@@ -6,7 +6,7 @@ $password = ""; // Replace with your DB password
 $database = "anime_site"; // Replace with your database name
 
 // Path to save the .sql file
-$output_file = __DIR__ . "/Anime-Site/database/anime_site.sql";
+$output_file = __DIR__ . "/../database/anime_site.sql";
 
 // Command to export database
 $command = "mysqldump -h $host -u $user --password=$password $database > $output_file";
