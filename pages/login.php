@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $row['username'];
 
             // Redirect to home page
-            header("Location: ..//index.php");
+            header("Location: ..//home.php");
             exit();
         } else {
             echo "<p style='color:red;'>Invalid username or password!</p>";

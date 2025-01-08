@@ -63,9 +63,9 @@
 <body>
     <div class="form-container">
         <h2>Add Highlight Video</h2>
-        <form action="anime.php" method="post">
+        <form action="anime.php" method="post" enctype="multipart/form-data">
             <input type="text" name="video_name" placeholder="Highlight Name" required>
-            <input type="text" name="video_url" placeholder="Google Drive URL" required>
+            <input type="file" name="video_file" required>
             <button type="submit">Add Highlight Video</button>
         </form>
     </div>
@@ -92,16 +92,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include '../pages/dbconnect.php';
 
     // Add Highlight Video
-    if (isset($_POST["video_name"]) && isset($_POST["video_url"])) {
+    if (isset($_POST["video_name"])) {
         $video_name = $_POST["video_name"];
-        $video_url = $_POST["video_url"];
+        $video_file = $_FILES["video_file"]["name"];
+        $target_dir = "../assets/videos/";
+        $target_file = $target_dir . basename($video_file);
 
-        $sql = "INSERT INTO highlight_videos (video_name, video_url) VALUES ('$video_name', '$video_url')";
-        if (mysqli_query($conn, $sql)) {
-            echo "<script>alert('Highlight video added successfully!');</script>";
-            echo "<script>window.location.href = 'dashboard.php';</script>";
+        if (move_uploaded_file($_FILES["video_file"]["tmp_name"], $target_file)) {
+            $sql = "INSERT INTO highlight_videos (video_name, video_file) VALUES ('$video_name', '$video_file')";
+            if (mysqli_query($conn, $sql)) {
+                echo "<script>alert('Highlight video added successfully!');</script>";
+                echo "<script>window.location.href = 'dashboard.php';</script>";
+            } else {
+                echo "<script>alert('Error adding highlight video: " . mysqli_error($conn) . "');</script>";
+            }
         } else {
-            echo "<script>alert('Error adding highlight video: " . mysqli_error($conn) . "');</script>";
+            echo "<script>alert('Error uploading highlight image.');</script>";
         }
     }
 

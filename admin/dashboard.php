@@ -85,7 +85,7 @@ $trendingMoviesResult = mysqli_query($conn, $trendingMoviesQuery);
                 <div class="box-item">
                     <h3><?php echo $row['video_name']; ?></h3>
                     <p>ID: <?php echo $row['video_id']; ?></p>
-                    <p>File ID: <?php echo $row['video_url']; ?></p>
+                    <p>File ID: <?php echo $row['video_file']; ?></p>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
