@@ -57,14 +57,11 @@
             margin-top: 1vh;
         }
 
-        video {
-            object-fit: cover;
-        }
-
-        .video-home {
+        iframe {
             width: 100%;
             height: 100%;
             border: none;
+            object-fit: cover;
         }
         
         .box-container {
@@ -157,7 +154,7 @@
                 <img src="#" alt="Logo">
             </div>
             <div class="options">
-                <a href="home.php">Home</a>
+                <a href="index.php">Home</a>
                 <a href="#">Anime List</a>
                 <a href="#">Category</a>
                 <a href="./pages/profile.php">Profile</a>
@@ -172,8 +169,7 @@
     <main>
         <section class="video-container">
             <?php if ($highlightVideo): ?>
-                <video src="./assets/videos/<?php echo $highlightVideo['video_file']; ?>" class="video-home" autoplay muted loop></video>
-                
+                <iframe src="https://drive.google.com/file/d/<?php echo $highlightVideo['video_url']; ?>/preview" class="video-home" allow="autoplay" allowfullscreen></iframe>
             <?php endif; ?>
         </section>
 
