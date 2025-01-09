@@ -99,7 +99,7 @@ $trendingMoviesResult = mysqli_query($conn, $trendingMoviesQuery);
     <div class="box">
         <?php while ($row = mysqli_fetch_assoc($trendingAnimeResult)): ?>
             <div class="box-item">
-                <img src="/PROJECT/assets/thumbnails/<?php echo $row['anime_image']; ?>" alt="<?php echo $row['anime_name']; ?>">
+                <img src="../assets/thumbnails/<?php echo $row['anime_image']; ?>" alt="<?php echo $row['anime_name']; ?>">
                 <h3><?php echo $row['anime_name']; ?></h3>
                 <p>ID: <?php echo $row['anime_id']; ?></p>
             </div>
