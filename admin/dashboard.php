@@ -55,6 +55,20 @@
         .box-item h3 {
             margin: 10px 0;
         }
+
+        .box-item button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .box-item button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -102,9 +116,13 @@ $trendingMoviesResult = mysqli_query($conn, $trendingMoviesQuery);
                 <img src="../assets/thumbnails/<?php echo $row['anime_image']; ?>" alt="<?php echo $row['anime_name']; ?>">
                 <h3><?php echo $row['anime_name']; ?></h3>
                 <p>ID: <?php echo $row['anime_id']; ?></p>
+                <button onclick="location.href='update_anime.php?id=<?php echo $row['anime_id']; ?>'">Update</button>
             </div>
         <?php endwhile; ?>
     </div>
+    <?php if (mysqli_num_rows($trendingAnimeResult) < 5): ?>
+        <button onclick="location.href='add_anime.php'">Add New Anime</button>
+    <?php endif; ?>
 </div>
 
 <div class="dashboard-container">
@@ -116,12 +134,14 @@ $trendingMoviesResult = mysqli_query($conn, $trendingMoviesQuery);
                     <img src="../assets/thumbnails/<?php echo $row['movie_image']; ?>" alt="<?php echo $row['movie_name']; ?>">
                     <h3><?php echo $row['movie_name']; ?></h3>
                     <p>ID: <?php echo $row['movie_id']; ?></p>
+                    <button onclick="location.href='update_movie.php?id=<?php echo $row['movie_id']; ?>'">Update</button>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
             <p>No trending movies found.</p>
         <?php endif; ?>
     </div>
+    <button onclick="location.href='add_movie.php'">Add New Movie</button>
 </div>
 
 </body>
