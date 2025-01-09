@@ -93,7 +93,7 @@
                 <h1>Admin Panel</h1>
                 <ul type="none">
                     <li><a href="dashboard.php" target="content-frame">Dashboard</a></li>
-                    <li><a href="anime.php" target="content-frame">Anime</a></li>
+                    <li><a href="anime_list.php" target="content-frame">Anime</a></li>
                     <li><a href="users.php" target="content-frame">Users</a></li>
                     <li><a href="profile.php" target="content-frame">Profile</a></li>
                     <li><a href="logout.php" target="content-frame">Logout</a></li>
