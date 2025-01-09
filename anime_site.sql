@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2025 at 03:55 PM
+-- Generation Time: Jan 09, 2025 at 03:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -50,7 +50,7 @@ CREATE TABLE `highlight_videos` (
 --
 
 INSERT INTO `highlight_videos` (`video_id`, `video_name`, `video_file`) VALUES
-(1, 'Dan Da Dan', 'DAN DA DAN Opening  Otonoke by Creepy Nuts.mp4');
+(1, 'Demon Slayer', 'Demon Slayer.mp4');
 
 -- --------------------------------------------------------
 
@@ -63,14 +63,6 @@ CREATE TABLE `movies` (
   `movie_name` varchar(100) NOT NULL,
   `movie_image` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `movies`
---
-
-INSERT INTO `movies` (`movie_id`, `movie_name`, `movie_image`) VALUES
-(1, 'Your Name', 'your name.jpg'),
-(2, 'Arrietty', 'arrietty.jfif');
 
 -- --------------------------------------------------------
 
