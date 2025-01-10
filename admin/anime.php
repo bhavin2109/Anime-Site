@@ -38,17 +38,22 @@
         }
         td {
             text-align: center; /* Center the content of the td */
+            vertical-align: middle; /* Vertically center the content of the td */
         }
         .action-buttons {
             display: flex; /* Use flexbox to center the buttons */
+            flex-direction: column;
+            border: none;
             justify-content: center; /* Center the buttons horizontally */
-            gap: 10px; /* Add some space between the buttons */
             align-self: center;
             justify-self: center;
+            margin-top: 3vh;
+            gap: 10px; /* Add some space between the buttons */ 
         }
         .action-buttons a {
             text-decoration: none;
             padding: 5px 10px;
+            max-width: 200px;
             border: 1px solid #000;
             border-radius: 5px;
             background-color: #f2f2f2;
@@ -82,11 +87,20 @@
                     <td><?php echo $row['anime_name']; ?></td>
                     <td><?php echo ucfirst($row['anime_type']); ?></td>
                     <td><img src="../assets/thumbnails/<?php echo $row['anime_image']; ?>" alt="<?php echo $row['anime_name']; ?>" width="100"></td>
-                    <td><?php echo $row['episodes']; ?></td>
+                    <td>
+                        <?php
+                        $anime_id = $row['anime_id'];
+                        $episode_query = "SELECT COUNT(*) as episode_count FROM episodes WHERE anime_id = $anime_id";
+                        $episode_result = mysqli_query($conn, $episode_query);
+                        $episode_row = mysqli_fetch_assoc($episode_result);
+                        echo $episode_row['episode_count'];
+                        ?>
+                    </td></td>
                     <td><?php echo $row['genre']; ?></td>
                     <td class="action-buttons">
                         <a href="update_anime.php?anime_id=<?php echo $row['anime_id']; ?>">Update</a>
                         <a href="anime.php?delete=<?php echo $row['anime_id']; ?>&type=<?php echo strtolower($row['anime_type']); ?>" onclick="return confirm('Are you sure you want to delete this <?php echo strtolower($row['anime_type']); ?>?');">Remove</a>
+                        <a href="add_episode.php?anime_id=<?php echo $row['anime_id']; ?>&anime_name=<?php echo urlencode($row['anime_name']); ?>">Add Episode</a>
                     </td>
                 </tr>
             <?php endwhile; ?>
