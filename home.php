@@ -143,12 +143,9 @@
     $highlightVideo = $highlightVideoResult->fetch_assoc();
 
     // Fetch trending anime
-    $trendingAnimeQuery = "SELECT * FROM anime LIMIT 5";
+    $trendingAnimeQuery = "SELECT * FROM anime LIMIT 10 ";
     $trendingAnimeResult = $conn->query($trendingAnimeQuery);
 
-    // Fetch movies
-    $moviesQuery = "SELECT * FROM movies LIMIT 5";
-    $moviesResult = $conn->query($moviesQuery);
 ?>
     <!-- Header -->
     <header>
@@ -184,18 +181,6 @@
                     <a href="#" class="box-anime">
                         <img src="./assets/thumbnails/<?php echo $anime['anime_image']; ?>">
                         <div class="anime_name"><?php echo isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'; ?></div>
-                    </a>
-                <?php endwhile; ?>
-            </div>
-        </section>
-
-        <section>
-            <h2>Movies</h2>
-            <div class="box-container">
-                <?php while ($movie = $moviesResult->fetch_assoc()): ?>
-                    <a href="#" class="box-anime">
-                        <img src="./assets/thumbnails/<?php echo $movie['movie_image']; ?>">
-                        <div class="anime_name"><?php echo isset($movie['movie_name']) ? $movie['movie_name'] : 'Unknown Title'; ?></div>
                     </a>
                 <?php endwhile; ?>
             </div>

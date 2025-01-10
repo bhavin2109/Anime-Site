@@ -85,12 +85,12 @@
                     <td><?php echo $row['episodes']; ?></td>
                     <td><?php echo $row['genre']; ?></td>
                     <td class="action-buttons">
-                        <a href="update_<?php echo strtolower($row['anime_type']); ?>.php?id=<?php echo $row['anime_id']; ?>">Update</a>
+                        <a href="update_anime.php?anime_id=<?php echo $row['anime_id']; ?>">Update</a>
                         <a href="anime.php?delete=<?php echo $row['anime_id']; ?>&type=<?php echo strtolower($row['anime_type']); ?>" onclick="return confirm('Are you sure you want to delete this <?php echo strtolower($row['anime_type']); ?>?');">Remove</a>
                     </td>
                 </tr>
             <?php endwhile; ?>
-        </tbody>
+        </tbody>    
     </table>
 </body>
 </html>

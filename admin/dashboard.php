@@ -86,9 +86,6 @@ if (!$trendingAnimeResult) {
     die("Query Failed: " . mysqli_error($conn));
 }
 
-// Fetch Trending Movies
-$trendingMoviesQuery = "SELECT * FROM anime LIMIT 5";
-$trendingMoviesResult = mysqli_query($conn, $trendingMoviesQuery);
 ?>
 
 <div class="dashboard-container">
@@ -116,7 +113,7 @@ $trendingMoviesResult = mysqli_query($conn, $trendingMoviesQuery);
                 <img src="../assets/thumbnails/<?php echo $row['anime_image']; ?>" alt="<?php echo $row['anime_name']; ?>">
                 <h3><?php echo $row['anime_name']; ?></h3>
                 <p>ID: <?php echo $row['anime_id']; ?></p>
-                <button onclick="location.href='update_anime.php?id=<?php echo $row['anime_id']; ?>'">Update</button>
+                <button onclick="location.href='update_trending.php?id=<?php echo $row['anime_id']; ?>'">Update</button>
             </div>
         <?php endwhile; ?>
     </div>
