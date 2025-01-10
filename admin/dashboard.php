@@ -87,7 +87,7 @@ if (!$trendingAnimeResult) {
 }
 
 // Fetch Trending Movies
-$trendingMoviesQuery = "SELECT * FROM movies LIMIT 5";
+$trendingMoviesQuery = "SELECT * FROM anime LIMIT 5";
 $trendingMoviesResult = mysqli_query($conn, $trendingMoviesQuery);
 ?>
 
@@ -120,28 +120,8 @@ $trendingMoviesResult = mysqli_query($conn, $trendingMoviesQuery);
             </div>
         <?php endwhile; ?>
     </div>
-    <?php if (mysqli_num_rows($trendingAnimeResult) < 5): ?>
-        <button onclick="location.href='add_anime.php'">Add New Anime</button>
-    <?php endif; ?>
 </div>
 
-<div class="dashboard-container">
-    <h2>Trending Movies</h2>
-    <div class="box">
-        <?php if (mysqli_num_rows($trendingMoviesResult) > 0): ?>
-            <?php while ($row = mysqli_fetch_assoc($trendingMoviesResult)): ?>
-                <div class="box-item">
-                    <img src="../assets/thumbnails/<?php echo $row['movie_image']; ?>" alt="<?php echo $row['movie_name']; ?>">
-                    <h3><?php echo $row['movie_name']; ?></h3>
-                    <p>ID: <?php echo $row['movie_id']; ?></p>
-                    <button onclick="location.href='update_movie.php?id=<?php echo $row['movie_id']; ?>'">Update</button>
-                </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>No trending movies found.</p>
-        <?php endif; ?>
-    </div>
-    <button onclick="location.href='add_movie.php'">Add New Movie</button>
 </div>
 
 </body>

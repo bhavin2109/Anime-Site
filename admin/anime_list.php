@@ -18,7 +18,7 @@ if (isset($_GET['delete'])) {
     header("Location: anime_list.php");
 }
 
-// Fetch all anime
+// Fetch all anime and movies
 $result = $conn->query("SELECT * FROM anime_list");
 ?>
 
@@ -27,7 +27,7 @@ $result = $conn->query("SELECT * FROM anime_list");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime List</title>
+    <title>Anime and Movie List</title>
     <style>
         table {
             width: 100%;
@@ -57,7 +57,7 @@ $result = $conn->query("SELECT * FROM anime_list");
     </style>
 </head>
 <body>
-    <h1>Anime List</h1>
+    <h1>Anime and Movie List</h1>
     <table>
         <thead>
             <tr>
@@ -76,6 +76,7 @@ $result = $conn->query("SELECT * FROM anime_list");
                     <td class="action-buttons">
                         <a href="update_anime.php?id=<?php echo $row['id']; ?>">Update</a>
                         <a href="anime_list.php?delete=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this anime?');">Delete</a>
+                        <a href="add_anime.php?id=<?php echo $row['id']; ?>">Add</a>
                     </td>
                 </tr>
             <?php endwhile; ?>
@@ -85,32 +86,5 @@ $result = $conn->query("SELECT * FROM anime_list");
 </html>
 
 <?php
-$conn->close();
-?>
-<?php
-// Include database connection file
-include '../pages/dbconnect.php';
-
-// Fetch all anime added by the admin
-$result = $conn->query("SELECT anime_id, anime_name, anime_type, episodes, anime_genre FROM anime_list");
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>" . $row['anime_id'] . "</td>";
-        echo "<td>" . $row['anime_name'] . "</td>";
-        echo "<td>" . $row['anime_type'] . "</td>";
-        echo "<td>" . $row['episodes'] . "</td>";
-        echo "<td>" . $row['anime_genre'] . "</td>";
-        echo "<td class='action-buttons'>";
-        echo "<a href='update_anime.php?id=" . $row['anime_id'] . "'>Update</a>";
-        echo "<a href='anime_list.php?delete=" . $row['anime_id'] . "' onclick='return confirm(\"Are you sure you want to delete this anime?\");'>Delete</a>";
-        echo "</td>";
-        echo "</tr>";
-    }
-} else {
-    echo "<tr><td colspan='6'>No anime found</td></tr>";
-}
-
 $conn->close();
 ?>

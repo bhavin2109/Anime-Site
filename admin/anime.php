@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Anime</title>
+    <title>Anime and Movie List</title>
     <style>
         * {
             margin: 0;
@@ -14,146 +14,99 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             display: flex;
-            justify-content: space-evenly;
+            justify-content: center;
             align-items: center;
-            height: 100vh;
-        }
-
-        .form-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            display: flex;
+            height: auto;
             flex-direction: column;
-            align-items: center;
         }
-
-        .form-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .form-container input[type="text"],
-        .form-container input[type="file"] {
+        table {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border-collapse: collapse;
+            margin-top: 10px;
         }
-
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
+        table, th, td {
+            border: 1px solid #ddd;
         }
-
-        .form-container button:hover {
-            background-color: #0056b3;
+        th, td {
+            padding: 10px;
+            text-align: left;
+            max-width: 200px; /* Adjust the max-width as needed */
+            word-wrap: break-word; /* Enable text wrapping */
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            text-align: center; /* Center the content of the td */
+        }
+        .action-buttons {
+            display: flex; /* Use flexbox to center the buttons */
+            justify-content: center; /* Center the buttons horizontally */
+            gap: 10px; /* Add some space between the buttons */
+            align-self: center;
+            justify-self: center;
+        }
+        .action-buttons a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #000;
+            border-radius: 5px;
+            background-color: #f2f2f2;
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Add Highlight Video</h2>
-        <form action="anime.php" method="post" enctype="multipart/form-data">
-            <input type="text" name="video_name" placeholder="Highlight Name" required>
-            <input type="file" name="video_file" required>
-            <button type="submit">Add Highlight Video</button>
-        </form>
-    </div>
-    <div class="form-container">
-        <h2>Add Anime</h2>
-        <form action="anime.php" method="post" enctype="multipart/form-data">
-            <input type="text" name="anime_name" placeholder="Anime Name" required>
-            <input type="file" name="anime_image" required>
-            <button type="submit">Add Anime</button>
-        </form>
-    </div>
-    <div class="form-container">
-        <h2>Add Movie</h2>
-        <form action="anime.php" method="post" enctype="multipart/form-data">
-            <input type="text" name="movie_name" placeholder="Movie Name" required>
-            <input type="file" name="movie_image" required>
-            <button type="submit">Add Movie</button>
-        </form>
-    </div>
+    <h2>Anime and Movie List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Image</th>
+                <th>Episodes</th>
+                <th>Genre</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            include '../pages/dbconnect.php';
+            $query = "
+                SELECT anime_id, anime_name, anime_type, anime_image, episodes, genre FROM anime
+            ";
+            $result = mysqli_query($conn, $query);
+            while ($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                    <td><?php echo $row['anime_id']; ?></td>
+                    <td><?php echo $row['anime_name']; ?></td>
+                    <td><?php echo ucfirst($row['anime_type']); ?></td>
+                    <td><img src="../assets/thumbnails/<?php echo $row['anime_image']; ?>" alt="<?php echo $row['anime_name']; ?>" width="100"></td>
+                    <td><?php echo $row['episodes']; ?></td>
+                    <td><?php echo $row['genre']; ?></td>
+                    <td class="action-buttons">
+                        <a href="update_<?php echo strtolower($row['anime_type']); ?>.php?id=<?php echo $row['anime_id']; ?>">Update</a>
+                        <a href="anime.php?delete=<?php echo $row['anime_id']; ?>&type=<?php echo strtolower($row['anime_type']); ?>" onclick="return confirm('Are you sure you want to delete this <?php echo strtolower($row['anime_type']); ?>?');">Remove</a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
 </body>
 </html>
+
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include '../pages/dbconnect.php';
-
-    // Add Highlight Video
-    if (isset($_POST["video_name"])) {
-        $video_name = $_POST["video_name"];
-        $video_file = $_FILES["video_file"]["name"];
-        $target_dir = "../assets/videos/";
-        $target_file = $target_dir . basename($video_file);
-
-        if (move_uploaded_file($_FILES["video_file"]["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO highlight_videos (video_name, video_file) VALUES ('$video_name', '$video_file')";
-            if (mysqli_query($conn, $sql)) {
-                echo "<script>alert('Highlight video added successfully!');</script>";
-                echo "<script>window.location.href = 'dashboard.php';</script>";
-            } else {
-                echo "<script>alert('Error adding highlight video: " . mysqli_error($conn) . "');</script>";
-            }
-        } else {
-            echo "<script>alert('Error uploading highlight image.');</script>";
-        }
+// Handle deletion
+if (isset($_GET['delete']) && isset($_GET['type'])) {
+    $id = $_GET['delete'];
+    $type = $_GET['type'];
+    $delete_query = "DELETE FROM anime WHERE anime_id = $id AND anime_type = '$type'";
+    if (mysqli_query($conn, $delete_query)) {
+        echo "<script>alert('{$type} removed successfully!');</script>";
+        echo "<script>window.location.href = 'anime.php';</script>";
+    } else {
+        echo "<script>alert('Error removing {$type}: " . mysqli_error($conn) . "');</script>";
     }
-
-    // Add Anime
-    if (isset($_POST["anime_name"])) {
-        $anime_name = $_POST["anime_name"];
-        $anime_image = $_FILES["anime_image"]["name"];
-        $target_dir = "../assets/thumbnails/";
-        $target_file = $target_dir . basename($anime_image);
-
-        if (move_uploaded_file($_FILES["anime_image"]["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO anime (anime_name, anime_image) VALUES ('$anime_name', '$anime_image')";
-            if (mysqli_query($conn, $sql)) {
-                echo "<script>alert('Anime added successfully!');</script>";
-                echo "<script>window.location.href = 'dashboard.php';</script>";
-            } else {
-                echo "<script>alert('Error adding anime: " . mysqli_error($conn) . "');</script>";
-            }
-        } else {
-            echo "<script>alert('Error uploading anime image.');</script>";
-        }
-    }
-
-    // Add Movie
-    if (isset($_POST["movie_name"])) {
-        $movie_name = $_POST["movie_name"];
-        $movie_image = $_FILES["movie_image"]["name"];
-        $target_dir = "../assets/thumbnails/";
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0777, true);
-        }
-        $target_file = $target_dir . basename($movie_image);
-
-        if (move_uploaded_file($_FILES["movie_image"]["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO movies (movie_name, movie_image) VALUES ('$movie_name', '$movie_image')";
-            if (mysqli_query($conn, $sql)) {
-                echo "<script>alert('Movie added successfully!');</script>";
-                echo "<script>window.location.href = 'dashboard.php';</script>";
-            } else {
-                echo "<script>alert('Error adding movie: " . mysqli_error($conn) . "');</script>";
-            }
-        } else {
-            echo "<script>alert('Error uploading movie image.');</script>";
-        }
-    }
-
     mysqli_close($conn);
 }
 ?>
