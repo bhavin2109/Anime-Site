@@ -40,6 +40,10 @@
             text-align: center; /* Center the content of the td */
             vertical-align: middle; /* Vertically center the content of the td */
         }
+        td img {
+            max-width: 100px; /* Adjust the max-width as needed */
+            height: 150px;
+        }
         .action-buttons {
             display: flex; /* Use flexbox to center the buttons */
             flex-direction: column;
@@ -57,6 +61,29 @@
             border: 1px solid #000;
             border-radius: 5px;
             background-color: #f2f2f2;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+            padding: 5px;
+        }
+        td.episodes {
+            text-align: center; /* Center the content of the td */
+            vertical-align: middle; /* Vertically center the content of the td */
+            cursor: pointer; /* Change the cursor to a pointer on hover */
+            transition: 0.5s; /* Add a smooth transition effect to the background color */
+        }
+        td.episodes:hover {
+            background-color:rgb(168, 167, 167); /* Change the background color on hover */
+        }
+        td.episodes a {
+            display: block; /* Make the link cover the entire cell */
+            width: 100%;
+            height: 100%;
+        }
+        td.episodes a:hover {
+            color: #007BFF; /* Change the text color on hover */
+            text-decoration: underline; /* Underline the text on hover */
         }
     </style>
 </head>
@@ -87,15 +114,16 @@
                     <td><?php echo $row['anime_name']; ?></td>
                     <td><?php echo ucfirst($row['anime_type']); ?></td>
                     <td><img src="../assets/thumbnails/<?php echo $row['anime_image']; ?>" alt="<?php echo $row['anime_name']; ?>" width="100"></td>
-                    <td>
+                    <td class="episodes">
                         <?php
                         $anime_id = $row['anime_id'];
                         $episode_query = "SELECT COUNT(*) as episode_count FROM episodes WHERE anime_id = $anime_id";
                         $episode_result = mysqli_query($conn, $episode_query);
                         $episode_row = mysqli_fetch_assoc($episode_result);
-                        echo $episode_row['episode_count'];
+                        $episode_page_url = "episodes.php?anime_id=$anime_id";
+                        echo "<a href='$episode_page_url'>" . $episode_row['episode_count'] . "</a>";
                         ?>
-                    </td></td>
+                    </td>
                     <td><?php echo $row['genre']; ?></td>
                     <td class="action-buttons">
                         <a href="update_anime.php?anime_id=<?php echo $row['anime_id']; ?>">Update</a>
