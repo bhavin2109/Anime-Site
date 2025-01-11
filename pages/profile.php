@@ -17,8 +17,40 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Header styles */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(159, 159, 159, 0.8);
+            z-index: 1000;
+        }
+
+        nav {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 20px;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .options a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .search-section input {
+            padding: 5px;
         }
 
         /* Profile container */
@@ -26,9 +58,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.5);
+            min-height: 100vh;
+            padding-top: 70px; /* Offset for the fixed header */
         }
 
         /* Profile card */
@@ -76,9 +107,11 @@
 </head>
 
 <body>
+    <!-- PHP User Profile Logic -->
     <?php
     // Start the session
     session_start();
+    include '../includes/header.php';
     require_once 'dbconnect.php'; // Include the database connection
 
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -86,7 +119,7 @@
         exit;
     } else {
         $username = $_SESSION['username']; // Get the session username
-        
+
         // Fetch email from the database if not set in session
         if (!isset($_SESSION['email'])) {
             $stmt = $conn->prepare("SELECT email FROM users WHERE username = ?");
@@ -101,6 +134,8 @@
         }
     }
     ?>
+
+    <!-- Profile Container -->
     <div class="profile-container">
         <div class="profile-card">
             <h2>User Profile</h2>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2025 at 03:57 AM
+-- Generation Time: Jan 11, 2025 at 06:45 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,8 +30,42 @@ SET time_zone = "+00:00";
 CREATE TABLE `anime` (
   `anime_id` int(100) NOT NULL,
   `anime_name` varchar(100) NOT NULL,
-  `anime_image` varchar(255) NOT NULL
+  `anime_image` varchar(255) NOT NULL,
+  `anime_type` varchar(100) NOT NULL,
+  `episodes` int(200) NOT NULL,
+  `genre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `anime`
+--
+
+INSERT INTO `anime` (`anime_id`, `anime_name`, `anime_image`, `anime_type`, `episodes`, `genre`) VALUES
+(1, 'Dan Da Dan', 'Dan Da Dan - S01.jpg', 'TV', 0, 'Action'),
+(2, 'Your Name', 'your name.jpg', 'Movie', 0, 'Fantasy'),
+(3, 'Wind Breaker', 'Wind Breaker - S01.jpeg', 'TV', 0, 'Action'),
+(4, 'I want to Eat Your Pancreas', 'i want to eat your pancreas.jpg', 'Movie', 0, 'Romance');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `episodes`
+--
+
+CREATE TABLE `episodes` (
+  `episode_id` int(11) NOT NULL,
+  `anime_id` int(11) NOT NULL,
+  `episode_title` varchar(255) DEFAULT NULL,
+  `episode_url` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `episodes`
+--
+
+INSERT INTO `episodes` (`episode_id`, `anime_id`, `episode_title`, `episode_url`) VALUES
+(1, 1, 'The Begining', '1o-6-aR4eGyxbmF2PJ3XT5M9EV1J_STm0'),
+(2, 2, 'Kimi No Namayva', '1yeirUYkEhVPXSWq-xhA7hlhCxqzWLbM3');
 
 -- --------------------------------------------------------
 
@@ -51,18 +85,6 @@ CREATE TABLE `highlight_videos` (
 
 INSERT INTO `highlight_videos` (`video_id`, `video_name`, `video_file`) VALUES
 (1, 'Demon Slayer', 'Demon Slayer.mp4');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `movies`
---
-
-CREATE TABLE `movies` (
-  `movie_id` int(100) NOT NULL,
-  `movie_name` varchar(100) NOT NULL,
-  `movie_image` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -96,16 +118,17 @@ ALTER TABLE `anime`
   ADD PRIMARY KEY (`anime_id`);
 
 --
+-- Indexes for table `episodes`
+--
+ALTER TABLE `episodes`
+  ADD PRIMARY KEY (`episode_id`),
+  ADD KEY `anime_id` (`anime_id`);
+
+--
 -- Indexes for table `highlight_videos`
 --
 ALTER TABLE `highlight_videos`
   ADD PRIMARY KEY (`video_id`);
-
---
--- Indexes for table `movies`
---
-ALTER TABLE `movies`
-  ADD PRIMARY KEY (`movie_id`);
 
 --
 -- Indexes for table `users`
@@ -118,16 +141,32 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `movies`
+-- AUTO_INCREMENT for table `anime`
 --
-ALTER TABLE `movies`
-  MODIFY `movie_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `anime`
+  MODIFY `anime_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `episodes`
+--
+ALTER TABLE `episodes`
+  MODIFY `episode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `episodes`
+--
+ALTER TABLE `episodes`
+  ADD CONSTRAINT `episodes_ibfk_1` FOREIGN KEY (`anime_id`) REFERENCES `anime` (`anime_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

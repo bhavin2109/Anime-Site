@@ -68,7 +68,7 @@ html, body {
 
 .video-player {
     width: 100%;
-    height: 600px; /* Increased player height */
+    height: 65vh; /* Increased player height */
     border: none;
 }
 
@@ -83,8 +83,8 @@ html, body {
 }
 
 .anime-info img {
-    width: 100%;
-    height: auto;
+    width: 150px;
+    height: 200px;
     margin-bottom: 20px; /* Increased margin */
 }
 
@@ -125,41 +125,57 @@ html, body {
     </style>
 </head>
 <body>
+    <?php include '../includes/header.php'; ?>
     <div class="player-container">
         <!-- Sidebar for Episodes -->
         <div class="sidebar">
             <h3>List of Episodes</h3>
             <ul class="episode-list">
-                <li><a href="?episode=1">1. Kill the King</a></li>
-                <li><a href="?episode=2">2. The Dark Arm</a></li>
-                <li><a href="?episode=3">3. The Betrayer</a></li>
-                <!-- Add more episodes here -->
+                <?php
+                include 'dbconnect.php';
+                // Fetch all episodes for the anime
+                $anime_id = isset($_GET['anime_id']) ? intval($_GET['anime_id']): $anime_id; // Default to anime_id 1 if not provided
+                $episodes_query = "SELECT episode_id, episode_title FROM episodes WHERE anime_id = ?";
+                $stmt = $conn->prepare($episodes_query);
+                $stmt->bind_param("i", $anime_id);
+                $stmt->execute();
+                $episodes_result = $stmt->get_result();
+
+                while ($episode = $episodes_result->fetch_assoc()) {
+                    echo '<li><a href="?anime_id=' . $anime_id . '&episode_id=' . $episode['episode_id'] . '">' . $episode['episode_id'] . '. ' . $episode['episode_title'] . '</a></li>';
+                }
+                ?>
             </ul>
         </div>
 
         <!-- Main Player Section -->
         <div class="main-player">
             <?php
-            // Get episode number from the URL
-            $episode = isset($_GET['episode']) ? $_GET['episode'] : 1;
-            $fileID = ""; // Default File ID for Google Drive
+            // Database connection
+            include 'dbconnect.php';
 
-            // Define a simple mapping for episodes to file IDs (You should replace these with actual IDs)
-            $fileIDs = [
-                1 => 'your_google_drive_file_id_for_episode_1',
-                2 => 'your_google_drive_file_id_for_episode_2',
-                3 => 'your_google_drive_file_id_for_episode_3',
-                // Add more episodes and their corresponding file IDs
-            ];
-
-            // Set the file ID based on the selected episode
-            if (isset($fileIDs[$episode])) {
-                $fileID = $fileIDs[$episode];
+            // Check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
             }
 
-            if ($fileID): ?>
+            // Get episode number from the URL
+            $episode = isset($_GET['episode_id']) ? intval($_GET['episode_id']) : 1;
+
+            // Fetch episode details from the database
+            $sql = "SELECT e.episode_id, a.anime_name, a.anime_image, e.episode_url
+                    FROM episodes e 
+                    JOIN anime a ON e.anime_id = a.anime_id 
+                    WHERE e.episode_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $episode);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $episodeDetails = $result->fetch_assoc();
+
+            if ($episodeDetails): ?>
                 <!-- Embed video using iframe -->
-                <iframe src="https://drive.google.com/file/d/<?php echo $fileID; ?>/preview" width="640" height="480" allow="autoplay" class="video-player"></iframe>
+                <iframe src="https://drive.google.com/file/d/<?php echo htmlspecialchars($episodeDetails['episode_url']); ?>/preview" width="100%" height="600" allow="autoplay" class="video-player"></iframe>
             <?php else: ?>
                 <p>No video found for this episode.</p>
             <?php endif; ?>
@@ -167,10 +183,13 @@ html, body {
 
         <!-- Anime Information Section -->
         <div class="anime-info">
-            <img src="assets/thumbnails/episode<?php echo $episode; ?>.jpg" alt="Episode Thumbnail" class="thumbnail">
-            <h2>Bleach: Thousand-Year Blood War</h2>
+            <?php if (isset($episodeDetails['anime_image'])): ?>
+                <img src="../assets/thumbnails/<?php echo $episodeDetails['anime_image']; ?>" alt="anime_image" class="thumbnail">
+            <?php else: ?>
+                <p>No image available for this anime.</p>
+            <?php endif; ?>
+            <h2><?php echo $episodeDetails['anime_name']; ?></h2>
             <p>Current Episode: <?php echo $episode; ?></p>
-            <p>This is the synopsis of the current episode.</p>
             <form method="post" action="like_dislike.php">
                 <button name="like" value="<?php echo $episode; ?>">Like</button>
                 <button name="dislike" value="<?php echo $episode; ?>">Dislike</button>

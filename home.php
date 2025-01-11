@@ -179,6 +179,7 @@
             <div class="box-container">
                 <?php while ($anime = $trendingAnimeResult->fetch_assoc()): ?>
                     <a href="#" class="box-anime">
+                        <a href="./pages/player.php?anime_id=<?php echo $anime['anime_id']; ?>&episode=1" class="box-anime">
                         <img src="./assets/thumbnails/<?php echo $anime['anime_image']; ?>">
                         <div class="anime_name"><?php echo isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'; ?></div>
                     </a>
