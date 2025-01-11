@@ -23,7 +23,7 @@ html, body {
     display: flex;
     height: 100%;
     justify-content: space-between;
-    padding: 40px; /* Increased padding */
+    padding: 1px; /* Increased padding */
     overflow: hidden; /* Prevent scrollbars */
 }
 
@@ -166,9 +166,9 @@ html, body {
             $sql = "SELECT e.episode_id, a.anime_name, a.anime_image, e.episode_url
                     FROM episodes e 
                     JOIN anime a ON e.anime_id = a.anime_id 
-                    WHERE e.episode_id = ?";
+                    WHERE e.episode_id = ? AND e.anime_id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("i", $episode);
+            $stmt->bind_param("ii", $episode,$anime_id);
             $stmt->execute();
             $result = $stmt->get_result();
             $episodeDetails = $result->fetch_assoc();
