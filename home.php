@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,14 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
         }
+
         header {
             background-color: rgba(159, 159, 159, 0.8);
             opacity: 0.8;
@@ -26,6 +29,7 @@
             top: 0;
             z-index: 1000;
         }
+
         nav {
             display: flex;
             justify-content: space-between;
@@ -34,17 +38,21 @@
             margin: 0 auto;
             padding: 0 20px;
         }
+
         .logo img {
             height: 50px;
         }
+
         .options a {
             color: #fff;
             text-decoration: none;
             margin: 0 10px;
         }
+
         .search-section input {
             padding: 5px;
         }
+
         .video-container {
             position: relative;
             top: -8vh;
@@ -66,13 +74,14 @@
             height: 100%;
             border: none;
         }
-        
+
         .box-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
             margin: 20px 0;
         }
+
         .box-anime {
             width: 200px;
             margin: 10px;
@@ -80,10 +89,12 @@
             text-decoration: none;
             color: #333;
         }
+
         .box-anime img {
             width: 200px;
             height: 300px;
         }
+
         .footer-container {
             display: flex;
             justify-content: space-between;
@@ -91,30 +102,36 @@
             background-color: #333;
             color: #fff;
         }
+
         .contact-us ul {
             list-style: none;
             padding: 0;
         }
+
         .contact-us ul li {
             margin: 5px 0;
         }
+
         .contact-us ul li a {
             color: #fff;
             text-decoration: none;
             display: flex;
             align-items: center;
         }
+
         .contact-us ul li img {
             width: 24px;
             height: 24px;
             margin-right: 10px;
         }
+
         .feedback-container input {
             display: block;
             width: 100%;
             margin: 10px 0;
             padding: 10px;
         }
+
         .submit-btn {
             background-color: #333;
             color: #fff;
@@ -124,8 +141,9 @@
         }
     </style>
 </head>
+
 <body>
-<?php
+    <?php
     session_start();
 
     // Check if the user is logged in
@@ -146,7 +164,7 @@
     $trendingAnimeQuery = "SELECT * FROM anime LIMIT 10 ";
     $trendingAnimeResult = $conn->query($trendingAnimeQuery);
 
-?>
+    ?>
     <!-- Header -->
     <header>
         <nav>
@@ -170,7 +188,7 @@
         <section class="video-container">
             <?php if ($highlightVideo): ?>
                 <video src="./assets/videos/<?php echo $highlightVideo['video_file']; ?>" class="video-home" autoplay muted loop></video>
-                
+
             <?php endif; ?>
         </section>
 
@@ -179,7 +197,7 @@
             <div class="box-container">
                 <?php while ($anime = $trendingAnimeResult->fetch_assoc()): ?>
                     <a href="./pages/player.php?anime_id=<?php echo $anime['anime_id']; ?>&episode=1" class="box-anime">
-                       
+
                         <img src="./assets/thumbnails/<?php echo $anime['anime_image']; ?>">
                         <div class="anime_name"><?php echo isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'; ?></div>
                     </a>
@@ -216,7 +234,8 @@
         &copy; Group No.1
     </footer>
 </body>
+
 </html>
 <?php
-    $conn->close();
+$conn->close();
 ?>

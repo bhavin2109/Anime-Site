@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
             top: 0;
             z-index: 1000;
         }
+
         nav {
             display: flex;
             justify-content: space-between;
@@ -22,22 +24,26 @@
             margin: 0 auto;
             padding: 0 20px;
         }
+
         .logo img {
             height: 50px;
         }
+
         .options a {
             color: #fff;
             text-decoration: none;
             margin: 0 10px;
         }
+
         .search-section input {
             padding: 5px;
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
-<header>
+    <header>
         <nav>
             <div class="logo">
                 <img src="#" alt="Logo">
@@ -54,4 +60,5 @@
         </nav>
     </header>
 </body>
+
 </html>
