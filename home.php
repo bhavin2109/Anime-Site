@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bleach</title>
     <style>
-        /* Your existing CSS code */
+
         * {
             margin: 0;
             padding: 0;
@@ -97,10 +97,12 @@
 
         .footer-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-evenly;
+            align-items: center;
             padding: 20px;
             background-color: #333;
             color: #fff;
+            height: 60vh;
         }
 
         .contact-us ul {
@@ -109,7 +111,8 @@
         }
 
         .contact-us ul li {
-            margin: 5px 0;
+            margin: 10px 0px;
+            padding: 5px;
         }
 
         .contact-us ul li a {
@@ -127,14 +130,18 @@
 
         .feedback-container input {
             display: block;
-            width: 100%;
+            width: 30vw;
             margin: 10px 0;
+            border-radius: 8px;
             padding: 10px;
+        }
+        .feedback-container input[type="text"] {
+            height: 150px;
         }
 
         .submit-btn {
-            background-color: #333;
-            color: #fff;
+            background-color: cyan;
+            color: black;
             border: none;
             padding: 10px;
             cursor: pointer;
@@ -231,7 +238,7 @@
                 </div>
             </div>
         </section>
-        &copy; Group No.1
+        <p style=" height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center;">&copy; Group No.1</p>
     </footer>
 </body>
 
