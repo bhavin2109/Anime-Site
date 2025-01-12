@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("iss", $anime_id, $episode_title, $episode_url);
         if ($stmt->execute()) {
             echo "<script>alert('Episode added successfully!');</script>";
-            echo "<script>window.location.href = 'dashboard.php';</script>";
+            echo "<script>window.location.href = 'add_episode.php';</script>";
         } else {
             echo "<script>alert('Error adding episode: " . $stmt->error . "');</script>";
         }
