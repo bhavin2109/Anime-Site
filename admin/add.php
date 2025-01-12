@@ -131,19 +131,6 @@ mysqli_close($conn);
             <button type="submit">Add Movie</button>
         </form>
     </div>
-
-    <div class="form-container">
-        <h2>Add Episode</h2>
-        <form action="add_episode.php" method="post">
-            <select name="identifier_type" class="input-box" required>
-                <option value="id">Anime ID</option>
-                <option value="name">Anime Name</option>
-            </select>
-            <input type="text" name="anime_identifier" placeholder="Anime ID or Name" class="input-box" required>
-            <input type="text" name="episode_name" placeholder="Episode Name" class="input-box" required>
-            <input type="text" name="episode_link" placeholder="Google Drive Link" class="input-box" required>
-            <button type="submit">Add Episode</button>
-        </form>
     </div>
 </body>
 </html>

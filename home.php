@@ -21,8 +21,9 @@
         }
 
         header {
-            background-color: rgba(159, 159, 159, 0.8);
+            background-color: rgba(31, 31, 31, 0.8);
             opacity: 0.8;
+            box-shadow: inset 0 0 10px #000;
             color: #fff;
             padding: 10px 0;
             position: sticky;
@@ -47,6 +48,13 @@
             color: #fff;
             text-decoration: none;
             margin: 0 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: 0.3s;  
+        }
+
+        .options a:hover {
+            background-color: rgba(101, 101, 101, 0.8);
         }
 
         .search-section input {
@@ -88,11 +96,17 @@
             text-align: center;
             text-decoration: none;
             color: #333;
+            transition: 0.3s;
+        }
+
+        .box-anime:hover {
+            transform: scale(1.02);
         }
 
         .box-anime img {
             width: 200px;
             height: 300px;
+            border-radius: 4px;
         }
 
         .footer-container {
@@ -132,6 +146,7 @@
             display: block;
             width: 30vw;
             margin: 10px 0;
+            border: none;
             border-radius: 8px;
             padding: 10px;
         }
@@ -140,11 +155,17 @@
         }
 
         .submit-btn {
-            background-color: cyan;
+            background-color: gray;
             color: black;
             border: none;
             padding: 10px;
             cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: rgba(101, 101, 101, 0.8);
+            color: white;
         }
     </style>
 </head>
@@ -231,11 +252,11 @@
 
             <div class="feedback-form">
                 <h2>Feedback</h2>
-                <div class="feedback-container">
+                <form action="" class="feedback-container" name="feedback-form" method="post">
                     <input type="email" name="emailid" class="email-feedback" placeholder="E-Mail">
                     <input type="text" name="feedback-text" class="text-feedback" placeholder="Feedback">
                     <input type="button" value="Submit" name="submitok" class="submit-btn">
-                </div>
+                </form>
             </div>
         </section>
         <p style=" height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center;">&copy; Group No.1</p>
