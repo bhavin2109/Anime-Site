@@ -97,6 +97,7 @@ if (!$trendingAnimeResult) {
                     <h3><?php echo $row['video_name']; ?></h3>
                     <p>ID: <?php echo $row['video_id']; ?></p>
                     <p>File ID: <?php echo $row['video_file']; ?></p>
+                    <button onclick="location.href='update_highlight.php?id=<?php echo $row['video_id']; ?>'">Update</button>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
