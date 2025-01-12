@@ -199,7 +199,7 @@
 
             if ($episodeDetails): ?>
                 <!-- Embed video using iframe -->
-                <iframe src="https://drive.google.com/file/d/<?php echo htmlspecialchars($episodeDetails['episode_url']); ?>/preview" width="100%" height="600" allow="autoplay" class="video-player"></iframe>
+                <iframe src="https://drive.google.com/file/d/<?php echo htmlspecialchars($episodeDetails['episode_url']); ?>/preview" width="100%" height="600" allow="autoplay" class="video-player" allowfullscreen></iframe>
             <?php else: ?>
                 <p>No video found for this episode.</p>
             <?php endif; ?>
