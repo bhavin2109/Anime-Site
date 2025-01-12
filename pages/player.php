@@ -29,24 +29,32 @@
         .sidebar {
             width: 300px;
             background-color: #bebaba;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             height: 100%;
-            overflow-y: auto;
+            overflow-y: scroll;
         }
 
         .episode-list {
             list-style: none;
-            padding: 0;
+            padding: 15px 0px;
+            margin-bottom: 5vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
         }
 
         .episode-list li {
-            margin-bottom: 15px;
             margin-top: 8px;
             background-color: rgb(168, 169, 169);
-            padding: 10px;
-            border-radius: 5px;
+            padding: 5px;
+            border-radius: 8px;
             transition: 0.3s;
+            width: 100%;
+            height: 8vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
         }
 
         .episode-list li a {
