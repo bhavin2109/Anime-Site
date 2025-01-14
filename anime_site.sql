@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2025 at 01:17 PM
+-- Generation Time: Jan 14, 2025 at 10:18 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -78,7 +78,8 @@ INSERT INTO `episodes` (`episode_id`, `anime_id`, `episode_title`, `episode_url`
 (12, 1, ' Merge! Serpo Dover Demon Nessie!', '17iQluKMENdhLPX_nvPnB4aRRKkOc1L7B'),
 (13, 1, 'Have You Ever Seen a Cattle Mutilation?', '1XWfgC6kwaLGO-wqbuL0PWZre0-M3KTy3'),
 (14, 1, 'First Love', '1Z8OHWKK7lnfS8ZAZ70kCDfLzUKnu5pOz'),
-(15, 1, 'Let\'s Go to the Cursed House', '1qxp8kNM3O_buJEGy6w-25uFG9ZlLbuOZ');
+(15, 1, 'Let\'s Go to the Cursed House', '1qxp8kNM3O_buJEGy6w-25uFG9ZlLbuOZ'),
+(16, 4, 'I want to Eat Your', '16581f-XHkRy8Y4R4TFd4ZXtEbPPdJup4');
 
 -- --------------------------------------------------------
 
@@ -97,7 +98,7 @@ CREATE TABLE `highlight_videos` (
 --
 
 INSERT INTO `highlight_videos` (`video_id`, `video_name`, `video_file`) VALUES
-(1, 'Demon Slayer', 'Demon Slayer.mp4');
+(1, 'Highlight Video', 'Highlight Video.mp4');
 
 -- --------------------------------------------------------
 
@@ -163,7 +164,7 @@ ALTER TABLE `anime`
 -- AUTO_INCREMENT for table `episodes`
 --
 ALTER TABLE `episodes`
-  MODIFY `episode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `episode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`
