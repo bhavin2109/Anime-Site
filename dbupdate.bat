@@ -1,3 +1,4 @@
 @echo off
-php "c:\xampp\htdocs\Projects\Anime-Site\dbupdate.php"
+php "./pages/dbupdate.php"
+php "Database updated successfully";
 exit
