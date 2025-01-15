@@ -16,15 +16,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($result) > 0) {
         $anime = mysqli_fetch_assoc($result);
         $anime_id = $anime['anime_id'];
+        $anime_name = $anime['anime_name'];
+        $anime_image = $anime['anime_image'];
 
-        // Update trending anime
-        $sql = "UPDATE trending_anime SET anime_id = '$anime_id' WHERE id = 1"; // Assuming id = 1 for trending anime
-        if (mysqli_query($conn, $sql)) {
-            echo "<script>alert('Trending anime updated successfully!');</script>";
-            echo "<script>window.location.href = 'dashboard.php';</script>";
-        } else {
-            echo "<script>alert('Error updating trending anime: " . mysqli_error($conn) . "');</script>";
-        }
+        // Store trending anime in session variables
+        $_SESSION['trending_anime_id'] = $anime_id;
+        $_SESSION['trending_anime_name'] = $anime_name;
+        $_SESSION['trending_anime_image'] = $anime_image;
+
+        echo "<script>alert('Trending anime updated successfully!');</script>";
+        echo "<script>window.location.href = 'dashboard.php';</script>";
     } else {
         echo "<script>alert('Anime not found.');</script>";
     }
