@@ -1,37 +1,6 @@
 <?php
+session_start();
 include '../pages/dbconnect.php';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $anime_identifier = $_POST["anime_identifier"];
-    $identifier_type = $_POST["identifier_type"];
-
-    // Check if anime exists
-    if ($identifier_type == "id") {
-        $query = "SELECT * FROM anime WHERE anime_id = '$anime_identifier'";
-    } else {
-        $query = "SELECT * FROM anime WHERE anime_name = '$anime_identifier'";
-    }
-    $result = mysqli_query($conn, $query);
-
-    if (mysqli_num_rows($result) > 0) {
-        $anime = mysqli_fetch_assoc($result);
-        $anime_id = $anime['anime_id'];
-        $anime_name = $anime['anime_name'];
-        $anime_image = $anime['anime_image'];
-
-        // Store trending anime in session variables
-        $_SESSION['trending_anime_id'] = $anime_id;
-        $_SESSION['trending_anime_name'] = $anime_name;
-        $_SESSION['trending_anime_image'] = $anime_image;
-
-        echo "<script>alert('Trending anime updated successfully!');</script>";
-        echo "<script>window.location.href = 'dashboard.php';</script>";
-    } else {
-        echo "<script>alert('Anime not found.');</script>";
-    }
-}
-
-mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +68,7 @@ mysqli_close($conn);
 <body>
     <div class="form-container">
         <h2>Update Trending Anime</h2>
-        <form action="update_trending.php" method="post">
+        <form id="updateForm">
             <select name="identifier_type" required>
                 <option value="id">Anime ID</option>
                 <option value="name">Anime Name</option>
@@ -108,5 +77,49 @@ mysqli_close($conn);
             <button type="submit">Update Trending Anime</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('updateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const identifierType = document.querySelector('select[name="identifier_type"]').value;
+            const animeIdentifier = document.querySelector('input[name="anime_identifier"]').value;
+
+            // Fetch anime details based on identifier type
+            fetch(`fetch_anime.php?identifier_type=${identifierType}&anime_identifier=${animeIdentifier}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update PHP session with new trending anime details
+                        fetch('update_trending_session.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => response.json())
+                        .then(responseData => {
+                            if (responseData.success) {
+                                alert('Trending anime updated successfully!');
+                                window.location.href = 'dashboard.php';
+                            } else {
+                                alert('Failed to update trending anime session.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error updating session:', error);
+                            alert('An error occurred. Please try again.');
+                        });
+                    } else {
+                        alert('Anime not found.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+        });
+    </script>
 </body>
 </html>

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bleach</title>
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -21,9 +20,9 @@
         }
 
         header {
-            background-color: rgba(31, 31, 31, 0.8);
-            opacity: 0.8;
-            box-shadow: inset 0 0 10px #000;
+            box-shadow: 0px 0px 30px rgba(227, 228, 237, 0.37);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.18);
             color: #fff;
             padding: 10px 0;
             position: sticky;
@@ -84,15 +83,16 @@
         }
 
         .box-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            justify-content: center;
             margin: 20px 0;
+            padding: 0 20px;
         }
 
         .box-anime {
-            width: 200px;
-            margin: 10px;
+            width: 100%;
             text-align: center;
             text-decoration: none;
             color: #333;
@@ -216,7 +216,6 @@
         <section class="video-container">
             <?php if ($highlightVideo): ?>
                 <video src="./assets/videos/<?php echo $highlightVideo['video_file']; ?>" class="video-home" autoplay muted loop></video>
-
             <?php endif; ?>
         </section>
 
@@ -225,7 +224,6 @@
             <div class="box-container">
                 <?php while ($anime = $trendingAnimeResult->fetch_assoc()): ?>
                     <a href="./pages/player.php?anime_id=<?php echo $anime['anime_id']; ?>&episode=1" class="box-anime">
-
                         <img src="./assets/thumbnails/<?php echo $anime['anime_image']; ?>">
                         <div class="anime_name"><?php echo isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'; ?></div>
                     </a>
@@ -241,7 +239,7 @@
                 <h2>Contact Us</h2>
                 <div class="contact-us-container">
                     <ul type="none">
-                        <li><a href="#"><img src="./assets/icons/instagram.png">Instagram</a></li>
+                        <li><a href="https://www.instagram.com/bleach_tbh?igsh=cTBmM20zM2M4OWFs"><img src="./assets/icons/instagram.png">Instagram</a></li>
                         <li><a href="#"><img src="./assets/icons/telegram.png">Telegram</a></li>
                         <li><a href="#"><img src="./assets/icons/twitter.png">X</a></li>
                         <li><a href="#"><img src="./assets/icons/facebook.png">Facebook</a></li>

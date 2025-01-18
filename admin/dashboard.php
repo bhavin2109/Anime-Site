@@ -1,3 +1,34 @@
+<?php
+session_start();
+include '../pages/dbconnect.php';
+
+// Fetch Highlight Video
+$highlightQuery = "SELECT * FROM highlight_videos";
+$highlightResult = mysqli_query($conn, $highlightQuery);
+
+// Fetch Trending Anime
+$trendingAnimeQuery = "SELECT * FROM anime LIMIT 10";
+$trendingAnimeResult = mysqli_query($conn, $trendingAnimeQuery);
+if (!$trendingAnimeResult) {
+    die("Query Failed: " . mysqli_error($conn));
+}
+
+// Set default trending anime in session storage if not already set
+if (!isset($_SESSION['trending_anime'])) {
+    $_SESSION['trending_anime'] = [];
+    while ($row = mysqli_fetch_assoc($trendingAnimeResult)) {
+        $_SESSION['trending_anime'][] = [
+            'anime_id' => $row['anime_id'],
+            'anime_name' => $row['anime_name'],
+            'anime_image' => $row['anime_image']
+        ];
+    }
+}
+
+// Retrieve trending anime from session storage
+$trendingAnime = $_SESSION['trending_anime'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,9 +61,10 @@
         }
 
         .box {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            justify-content: center;
         }
 
         .box-item {
@@ -42,14 +74,15 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin: 10px;
             padding: 10px;
-            width: 200px;
+            width: 100%;
             text-align: center;
         }
 
         .box-item img {
             border-radius: 10px;
             height: 300px;
-            width: 200px;
+            width: 100%;
+            object-fit: cover;
         }
 
         .box-item h3 {
@@ -72,22 +105,6 @@
     </style>
 </head>
 <body>
-<?php 
-include '../pages/dbconnect.php';
-
-// Fetch Highlight Video
-$highlightQuery = "SELECT * FROM highlight_videos";
-$highlightResult = mysqli_query($conn, $highlightQuery);
-
-// Fetch Trending Anime
-$trendingAnimeQuery = "SELECT * FROM anime LIMIT 5";
-$trendingAnimeResult = mysqli_query($conn, $trendingAnimeQuery);
-if (!$trendingAnimeResult) {
-    die("Query Failed: " . mysqli_error($conn));
-}
-
-?>
-
 <div class="dashboard-container">
     <h2>Highlight Video</h2>
     <div class="box">
@@ -109,18 +126,19 @@ if (!$trendingAnimeResult) {
 <div class="dashboard-container">
     <h2>Trending Anime</h2>
     <div class="box">
-        <?php while ($row = mysqli_fetch_assoc($trendingAnimeResult)): ?>
+        <?php foreach ($trendingAnime as $anime): ?>
             <div class="box-item">
-                <img src="../assets/thumbnails/<?php echo $row['anime_image']; ?>" alt="<?php echo $row['anime_name']; ?>">
-                <h3><?php echo $row['anime_name']; ?></h3>
-                <p>ID: <?php echo $row['anime_id']; ?></p>
-                <button onclick="location.href='update_trending.php?id=<?php echo $row['anime_id']; ?>'">Update</button>
+                <img src="../assets/thumbnails/<?php echo $anime['anime_image']; ?>" alt="<?php echo $anime['anime_name']; ?>">
+                <h3><?php echo $anime['anime_name']; ?></h3>
+                <p>ID: <?php echo $anime['anime_id']; ?></p>
+                <button onclick="location.href='update_trending.php'">Update Trending Anime</button>
             </div>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
     </div>
-</div>
-
 </div>
 
 </body>
 </html>
+<?php
+$conn->close();
+?>

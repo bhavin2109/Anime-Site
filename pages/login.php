@@ -8,7 +8,7 @@
         body {
     margin: 0;
     padding: 0;
-    background: url('http://localhost/PROJECT/assets/78.jpg') no-repeat center center fixed;
+    background-image: url('../assets/background.jpg');
     background-size: cover;
     font-family: Arial, sans-serif;
     display: flex;
@@ -16,6 +16,7 @@
     align-items: center;
     height: 100vh;  
 }
+
 
 section {
     background-color: rgba(165, 165, 165, 0.2);
@@ -32,14 +33,6 @@ h2 {
     margin-bottom: 20px;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
 
 button {
     width: 100%;
@@ -50,6 +43,35 @@ button {
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    transition: padding-top 0.3s ease;
+    overflow: visible;
+}
+
+input:focus {
+    border-color: #0051ff;
+    color: #0051ff;
+    overflow: visible;
+}
+
+input:focus::placeholder {
+    color: #0051ff;
+    transform: translateY(-25px);
+    overflow: visible;
+}
+
+input::placeholder {
+    transition: transform 0.3s ease;
 }
 
 button:hover {
