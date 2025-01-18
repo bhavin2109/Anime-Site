@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 14, 2025 at 10:18 AM
+-- Generation Time: Jan 18, 2025 at 11:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,7 +44,9 @@ INSERT INTO `anime` (`anime_id`, `anime_name`, `anime_image`, `anime_type`, `epi
 (1, 'Dan Da Dan', 'Dan Da Dan - S01.jpg', 'TV', 0, 'Action'),
 (2, 'Your Name', 'your name.jpg', 'Movie', 0, 'Fantasy'),
 (3, 'Wind Breaker', 'Wind Breaker - S01.jpeg', 'TV', 0, 'Action'),
-(4, 'I want to Eat Your Pancreas', 'i want to eat your pancreas.jpg', 'Movie', 0, 'Romance');
+(4, 'I want to Eat Your Pancreas', 'i want to eat your pancreas.jpg', 'Movie', 0, 'Romance'),
+(5, 'Black Clover', 'Black Clover.jpeg', 'TV', 0, 'Fantasy'),
+(6, 'Bleach', 'Bleach.jpeg', 'TV', 0, 'Shonen');
 
 -- --------------------------------------------------------
 
@@ -79,7 +81,9 @@ INSERT INTO `episodes` (`episode_id`, `anime_id`, `episode_title`, `episode_url`
 (13, 1, 'Have You Ever Seen a Cattle Mutilation?', '1XWfgC6kwaLGO-wqbuL0PWZre0-M3KTy3'),
 (14, 1, 'First Love', '1Z8OHWKK7lnfS8ZAZ70kCDfLzUKnu5pOz'),
 (15, 1, 'Let\'s Go to the Cursed House', '1qxp8kNM3O_buJEGy6w-25uFG9ZlLbuOZ'),
-(16, 4, 'I want to Eat Your', '16581f-XHkRy8Y4R4TFd4ZXtEbPPdJup4');
+(16, 4, 'I want to Eat Your', '16581f-XHkRy8Y4R4TFd4ZXtEbPPdJup4'),
+(17, 5, 'Asta and Yuno', '17-Lv_cY9MSrMK098AXgRNCLbP7KM2fJw'),
+(18, 6, 'The Day I Became a Shinigami', '12N8KdEiVdkI6vgJ_yeJ-utl1IhE5IsLf');
 
 -- --------------------------------------------------------
 
@@ -158,13 +162,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `anime`
 --
 ALTER TABLE `anime`
-  MODIFY `anime_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `anime_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `episodes`
 --
 ALTER TABLE `episodes`
-  MODIFY `episode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `episode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `users`
