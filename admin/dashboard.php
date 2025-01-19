@@ -74,14 +74,14 @@ $trendingAnime = $_SESSION['trending_anime'];
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin: 10px;
             padding: 10px;
-            width: 100%;
+            width: 100px;
             text-align: center;
         }
 
         .box-item img {
             border-radius: 10px;
             height: 300px;
-            width: 100%;
+            width: 200px;
             object-fit: cover;
         }
 
