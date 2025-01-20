@@ -6,27 +6,33 @@ include '../pages/dbconnect.php';
 $highlightQuery = "SELECT * FROM highlight_videos";
 $highlightResult = mysqli_query($conn, $highlightQuery);
 
-// Fetch Trending Anime
-$trendingAnimeQuery = "SELECT * FROM anime LIMIT 10";
-$trendingAnimeResult = mysqli_query($conn, $trendingAnimeQuery);
-if (!$trendingAnimeResult) {
-    die("Query Failed: " . mysqli_error($conn));
-}
+// Fetch Trending Anime from session
+if (isset($_SESSION['trending_anime'])) {
+    $trendingAnime = $_SESSION['trending_anime'];
+} else {
+    // Fetch the first 10 anime if no trending anime are set
+    $trendingAnimeQuery = "SELECT * FROM anime LIMIT 10";
+    $trendingAnimeResult = mysqli_query($conn, $trendingAnimeQuery);
+    if (!$trendingAnimeResult) {
+        die("Query Failed: " . mysqli_error($conn));
+    }
+    $numRows = mysqli_num_rows($trendingAnimeResult);
+    echo "Number of rows: " . $numRows; // Debug statement
 
-// Set default trending anime in session storage if not already set
-if (!isset($_SESSION['trending_anime'])) {
-    $_SESSION['trending_anime'] = [];
+    $trendingAnime = [];
     while ($row = mysqli_fetch_assoc($trendingAnimeResult)) {
-        $_SESSION['trending_anime'][] = [
+        $trendingAnime[] = [
             'anime_id' => $row['anime_id'],
             'anime_name' => $row['anime_name'],
             'anime_image' => $row['anime_image']
         ];
     }
+    // Set the default trending anime in session
+    $_SESSION['trending_anime'] = $trendingAnime;
+    echo "<pre>";
+    print_r($_SESSION['trending_anime']); // Debug statement
+    echo "</pre>";
 }
-
-// Retrieve trending anime from session storage
-$trendingAnime = $_SESSION['trending_anime'];
 ?>
 
 <!DOCTYPE html>
@@ -111,10 +117,10 @@ $trendingAnime = $_SESSION['trending_anime'];
         <?php if (mysqli_num_rows($highlightResult) > 0): ?>
             <?php while ($row = mysqli_fetch_assoc($highlightResult)): ?>
                 <div class="box-item">
-                    <h3><?php echo $row['video_name']; ?></h3>
-                    <p>ID: <?php echo $row['video_id']; ?></p>
-                    <p>File ID: <?php echo $row['video_file']; ?></p>
-                    <button onclick="location.href='update_highlight.php?id=<?php echo $row['video_id']; ?>'">Update</button>
+                    <h3><?php echo htmlspecialchars($row['video_name']); ?></h3>
+                    <p>ID: <?php echo htmlspecialchars($row['video_id']); ?></p>
+                    <p>File ID: <?php echo htmlspecialchars($row['video_file']); ?></p>
+                    <button onclick="location.href='update_highlight.php?id=<?php echo htmlspecialchars($row['video_id']); ?>'">Update</button>
                 </div>
             <?php endwhile; ?>
         <?php else: ?>
@@ -126,14 +132,18 @@ $trendingAnime = $_SESSION['trending_anime'];
 <div class="dashboard-container">
     <h2>Trending Anime</h2>
     <div class="box">
-        <?php foreach ($trendingAnime as $anime): ?>
-            <div class="box-item">
-                <img src="../assets/thumbnails/<?php echo $anime['anime_image']; ?>" alt="<?php echo $anime['anime_name']; ?>">
-                <h3><?php echo $anime['anime_name']; ?></h3>
-                <p>ID: <?php echo $anime['anime_id']; ?></p>
-                <button onclick="location.href='update_trending.php'">Update Trending Anime</button>
-            </div>
-        <?php endforeach; ?>
+        <?php if (!empty($trendingAnime)): ?>
+            <?php foreach ($trendingAnime as $anime): ?>
+                <div class="box-item">
+                    <img src="../assets/thumbnails/<?php echo htmlspecialchars($anime['anime_image']); ?>" alt="<?php echo htmlspecialchars($anime['anime_name']); ?>">
+                    <h3><?php echo htmlspecialchars($anime['anime_name']); ?></h3>
+                    <p>ID: <?php echo htmlspecialchars($anime['anime_id']); ?></p>
+                    <button onclick="location.href='update_trending.php'">Update Trending Anime</button>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No trending anime found.</p>
+        <?php endif; ?>
     </div>
 </div>
 

@@ -1,6 +1,48 @@
 <?php
 session_start();
 include '../pages/dbconnect.php';
+
+// Initialize variables to store form data
+$identifierType = '';
+$animeIdentifier = '';
+$successMessage = '';
+$errorMessage = '';
+
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $identifierType = $_POST['identifier_type'];
+    $animeIdentifier = $_POST['anime_identifier'];
+
+    // Prepare the SQL query based on the identifier type
+    if ($identifierType === 'id') {
+        $query = "SELECT * FROM anime WHERE anime_id = ?";
+    } else {
+        $query = "SELECT * FROM anime WHERE anime_name = ?";
+    }
+
+    // Prepare and execute the query
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $animeIdentifier);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Fetch the anime details
+        $animeDetails = $result->fetch_assoc();
+
+        // Update the session with the new trending anime details
+        $_SESSION['trending_anime'] = $animeDetails;
+
+        // Set success message
+        $successMessage = 'Trending anime updated successfully!';
+        // Redirect to dashboard
+        header("Location: dashboard.php");
+        exit();
+    } else {
+        // Set error message if anime not found
+        $errorMessage = 'Anime not found.';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -63,63 +105,38 @@ include '../pages/dbconnect.php';
         .form-container button:hover {
             background-color: #0056b3;
         }
+
+        .form-container .message {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .form-container .success {
+            color: green;
+        }
+
+        .form-container .error {
+            color: red;
+        }
     </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Update Trending Anime</h2>
-        <form id="updateForm">
+        <?php if (!empty($successMessage)): ?>
+            <div class="message success"><?php echo htmlspecialchars($successMessage); ?></div>
+        <?php endif; ?>
+        <?php if (!empty($errorMessage)): ?>
+            <div class="message error"><?php echo htmlspecialchars($errorMessage); ?></div>
+        <?php endif; ?>
+        <form method="post">
             <select name="identifier_type" required>
-                <option value="id">Anime ID</option>
-                <option value="name">Anime Name</option>
+                <option value="id" <?php if ($identifierType === 'id') echo 'selected'; ?>>Anime ID</option>
+                <option value="name" <?php if ($identifierType === 'name') echo 'selected'; ?>>Anime Name</option>
             </select>
-            <input type="text" name="anime_identifier" placeholder="Anime ID or Name" required>
+            <input type="text" name="anime_identifier" placeholder="Anime ID or Name" value="<?php echo htmlspecialchars($animeIdentifier); ?>" required>
             <button type="submit">Update Trending Anime</button>
         </form>
     </div>
-
-    <script>
-        document.getElementById('updateForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const identifierType = document.querySelector('select[name="identifier_type"]').value;
-            const animeIdentifier = document.querySelector('input[name="anime_identifier"]').value;
-
-            // Fetch anime details based on identifier type
-            fetch(`fetch_anime.php?identifier_type=${identifierType}&anime_identifier=${animeIdentifier}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update PHP session with new trending anime details
-                        fetch('update_trending_session.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data)
-                        })
-                        .then(response => response.json())
-                        .then(responseData => {
-                            if (responseData.success) {
-                                alert('Trending anime updated successfully!');
-                                window.location.href = 'dashboard.php';
-                            } else {
-                                alert('Failed to update trending anime session.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error updating session:', error);
-                            alert('An error occurred. Please try again.');
-                        });
-                    } else {
-                        alert('Anime not found.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
-                });
-        });
-    </script>
 </body>
 </html>
