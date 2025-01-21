@@ -5,34 +5,28 @@ include '../pages/dbconnect.php';
 // Fetch Highlight Video
 $highlightQuery = "SELECT * FROM highlight_videos";
 $highlightResult = mysqli_query($conn, $highlightQuery);
-
-// Fetch Trending Anime from session
-if (isset($_SESSION['trending_anime'])) {
-    $trendingAnime = $_SESSION['trending_anime'];
-} else {
-    // Fetch the first 10 anime if no trending anime are set
-    $trendingAnimeQuery = "SELECT * FROM anime LIMIT 10";
-    $trendingAnimeResult = mysqli_query($conn, $trendingAnimeQuery);
-    if (!$trendingAnimeResult) {
-        die("Query Failed: " . mysqli_error($conn));
-    }
-    $numRows = mysqli_num_rows($trendingAnimeResult);
-    echo "Number of rows: " . $numRows; // Debug statement
-
-    $trendingAnime = [];
-    while ($row = mysqli_fetch_assoc($trendingAnimeResult)) {
-        $trendingAnime[] = [
-            'anime_id' => $row['anime_id'],
-            'anime_name' => $row['anime_name'],
-            'anime_image' => $row['anime_image']
-        ];
-    }
-    // Set the default trending anime in session
-    $_SESSION['trending_anime'] = $trendingAnime;
-    echo "<pre>";
-    print_r($_SESSION['trending_anime']); // Debug statement
-    echo "</pre>";
+if (!$highlightResult) {
+    error_log('Highlight query failed: ' . mysqli_error($conn));
 }
+
+// Fetch Trending Anime from the database
+$trendingAnimeQuery = "SELECT * FROM anime ORDER BY RAND() LIMIT 10";
+$trendingAnimeResult = mysqli_query($conn, $trendingAnimeQuery);
+if (!$trendingAnimeResult) {
+    error_log('Query Failed: ' . mysqli_error($conn));
+    die("Query Failed: " . mysqli_error($conn));
+}
+$trendingAnime = [];
+while ($row = mysqli_fetch_assoc($trendingAnimeResult)) {
+    $trendingAnime[] = [
+        'anime_id' => $row['anime_id'],
+        'anime_name' => $row['anime_name'],
+        'anime_image' => $row['anime_image']
+    ];
+}
+
+// Debug statement
+error_log('Trending anime fetched from database: ' . print_r($trendingAnime, true));
 ?>
 
 <!DOCTYPE html>
@@ -80,13 +74,13 @@ if (isset($_SESSION['trending_anime'])) {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin: 10px;
             padding: 10px;
-            width: 100px;
+            width: 200px;
             text-align: center;
         }
 
         .box-item img {
             border-radius: 10px;
-            height: 300px;
+            height: 350px;
             width: 200px;
             object-fit: cover;
         }

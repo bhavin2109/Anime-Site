@@ -6,15 +6,19 @@ if (isset($_GET['identifier_type']) && isset($_GET['anime_identifier'])) {
     $animeIdentifier = $_GET['anime_identifier'];
 
     if ($identifierType == "id") {
-        $query = "SELECT * FROM anime WHERE anime_id = '$animeIdentifier'";
+        $query = "SELECT * FROM anime WHERE anime_id = ?";
     } else {
-        $query = "SELECT * FROM anime WHERE anime_name = '$animeIdentifier'";
+        $query = "SELECT * FROM anime WHERE anime_name = ?";
     }
 
-    $result = mysqli_query($conn, $query);
+    // Prepare and execute the query
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $animeIdentifier);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (mysqli_num_rows($result) > 0) {
-        $anime = mysqli_fetch_assoc($result);
+    if ($result->num_rows > 0) {
+        $anime = $result->fetch_assoc();
         echo json_encode([
             'success' => true,
             'anime_id' => $anime['anime_id'],
