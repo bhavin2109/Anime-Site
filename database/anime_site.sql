@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 18, 2025 at 11:41 AM
+-- Generation Time: Jan 22, 2025 at 06:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,7 +46,12 @@ INSERT INTO `anime` (`anime_id`, `anime_name`, `anime_image`, `anime_type`, `epi
 (3, 'Wind Breaker', 'Wind Breaker - S01.jpeg', 'TV', 0, 'Action'),
 (4, 'I want to Eat Your Pancreas', 'i want to eat your pancreas.jpg', 'Movie', 0, 'Romance'),
 (5, 'Black Clover', 'Black Clover.jpeg', 'TV', 0, 'Fantasy'),
-(6, 'Bleach', 'Bleach.jpeg', 'TV', 0, 'Shonen');
+(6, 'Bleach', 'Bleach.jpeg', 'TV', 0, 'Shonen'),
+(7, 'Jujutsu Kaisen', 'Jujutsu Kaisen - S01.jpeg', 'TV', 0, 'Action'),
+(8, 'Chainsaw Man', 'Chainsaw Man - S01.jpeg', 'TV', 0, 'Action'),
+(9, 'Demon Slayer', 'Demon Slayer - Kimetsu no Yaiba.jpg', 'TV', 0, 'Action'),
+(10, 'Steins Gate', 'steins gate.jpg', 'TV', 0, 'Isekai'),
+(11, 'Solo Leveling', 'Solo Leveling - S01.jpg', 'TV', 0, 'Action');
 
 -- --------------------------------------------------------
 
@@ -162,7 +167,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `anime`
 --
 ALTER TABLE `anime`
-  MODIFY `anime_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `anime_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `episodes`

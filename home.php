@@ -1,3 +1,36 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: ./pages/login.php");
+    exit();
+}
+
+// Include database connection
+include './pages/dbconnect.php';
+
+// Fetch highlight video
+$highlightVideoQuery = "SELECT * FROM highlight_videos WHERE video_id = 1 LIMIT 1";
+$highlightVideoResult = $conn->query($highlightVideoQuery);
+$highlightVideo = $highlightVideoResult->fetch_assoc();
+
+// Fetch trending anime randomly
+$trendingAnimeQuery = "SELECT * FROM anime ORDER BY RAND() LIMIT 10";
+$trendingAnimeResult = $conn->query($trendingAnimeQuery);
+
+// Check if the query was successful
+if (!$trendingAnimeResult) {
+    error_log('Trending anime query failed: ' . mysqli_error($conn));
+    $trendingAnime = [];
+} else {
+    $trendingAnime = [];
+    while ($anime = $trendingAnimeResult->fetch_assoc()) {
+        $trendingAnime[] = $anime;
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -136,7 +169,7 @@
             align-items: center;
         }
 
-        .contact-us ul li img {
+        .contact-us ul li a img {
             width: 24px;
             height: 24px;
             margin-right: 10px;
@@ -171,28 +204,6 @@
 </head>
 
 <body>
-    <?php
-    session_start();
-
-    // Check if the user is logged in
-    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-        header("Location: ./pages/login.php");
-        exit();
-    }
-
-    // Include database connection
-    include './pages/dbconnect.php';
-
-    // Fetch highlight video
-    $highlightVideoQuery = "SELECT * FROM highlight_videos WHERE video_id = 1 LIMIT 1";
-    $highlightVideoResult = $conn->query($highlightVideoQuery);
-    $highlightVideo = $highlightVideoResult->fetch_assoc();
-
-    // Fetch trending anime
-    $trendingAnimeQuery = "SELECT * FROM anime LIMIT 10 ";
-    $trendingAnimeResult = $conn->query($trendingAnimeQuery);
-
-    ?>
     <!-- Header -->
     <header>
         <nav>
@@ -201,7 +212,7 @@
             </div>
             <div class="options">
                 <a href="home.php">Home</a>
-                <a href="#">Anime List</a>
+                <a href="./pages/explore.php">Explore</a>
                 <a href="#">Category</a>
                 <a href="./pages/profile.php">Profile</a>
             </div>
@@ -220,14 +231,18 @@
         </section>
 
         <section>
-            <h2>Trending</h2>
+            <h2 style="text-align: center;">Anime Suggestions</h2>
             <div class="box-container">
-                <?php while ($anime = $trendingAnimeResult->fetch_assoc()): ?>
-                    <a href="./pages/player.php?anime_id=<?php echo $anime['anime_id']; ?>&episode=1" class="box-anime">
-                        <img src="./assets/thumbnails/<?php echo $anime['anime_image']; ?>">
-                        <div class="anime_name"><?php echo isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'; ?></div>
-                    </a>
-                <?php endwhile; ?>
+                <?php if (!empty($trendingAnime)): ?>
+                    <?php foreach ($trendingAnime as $anime): ?>
+                        <a href="./pages/player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>&episode=1" class="box-anime">
+                            <img src="./assets/thumbnails/<?php echo htmlspecialchars($anime['anime_image']); ?>">
+                            <div class="anime_name"><?php echo htmlspecialchars(isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'); ?></div>
+                        </a>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No trending anime found.</p>
+                <?php endif; ?>
             </div>
         </section>
     </main>

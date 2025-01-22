@@ -1,0 +1,276 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: ./pages/login.php");
+    exit();
+}
+
+// Include database connection
+include 'dbconnect.php';
+
+// Fetch anime by genre with episode count
+$genres = ['Action', 'Comedy', 'Drama', 'Fantasy']; // Define the genres you want to display
+$animeByGenre = [];
+
+foreach ($genres as $genre) {
+    $query = "
+        SELECT 
+            a.anime_id, 
+            a.anime_name, 
+            a.anime_image, 
+            a.anime_type, 
+            COUNT(e.episode_id) AS episode_count
+        FROM 
+            anime a
+        LEFT JOIN 
+            episodes e ON a.anime_id = e.anime_id
+        WHERE 
+            a.genre = ?
+        GROUP BY 
+            a.anime_id, a.anime_name, a.anime_image, a.anime_type
+        LIMIT 10
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $genre);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $animeByGenre[$genre] = $result->fetch_all(MYSQLI_ASSOC);
+}
+
+
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Anime</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            box-shadow: 0px 0px 30px rgba(227, 228, 237, 0.37);
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(255, 255, 255, 0.18);
+            color: #fff;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .options a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: 0.3s;  
+        }
+
+        .options a:hover {
+            background-color: rgba(101, 101, 101, 0.8);
+        }
+
+        .search-section input {
+            padding: 5px;
+        }
+
+        .video-container {
+            position: relative;
+            top: -8vh;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1vh;
+        }
+
+        video {
+            object-fit: cover;
+        }
+
+        .video-home {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .genre-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .genre-box {
+            width: 100%;
+            height: 150vh;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .genre-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .anime-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .anime-item {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            transition: 0.3s;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .anime-item:hover {
+            background-color: #e0e0e0;
+        }
+
+        .anime-item img {
+            width: 100px;
+            height: 150px;
+            border-radius: 4px;
+            margin-right: 20px;
+        }
+
+        .anime-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            height: 100%;
+        }
+
+        .anime-details .anime_name {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .anime-details .anime-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .anime-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .additional-section {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .additional-section h2 {
+            margin-bottom: 20px;
+        }
+
+        .additional-section p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <?php include '../includes/header.php'; ?>
+
+    <!-- Main Content -->
+    <main>
+        
+        <section class="genre-container">
+            <?php foreach ($genres as $genre): ?>
+                <div class="genre-box">
+                    <h2><?php echo htmlspecialchars($genre); ?></h2>
+                    <div class="anime-grid">
+                        <?php if (!empty($animeByGenre[$genre])): ?>
+                            <?php foreach ($animeByGenre[$genre] as $anime): ?>
+                                <a href="./pages/player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>&episode=1" class="anime-item">
+                                    <img src="../assets/thumbnails/<?php echo htmlspecialchars($anime['anime_image']); ?>">
+                                    <div class="anime-details">
+                                        <div class="anime_name"><?php echo htmlspecialchars(isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'); ?></div>
+                                        <div class="anime-info">
+                                            <span>Episodes: <?php echo htmlspecialchars(isset($anime['episode_count']) ? $anime['episode_count'] : 'N/A'); ?></span>
+                                            <span>Type: <?php echo htmlspecialchars(isset($anime['anime_type']) ? $anime['anime_type'] : 'N/A'); ?></span>
+                                        </div>
+                                    </div>
+                                </a>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>No anime found in this genre.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </section>
+
+        <!-- Additional Sections -->
+        <section class="additional-section">
+            <h2>About Us</h2>
+            <p>Welcome to our anime streaming platform! We offer a wide variety of anime across different genres. Enjoy your favorite shows and discover new ones.</p>
+        </section>
+
+        <section class="additional-section">
+            <h2>Popular Anime</h2>
+            <p>Check out our most popular anime series that have captured the hearts of many viewers.</p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <?php include 'footer.php'; ?>
+</body>
+
+</html>
+<?php
+$conn->close();
+?>

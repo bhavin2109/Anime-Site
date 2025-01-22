@@ -50,7 +50,7 @@
             </div>
             <div class="options">
                 <a href="../home.php">Home</a>
-                <a href="#">Anime List</a>
+                <a href="../pages/explore.php">Explore</a>
                 <a href="#">Category</a>
                 <a href="../pages/profile.php">Profile</a>
             </div>
