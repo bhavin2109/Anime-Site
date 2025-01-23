@@ -45,16 +45,25 @@ def push_to_github():
         print(f"Git operation failed: {e}")
 
 
+def get_database_checksum():
+    """Returns a checksum of the current database state."""
+    checksum_cmd = f'"{MYSQL_BIN_PATH}/mysqldump" -u {DB_USER} --password={DB_PASSWORD} {DB_NAME} | md5sum'
+    result = subprocess.run(checksum_cmd, shell=True, capture_output=True, text=True)
+    return result.stdout.strip()
+
+
 def monitor_changes():
     global db_last_export_time, file_last_modified_time
 
+    last_db_checksum = get_database_checksum()
+
     while True:
         # Monitor for changes in the database
-        current_time = datetime.now()
-        if (current_time - db_last_export_time).seconds >= 10:  # Check every 10 seconds
-            print("Exporting database to sync changes...")
+        current_db_checksum = get_database_checksum()
+        if current_db_checksum != last_db_checksum:
+            print("Changes detected in the database. Exporting to sync changes...")
             export_database()
-            db_last_export_time = current_time
+            last_db_checksum = current_db_checksum
 
             # Automatically push the updated file to GitHub
             push_to_github()
