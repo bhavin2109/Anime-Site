@@ -62,7 +62,9 @@ foreach ($genres as $genre) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #000000, #1a1a1a, #333333, #000000);
+            background-size: 300% 300%;
+            animation: gradient-animation 4s ease infinite;
         }
 
         header {
@@ -144,7 +146,6 @@ foreach ($genres as $genre) {
             background-size: 300% 300%;
             animation: gradient-animation 15s ease infinite;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
             padding: 20px;
         }

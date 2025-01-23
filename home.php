@@ -1,4 +1,3 @@
-<file file_path=home.php>
 <?php
 session_start();
 
@@ -10,6 +9,13 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 // Include database connection
 include './pages/dbconnect.php';
+
+// Fetch Slider Images
+$sliderQuery = "SELECT * FROM slider ORDER BY RAND() LIMIT 7";
+$sliderResult = mysqli_query($conn, $sliderQuery);
+if (!$sliderResult) {
+    error_log('Slider query failed: ' . mysqli_error($conn));
+}
 
 // Fetch highlight images
 $highlightImagesQuery = "SELECT * FROM slider ORDER BY RAND() LIMIT 7";
@@ -48,9 +54,9 @@ if (!$trendingAnimeResult) {
 
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, cyan, pink, green);
+            background: linear-gradient(135deg, #000000, #1a1a1a, #333333, #000000);
             background-size: 300% 300%;
-            animation: gradient-animation 15s ease infinite;
+            animation: gradient-animation 4s ease infinite;
             color: #333;
         }
 
@@ -108,52 +114,93 @@ if (!$trendingAnimeResult) {
             border: none;
             border-radius: 5px;
         }
+
+        main {
+            display: flex;
+            flex-direction: column;
+        }
+
         .slider-container {
             position: relative;
-            width: 100%;
+            justify-self: center;
+            align-self: center;
+            top: 0;
+            width: 80%;
             height: 80vh;
             overflow: hidden;
             display: flex;
+            border-radius: 8px;
             align-items: center;
             justify-content: center;
         }
 
         .slider {
             display: flex;
-            width: 700%;
+            width: 100%;
             height: 100%;
-            animation: slide 35s ease infinite;
+            transition: transform 0.5s ease-in-out;
         }
 
-        .slider img {
+        .slider-item {
             width: 100%;
             height: 100%;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-item img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             cursor: pointer;
+            max-width: 100%;
+            max-height: 100%;
         }
 
-        @keyframes slide {
-            0% { transform: translateX(0); }
-            14.28% { transform: translateX(0); }
-            14.29% { transform: translateX(-100%); }
-            28.57% { transform: translateX(-100%); }
-            28.58% { transform: translateX(-200%); }
-            42.85% { transform: translateX(-200%); }
-            42.86% { transform: translateX(-300%); }
-            57.14% { transform: translateX(-300%); }
-            57.15% { transform: translateX(-400%); }
-            71.42% { transform: translateX(-400%); }
-            71.43% { transform: translateX(-500%); }
-            85.71% { transform: translateX(-500%); }
-            85.72% { transform: translateX(-600%); }
-            100% { transform: translateX(-600%); }
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 10;
         }
 
+        .slider-nav button {
+            background: rgba(0, 0, 0, 0.1);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 10%;
+            transition: background 0.3s;
+        }
+
+        .slider-nav button:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .options {
+                margin-top: 10px;
+            }
+
+            .search-section {
+                margin-top: 10px;
+            }
+        }
         .box-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            gap: 60px;
             justify-content: center;
             margin: 20px 0;
             padding: 0 20px;
@@ -163,11 +210,10 @@ if (!$trendingAnimeResult) {
             width: 100%;
             text-align: center;
             text-decoration: none;
-            color: #333;
+            color: #fff;
             transition: transform 0.3s;
-            background-color: #fff;
+            background: transparent;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
@@ -176,9 +222,14 @@ if (!$trendingAnimeResult) {
         }
 
         .box-anime img {
-            width: 100%;
+            width: 200px;
             height: 300px;
-            border-radius: 8px 8px 0 0;
+            border-radius: 8px;
+        }
+
+        .box-anime .anime_name {
+            padding: 10px;
+            font-size: 1.2rem;
         }
 
         .footer-container {
@@ -186,8 +237,8 @@ if (!$trendingAnimeResult) {
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             justify-content: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 50px 150px;
+            background-color: #333;
             color: #fff;
             height: auto;
         }
@@ -286,17 +337,23 @@ if (!$trendingAnimeResult) {
     <!-- Main Content -->
     <main>
         <section class="slider-container">
-            <div class="slider">
+            <div class="slider" id="slider">
                 <?php foreach ($highlightImages as $image): ?>
-                    <a href="./pages/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode=1">
-                        <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
-                    </a>
+                    <div class="slider-item">
+                        <a href="./pages/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode=1">
+                            <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
+                        </a>
+                    </div>
                 <?php endforeach; ?>
+            </div>
+            <div class="slider-nav">
+                <button id="prev">&#10094;</button>
+                <button id="next">&#10095;</button>
             </div>
         </section>
 
         <section>
-            <h2 style="text-align: center; margin: 20px 0;">Anime Suggestions</h2>
+            <h2 style="text-align: center; margin: 50px 0; color:#fff;">Anime Suggestions</h2>
             <div class="box-container">
                 <?php if (!empty($trendingAnime)): ?>
                     <?php foreach ($trendingAnime as $anime): ?>
@@ -337,12 +394,30 @@ if (!$trendingAnimeResult) {
                 </form>
             </div>
         </section>
-        <p style="height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center;">&copy; Group No.1</p>
+        <p style="height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center; color:#fff;">&copy; Group No.1</p>
     </footer>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const prev = document.getElementById('prev');
+        const next = document.getElementById('next');
+        let currentIndex = 0;
+        const items = slider.children;
+        const totalItems = items.length;
+
+        prev.addEventListener('click', () => {
+            currentIndex = (currentIndex === 0) ? totalItems - 1 : currentIndex - 1;
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        });
+
+        next.addEventListener('click', () => {
+            currentIndex = (currentIndex === totalItems - 1) ? 0 : currentIndex + 1;
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        });
+    </script>
 </body>
 
 </html>
 <?php
 $conn->close();
 ?>
-</file>

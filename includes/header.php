@@ -7,8 +7,7 @@
     <title>Document</title>
     <style>
         header {
-            background-color: rgba(159, 159, 159, 0.8);
-            opacity: 0.8;
+            background:transparent;
             color: #fff;
             padding: 10px 0;
             position: sticky;
