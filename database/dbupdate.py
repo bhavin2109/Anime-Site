@@ -75,7 +75,7 @@ def monitor_changes():
             import_database()
             file_last_modified_time = current_file_modified_time
 
-        time.sleep(1)  # Check for changes every 5 seconds
+        time.sleep(5)  # Check for changes every 5 seconds
 
 
 if __name__ == "__main__":
