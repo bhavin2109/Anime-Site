@@ -1,6 +1,16 @@
 <?php
 include '../pages/dbconnect.php';
 
+// Fetch anime list from the database
+$anime_list = [];
+$sql = "SELECT anime_id, anime_name FROM anime";
+$result = mysqli_query($conn, $sql);
+if (mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $anime_list[] = $row;
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["anime_name"])) {
         $anime_name = $_POST["anime_name"];
@@ -39,6 +49,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             echo "<script>alert('Error uploading movie image.');</script>";
+        }
+    } elseif (isset($_POST["slider_anime_id"])) {
+        $slider_anime_id = $_POST["slider_anime_id"];
+        $slider_image = $_FILES["slider_image"]["name"];
+        $target_dir = "../assets/slider/";
+        $target_file = $target_dir . basename($slider_image);
+
+        // Fetch the number of episodes for the selected anime
+        $sql = "SELECT episodes FROM anime WHERE anime_id = '$slider_anime_id'";
+        $result = mysqli_query($conn, $sql);
+        $episodes = 0;
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $episodes = $row['episodes'];
+        }
+
+        if (move_uploaded_file($_FILES["slider_image"]["tmp_name"], $target_file)) {
+            $sql = "INSERT INTO slider (anime_id, slider_image, episodes) VALUES ('$slider_anime_id', '$slider_image', '$episodes')";
+            if (mysqli_query($conn, $sql)) {
+                echo "<script>alert('Slider added successfully!');</script>";
+                echo "<script>window.location.href = 'dashboard.php';</script>";
+            } else {
+                echo "<script>alert('Error adding slider: " . mysqli_error($conn) . "');</script>";
+            }
+        } else {
+            echo "<script>alert('Error uploading slider image.');</script>";
         }
     }
 }
@@ -131,6 +167,19 @@ mysqli_close($conn);
             <button type="submit">Add Movie</button>
         </form>
     </div>
+
+    <div class="form-container">
+        <h2>Add Slider</h2>
+        <form action="add.php" method="post" enctype="multipart/form-data">
+            <select name="slider_anime_id" class="input-box" required>
+                <option value="">Select Anime</option>
+                <?php foreach ($anime_list as $anime): ?>
+                    <option value="<?php echo $anime['anime_id']; ?>"><?php echo $anime['anime_name']; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <input type="file" name="slider_image" class="input-box" required>
+            <button type="submit">Add Slider</button>
+        </form>
     </div>
 </body>
 </html>

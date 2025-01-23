@@ -1,3 +1,4 @@
+<file file_path=home.php>
 <?php
 session_start();
 
@@ -10,10 +11,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 // Include database connection
 include './pages/dbconnect.php';
 
-// Fetch highlight video
-$highlightVideoQuery = "SELECT * FROM highlight_videos WHERE video_id = 1 LIMIT 1";
-$highlightVideoResult = $conn->query($highlightVideoQuery);
-$highlightVideo = $highlightVideoResult->fetch_assoc();
+// Fetch highlight images
+$highlightImagesQuery = "SELECT * FROM slider ORDER BY RAND() LIMIT 7";
+$highlightImagesResult = $conn->query($highlightImagesQuery);
+$highlightImages = $highlightImagesResult->fetch_all(MYSQLI_ASSOC);
 
 // Fetch trending anime randomly
 $trendingAnimeQuery = "SELECT * FROM anime ORDER BY RAND() LIMIT 10";
@@ -47,15 +48,28 @@ if (!$trendingAnimeResult) {
 
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, cyan, pink, green);
+            background-size: 300% 300%;
+            animation: gradient-animation 15s ease infinite;
+            color: #333;
+        }
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         header {
-            box-shadow: 0px 0px 30px rgba(227, 228, 237, 0.37);
-            backdrop-filter: blur(30px);
-            border: 2px solid rgba(255, 255, 255, 0.18);
+            background: transparent;
             color: #fff;
             padding: 10px 0;
             position: sticky;
@@ -82,42 +96,63 @@ if (!$trendingAnimeResult) {
             margin: 0 10px;
             padding: 10px;
             border-radius: 5px;
-            transition: 0.3s;  
+            transition: background-color 0.3s;
         }
 
         .options a:hover {
-            background-color: rgba(101, 101, 101, 0.8);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .search-section input {
             padding: 5px;
+            border: none;
+            border-radius: 5px;
         }
-
-        .video-container {
+        .slider-container {
             position: relative;
-            top: -8vh;
             width: 100%;
-            height: 100vh;
+            height: 80vh;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 1vh;
         }
 
-        video {
-            object-fit: cover;
+        .slider {
+            display: flex;
+            width: 700%;
+            height: 100%;
+            animation: slide 35s ease infinite;
         }
 
-        .video-home {
+        .slider img {
             width: 100%;
             height: 100%;
-            border: none;
+            flex-shrink: 0;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            14.28% { transform: translateX(0); }
+            14.29% { transform: translateX(-100%); }
+            28.57% { transform: translateX(-100%); }
+            28.58% { transform: translateX(-200%); }
+            42.85% { transform: translateX(-200%); }
+            42.86% { transform: translateX(-300%); }
+            57.14% { transform: translateX(-300%); }
+            57.15% { transform: translateX(-400%); }
+            71.42% { transform: translateX(-400%); }
+            71.43% { transform: translateX(-500%); }
+            85.71% { transform: translateX(-500%); }
+            85.72% { transform: translateX(-600%); }
+            100% { transform: translateX(-600%); }
         }
 
         .box-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             justify-content: center;
             margin: 20px 0;
@@ -129,7 +164,11 @@ if (!$trendingAnimeResult) {
             text-align: center;
             text-decoration: none;
             color: #333;
-            transition: 0.3s;
+            transition: transform 0.3s;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
         .box-anime:hover {
@@ -137,19 +176,20 @@ if (!$trendingAnimeResult) {
         }
 
         .box-anime img {
-            width: 200px;
+            width: 100%;
             height: 300px;
-            border-radius: 4px;
+            border-radius: 8px 8px 0 0;
         }
 
         .footer-container {
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            justify-content: center;
             padding: 20px;
-            background-color: #333;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: #fff;
-            height: 60vh;
+            height: auto;
         }
 
         .contact-us ul {
@@ -158,7 +198,7 @@ if (!$trendingAnimeResult) {
         }
 
         .contact-us ul li {
-            margin: 10px 0px;
+            margin: 10px 0;
             padding: 5px;
         }
 
@@ -177,28 +217,49 @@ if (!$trendingAnimeResult) {
 
         .feedback-container input {
             display: block;
-            width: 30vw;
+            width: 100%;
             margin: 10px 0;
             border: none;
             border-radius: 8px;
             padding: 10px;
+            box-sizing: border-box;
         }
+
         .feedback-container input[type="text"] {
             height: 150px;
         }
 
         .submit-btn {
-            background-color: gray;
-            color: black;
+            background-color: #fff;
+            color: #333;
             border: none;
             padding: 10px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: background-color 0.3s;
+            border-radius: 5px;
         }
 
         .submit-btn:hover {
-            background-color: rgba(101, 101, 101, 0.8);
-            color: white;
+            background-color: #ddd;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .options {
+                margin-top: 10px;
+            }
+
+            .search-section {
+                margin-top: 10px;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -224,14 +285,18 @@ if (!$trendingAnimeResult) {
 
     <!-- Main Content -->
     <main>
-        <section class="video-container">
-            <?php if ($highlightVideo): ?>
-                <video src="./assets/videos/<?php echo $highlightVideo['video_file']; ?>" class="video-home" autoplay muted loop></video>
-            <?php endif; ?>
+        <section class="slider-container">
+            <div class="slider">
+                <?php foreach ($highlightImages as $image): ?>
+                    <a href="./pages/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode=1">
+                        <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
+                    </a>
+                <?php endforeach; ?>
+            </div>
         </section>
 
         <section>
-            <h2 style="text-align: center;">Anime Suggestions</h2>
+            <h2 style="text-align: center; margin: 20px 0;">Anime Suggestions</h2>
             <div class="box-container">
                 <?php if (!empty($trendingAnime)): ?>
                     <?php foreach ($trendingAnime as $anime): ?>
@@ -272,7 +337,7 @@ if (!$trendingAnimeResult) {
                 </form>
             </div>
         </section>
-        <p style=" height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center;">&copy; Group No.1</p>
+        <p style="height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center;">&copy; Group No.1</p>
     </footer>
 </body>
 
@@ -280,3 +345,4 @@ if (!$trendingAnimeResult) {
 <?php
 $conn->close();
 ?>
+</file>

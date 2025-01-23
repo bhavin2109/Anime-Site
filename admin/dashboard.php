@@ -2,11 +2,11 @@
 session_start();
 include '../pages/dbconnect.php';
 
-// Fetch Highlight Video
-$highlightQuery = "SELECT * FROM highlight_videos";
-$highlightResult = mysqli_query($conn, $highlightQuery);
-if (!$highlightResult) {
-    error_log('Highlight query failed: ' . mysqli_error($conn));
+// Fetch Slider Images
+$sliderQuery = "SELECT * FROM slider ORDER BY RAND() LIMIT 7";
+$sliderResult = mysqli_query($conn, $sliderQuery);
+if (!$sliderResult) {
+    error_log('Slider query failed: ' . mysqli_error($conn));
 }
 
 // Fetch Trending Anime from the database
@@ -60,6 +60,42 @@ error_log('Trending anime fetched from database: ' . print_r($trendingAnime, tru
             margin-bottom: 20px;
         }
 
+        .slider {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slides img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .navigation {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .navigation button {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+        }
+
         .box {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -106,20 +142,21 @@ error_log('Trending anime fetched from database: ' . print_r($trendingAnime, tru
 </head>
 <body>
 <div class="dashboard-container">
-    <h2>Highlight Video</h2>
-    <div class="box">
-        <?php if (mysqli_num_rows($highlightResult) > 0): ?>
-            <?php while ($row = mysqli_fetch_assoc($highlightResult)): ?>
-                <div class="box-item">
-                    <h3><?php echo htmlspecialchars($row['video_name']); ?></h3>
-                    <p>ID: <?php echo htmlspecialchars($row['video_id']); ?></p>
-                    <p>File ID: <?php echo htmlspecialchars($row['video_file']); ?></p>
-                    <button onclick="location.href='update_highlight.php?id=<?php echo htmlspecialchars($row['video_id']); ?>'">Update</button>
-                </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>No highlight videos found.</p>
-        <?php endif; ?>
+    <h2>Slider Images</h2>
+    <div class="slider">
+        <div class="slides">
+            <?php if (mysqli_num_rows($sliderResult) > 0): ?>
+                <?php while ($row = mysqli_fetch_assoc($sliderResult)): ?>
+                    <img src="../assets/slider/<?php echo htmlspecialchars($row['slider_image']); ?>" alt="<?php echo htmlspecialchars($row['slider_image']); ?>">
+                <?php endwhile; ?>
+            <?php else: ?>
+                <p>No slider images found.</p>
+            <?php endif; ?>
+        </div>
+        <div class="navigation">
+            <button onclick="prevSlide()">&#10094;</button>
+            <button onclick="nextSlide()">&#10095;</button>
+        </div>
     </div>
 </div>
 
@@ -140,6 +177,27 @@ error_log('Trending anime fetched from database: ' . print_r($trendingAnime, tru
         <?php endif; ?>
     </div>
 </div>
+
+<script>
+    let slideIndex = 0;
+    const slides = document.querySelector('.slides');
+    const totalSlides = slides.children.length;
+
+    function showSlide(index) {
+        slideIndex = (index + totalSlides) % totalSlides;
+        slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+    }
+
+    function nextSlide() {
+        showSlide(slideIndex + 1);
+    }
+
+    function prevSlide() {
+        showSlide(slideIndex - 1);
+    }
+
+    setInterval(nextSlide, 3000);
+</script>
 
 </body>
 </html>

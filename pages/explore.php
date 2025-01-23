@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 include 'dbconnect.php';
 
 // Fetch anime by genre with episode count
-$genres = ['Action', 'Comedy', 'Drama', 'Fantasy']; // Define the genres you want to display
+$genres = ['Action', 'Adventure', 'Romance', 'Fantasy']; // Define the genres you want to display
 $animeByGenre = [];
 
 foreach ($genres as $genre) {
@@ -30,6 +30,8 @@ foreach ($genres as $genre) {
             a.genre = ?
         GROUP BY 
             a.anime_id, a.anime_name, a.anime_image, a.anime_type
+        ORDER BY
+            RAND()
         LIMIT 10
     ";
     $stmt = $conn->prepare($query);
@@ -93,7 +95,7 @@ foreach ($genres as $genre) {
             margin: 0 10px;
             padding: 10px;
             border-radius: 5px;
-            transition: 0.3s;  
+            transition: 0.3s;
         }
 
         .options a:hover {
@@ -138,11 +140,27 @@ foreach ($genres as $genre) {
         .genre-box {
             width: 100%;
             height: 150vh;
-            background-color: white;
+            background: linear-gradient(135deg, cyan, pink, green);
+            background-size: 300% 300%;
+            animation: gradient-animation 15s ease infinite;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
             padding: 20px;
+        }
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .genre-box h2 {
@@ -164,7 +182,7 @@ foreach ($genres as $genre) {
             transition: 0.3s;
             padding: 10px;
             border-radius: 5px;
-            background-color: #f9f9f9;
+            background: transparent;
         }
 
         .anime-item:hover {
@@ -227,7 +245,7 @@ foreach ($genres as $genre) {
 
     <!-- Main Content -->
     <main>
-        
+
         <section class="genre-container">
             <?php foreach ($genres as $genre): ?>
                 <div class="genre-box">
