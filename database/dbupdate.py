@@ -45,22 +45,29 @@ def push_to_github():
         print(f"Git operation failed: {e}")
 
 
-while True:
-    # Monitor for changes in the database
-    current_time = datetime.now()
-    if (current_time - db_last_export_time).seconds >= 10:  # Check every 10 seconds
-        print("Exporting database to sync changes...")
-        export_database()
-        db_last_export_time = current_time
+def monitor_changes():
+    global db_last_export_time, file_last_modified_time
 
-        # Automatically push the updated file to GitHub
-        push_to_github()
+    while True:
+        # Monitor for changes in the database
+        current_time = datetime.now()
+        if (current_time - db_last_export_time).seconds >= 10:  # Check every 10 seconds
+            print("Exporting database to sync changes...")
+            export_database()
+            db_last_export_time = current_time
 
-    # Monitor for changes in the .sql file
-    current_file_modified_time = os.path.getmtime(SQL_FILE)
-    if current_file_modified_time != file_last_modified_time:
-        print("Changes detected in the .sql file. Updating the database...")
-        import_database()
-        file_last_modified_time = current_file_modified_time
+            # Automatically push the updated file to GitHub
+            push_to_github()
 
-    time.sleep(5)  # Check for changes every 5 seconds
+        # Monitor for changes in the .sql file
+        current_file_modified_time = os.path.getmtime(SQL_FILE)
+        if current_file_modified_time != file_last_modified_time:
+            print("Changes detected in the .sql file. Updating the database...")
+            import_database()
+            file_last_modified_time = current_file_modified_time
+
+        time.sleep(5)  # Check for changes every 5 seconds
+
+
+if __name__ == "__main__":
+    monitor_changes()
