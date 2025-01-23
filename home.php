@@ -118,6 +118,7 @@ if (!$trendingAnimeResult) {
         main {
             display: flex;
             flex-direction: column;
+            margin-top: 5vh;
         }
 
         .slider-container {
@@ -157,6 +158,7 @@ if (!$trendingAnimeResult) {
             cursor: pointer;
             max-width: 100%;
             max-height: 100%;
+            box-shadow: inset 0 0 10px 10px rgba(0, 0, 0, 0.5);
         }
 
         .slider-nav {
@@ -414,6 +416,10 @@ if (!$trendingAnimeResult) {
             currentIndex = (currentIndex === totalItems - 1) ? 0 : currentIndex + 1;
             slider.style.transform = `translateX(-${currentIndex * 100}%)`;
         });
+
+        setInterval(() => {
+            next.click();
+        }, 5000);
     </script>
 </body>
 

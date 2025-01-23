@@ -196,7 +196,7 @@ error_log('Trending anime fetched from database: ' . print_r($trendingAnime, tru
         showSlide(slideIndex - 1);
     }
 
-    setInterval(nextSlide, 3000);
+    setInterval(nextSlide, 2000);
 </script>
 
 </body>

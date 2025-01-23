@@ -67,69 +67,7 @@ foreach ($genres as $genre) {
             animation: gradient-animation 4s ease infinite;
         }
 
-        header {
-            box-shadow: 0px 0px 30px rgba(227, 228, 237, 0.37);
-            backdrop-filter: blur(30px);
-            border: 2px solid rgba(255, 255, 255, 0.18);
-            color: #fff;
-            padding: 10px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .logo img {
-            height: 50px;
-        }
-
-        .options a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-
-        .options a:hover {
-            background-color: rgba(101, 101, 101, 0.8);
-        }
-
-        .search-section input {
-            padding: 5px;
-        }
-
-        .video-container {
-            position: relative;
-            top: -8vh;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 1vh;
-        }
-
-        video {
-            object-fit: cover;
-        }
-
-        .video-home {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
+        
         .genre-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -147,6 +85,8 @@ foreach ($genres as $genre) {
             animation: gradient-animation 15s ease infinite;
             border-radius: 10px;
             overflow-y: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
             padding: 20px;
         }
 
@@ -254,7 +194,7 @@ foreach ($genres as $genre) {
                     <div class="anime-grid">
                         <?php if (!empty($animeByGenre[$genre])): ?>
                             <?php foreach ($animeByGenre[$genre] as $anime): ?>
-                                <a href="./pages/player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>&episode=1" class="anime-item">
+                                <a href="player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>&episode=1" class="anime-item">
                                     <img src="../assets/thumbnails/<?php echo htmlspecialchars($anime['anime_image']); ?>">
                                     <div class="anime-details">
                                         <div class="anime_name"><?php echo htmlspecialchars(isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'); ?></div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 22, 2025 at 06:25 AM
+-- Generation Time: Jan 23, 2025 at 06:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -51,7 +51,8 @@ INSERT INTO `anime` (`anime_id`, `anime_name`, `anime_image`, `anime_type`, `epi
 (8, 'Chainsaw Man', 'Chainsaw Man - S01.jpeg', 'TV', 0, 'Action'),
 (9, 'Demon Slayer', 'Demon Slayer - Kimetsu no Yaiba.jpg', 'TV', 0, 'Action'),
 (10, 'Steins Gate', 'steins gate.jpg', 'TV', 0, 'Isekai'),
-(11, 'Solo Leveling', 'Solo Leveling - S01.jpg', 'TV', 0, 'Action');
+(12, 'One Piece', 'OnePiece.jpg', 'TV', 0, 'Adventure'),
+(13, 'Kaiju No.8', 'kaiju no.8.jpg', 'TV', 0, 'Action');
 
 -- --------------------------------------------------------
 
@@ -88,7 +89,9 @@ INSERT INTO `episodes` (`episode_id`, `anime_id`, `episode_title`, `episode_url`
 (15, 1, 'Let\'s Go to the Cursed House', '1qxp8kNM3O_buJEGy6w-25uFG9ZlLbuOZ'),
 (16, 4, 'I want to Eat Your', '16581f-XHkRy8Y4R4TFd4ZXtEbPPdJup4'),
 (17, 5, 'Asta and Yuno', '17-Lv_cY9MSrMK098AXgRNCLbP7KM2fJw'),
-(18, 6, 'The Day I Became a Shinigami', '12N8KdEiVdkI6vgJ_yeJ-utl1IhE5IsLf');
+(18, 6, 'The Day I Became a Shinigami', '12N8KdEiVdkI6vgJ_yeJ-utl1IhE5IsLf'),
+(19, 12, 'I\'m Luffy! The Man Who\'s Gonna Be King of the Pirates!', '1nqcISCX9jjsd6ihKR_Ux6fJ2VQO-8ZqE'),
+(20, 12, 'Enter the Great Swordsman! Pirate Hunter Roronoa Zoro!', '1_EACuxrz8fl6JnbdNCAysfzCXdNJ44Ts');
 
 -- --------------------------------------------------------
 
@@ -108,6 +111,29 @@ CREATE TABLE `highlight_videos` (
 
 INSERT INTO `highlight_videos` (`video_id`, `video_name`, `video_file`) VALUES
 (1, 'Highlight Video', 'Highlight Video.mp4');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `slider`
+--
+
+CREATE TABLE `slider` (
+  `id` int(11) NOT NULL,
+  `anime_id` int(11) NOT NULL,
+  `slider_image` varchar(255) NOT NULL,
+  `episodes` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `slider`
+--
+
+INSERT INTO `slider` (`id`, `anime_id`, `slider_image`, `episodes`) VALUES
+(1, 12, 'OnePiece-UW-LTR.jpeg', 0),
+(2, 13, 'KaijuNo8-UW-LTR.jpeg', 0),
+(3, 3, 'wind breaker uw.jpg', 0),
+(4, 9, 'demon slayer uw.jpg', 0);
 
 -- --------------------------------------------------------
 
@@ -154,6 +180,13 @@ ALTER TABLE `highlight_videos`
   ADD PRIMARY KEY (`video_id`);
 
 --
+-- Indexes for table `slider`
+--
+ALTER TABLE `slider`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `anime_id` (`anime_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -167,13 +200,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `anime`
 --
 ALTER TABLE `anime`
-  MODIFY `anime_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `anime_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `episodes`
 --
 ALTER TABLE `episodes`
-  MODIFY `episode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `episode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `slider`
+--
+ALTER TABLE `slider`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -190,6 +229,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `episodes`
   ADD CONSTRAINT `episodes_ibfk_1` FOREIGN KEY (`anime_id`) REFERENCES `anime` (`anime_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `slider`
+--
+ALTER TABLE `slider`
+  ADD CONSTRAINT `slider_ibfk_1` FOREIGN KEY (`anime_id`) REFERENCES `anime` (`anime_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
