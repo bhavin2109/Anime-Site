@@ -75,7 +75,7 @@ if (!$trendingAnimeResult) {
         }
 
         header {
-            background: transparent;
+            background: rgba(0, 0, 0, 0.5);
             color: #fff;
             padding: 10px 0;
             position: sticky;
@@ -109,10 +109,60 @@ if (!$trendingAnimeResult) {
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        .search-section input {
-            padding: 5px;
-            border: none;
+        .search-section {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
+        }
+
+        .search-section input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            background: transparent;
+            transition: 0.3s ease-in-out;
+        }
+
+        .search-section input::placeholder {
+            color: #fff;
+        }
+
+        .search-section input:focus {
+            outline: none;
+        }
+
+        
+
+        .search-section input:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-section input:focus::placeholder {
+            color: transparent;
+        }
+
+        .search-section button {
+            padding: 8px;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            background: transparent;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+
+        }
+
+        .search-section button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .search-section button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         main {
@@ -125,14 +175,14 @@ if (!$trendingAnimeResult) {
             position: relative;
             justify-self: center;
             align-self: center;
-            top: 0;
-            width: 80%;
-            height: 80vh;
+            top: -13vh;
+            width: 100%;
+            height: 100vh;
             overflow: hidden;
             display: flex;
-            border-radius: 8px;
             align-items: center;
             justify-content: center;
+
         }
 
         .slider {
@@ -143,12 +193,21 @@ if (!$trendingAnimeResult) {
         }
 
         .slider-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
             width: 100%;
             height: 100%;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slider-item.active {
+            opacity: 1;
         }
 
         .slider-item img {
@@ -158,7 +217,6 @@ if (!$trendingAnimeResult) {
             cursor: pointer;
             max-width: 100%;
             max-height: 100%;
-            box-shadow: inset 0 0 10px 10px rgba(0, 0, 0, 0.5);
         }
 
         .slider-nav {
@@ -199,6 +257,7 @@ if (!$trendingAnimeResult) {
                 margin-top: 10px;
             }
         }
+
         .box-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -332,6 +391,7 @@ if (!$trendingAnimeResult) {
             </div>
             <div class="search-section">
                 <input type="search" name="searchbar" placeholder="Search Anime">
+                <button onclick="performSearch()"><img src="./assets/icons/search.png"></button>
             </div>
         </nav>
     </header>
@@ -401,25 +461,52 @@ if (!$trendingAnimeResult) {
 
     <script>
         const slider = document.getElementById('slider');
-        const prev = document.getElementById('prev');
-        const next = document.getElementById('next');
-        let currentIndex = 0;
-        const items = slider.children;
-        const totalItems = items.length;
+const items = slider.children;
+const totalItems = items.length;
+let currentIndex = 0;
 
-        prev.addEventListener('click', () => {
-            currentIndex = (currentIndex === 0) ? totalItems - 1 : currentIndex - 1;
-            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-        });
+function showSlide(index) {
+    // Remove "active" class from all items
+    for (let i = 0; i < totalItems; i++) {
+        items[i].classList.remove('active');
+    }
 
-        next.addEventListener('click', () => {
-            currentIndex = (currentIndex === totalItems - 1) ? 0 : currentIndex + 1;
-            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-        });
+    // Add "active" class to the current index
+    items[index].classList.add('active');
+}
 
-        setInterval(() => {
-            next.click();
-        }, 5000);
+// Initialize the first slide
+showSlide(currentIndex);
+
+// Automatically switch slides every 5 seconds
+setInterval(() => {
+    currentIndex = (currentIndex + 1) % totalItems;
+    showSlide(currentIndex);
+}, 5000);
+
+// Add optional manual controls
+const prev = document.getElementById('prev');
+const next = document.getElementById('next');
+
+prev.addEventListener('click', () => {
+    currentIndex = (currentIndex === 0) ? totalItems - 1 : currentIndex - 1;
+    showSlide(currentIndex);
+});
+
+next.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % totalItems;
+    showSlide(currentIndex);
+});
+
+
+        function performSearch() {
+            const query = document.getElementById('searchQuery').value.trim();
+            if (query) {
+                window.location.href = `search.php?query=${encodeURIComponent(query)}`;
+            } else {
+                alert('Please enter a search term.');
+            }
+        }
     </script>
 </body>
 
