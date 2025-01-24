@@ -44,6 +44,8 @@ if (!$trendingAnimeResult) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./assets/logo.ico">
+
     <title>Urahara TV</title>
     <style>
         * {
@@ -93,7 +95,7 @@ if (!$trendingAnimeResult) {
         }
 
         .logo img {
-            height: 50px;
+            height: 30px
         }
 
         .options a {
@@ -381,7 +383,7 @@ if (!$trendingAnimeResult) {
     <header>
         <nav>
             <div class="logo">
-                <img src="#" alt="Logo">
+                <img src="./assets/logo.ico" alt="Logo">
             </div>
             <div class="options">
                 <a href="home.php">Home</a>
