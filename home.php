@@ -386,7 +386,7 @@ if (!$trendingAnimeResult) {
             <div class="options">
                 <a href="home.php">Home</a>
                 <a href="./pages/explore.php">Explore</a>
-                <a href="#">Category</a>
+                <a href="./admin/admin.php">Admin</a>
                 <a href="./pages/profile.php">Profile</a>
             </div>
             <div class="search-section">
