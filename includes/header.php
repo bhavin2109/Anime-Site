@@ -45,7 +45,7 @@
     <header>
         <nav>
             <div class="logo">
-                <img src="#" alt="Logo">
+                <img src="../assets/logo.ico" alt="Logo">
             </div>
             <div class="options">
                 <a href="../home.php">Home</a>
