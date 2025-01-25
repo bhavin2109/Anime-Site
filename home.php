@@ -18,7 +18,7 @@ if (!$sliderResult) {
 }
 
 // Fetch highlight images
-$highlightImagesQuery = "SELECT * FROM slider ORDER BY RAND() LIMIT 7";
+$highlightImagesQuery = "SELECT slider.*, anime.anime_id FROM slider JOIN anime ON slider.anime_id = anime.anime_id ORDER BY RAND() LIMIT 7";
 $highlightImagesResult = $conn->query($highlightImagesQuery);
 $highlightImages = $highlightImagesResult->fetch_all(MYSQLI_ASSOC);
 
