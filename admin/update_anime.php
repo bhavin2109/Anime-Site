@@ -49,7 +49,7 @@ if (isset($_POST['update'])) {
     }
 }
 ?>
-<form name="update_anime" method="post" action="update_anime.php" enctype="multipart/form-data">
+<form name="update_anime" method="post" action="update_anime.php?anime_id=<?php echo $anime_id; ?>" enctype="multipart/form-data">
     <table border="0">
         <tr>
             <td>Name</td>
