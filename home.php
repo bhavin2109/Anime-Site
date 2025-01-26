@@ -134,7 +134,7 @@ if (!$trendingAnimeResult) {
             outline: none;
         }
 
-        
+
 
         .search-section input:hover {
             background-color: rgba(255, 255, 255, 0.1);
@@ -400,21 +400,17 @@ if (!$trendingAnimeResult) {
 
     <!-- Main Content -->
     <main>
-        <section class="slider-container">
-            <div class="slider" id="slider">
-                <?php foreach ($highlightImages as $image): ?>
-                    <div class="slider-item">
-                        <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode=1">
-                            <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
-                        </a>
-                    </div>
-                <?php endforeach; ?>
+    <section class="slider-container">
+    <div class="slider" id="slider">
+        <?php foreach ($highlightImages as $index => $image): ?>
+            <div class="slider-item" id="slider-item-<?php echo $index; ?>">
+                <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode_id=1">
+                    <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
+                </a>
             </div>
-            <div class="slider-nav">
-                <button id="prev">&#10094;</button>
-                <button id="next">&#10095;</button>
-            </div>
-        </section>
+        <?php endforeach; ?>
+    </div>
+</section>
 
         <section>
             <h2 style="text-align: center; margin: 50px 0; color:#fff;">Anime Suggestions</h2>
@@ -463,42 +459,28 @@ if (!$trendingAnimeResult) {
 
     <script>
         const slider = document.getElementById('slider');
-const items = slider.children;
-const totalItems = items.length;
-let currentIndex = 0;
+        const items = slider.children;
+        const totalItems = items.length;
+        let currentIndex = 0;
 
-function showSlide(index) {
-    // Remove "active" class from all items
-    for (let i = 0; i < totalItems; i++) {
-        items[i].classList.remove('active');
-    }
+        function showSlide(index) {
+            // Remove "active" class from all items
+            for (let i = 0; i < totalItems; i++) {
+                items[i].classList.remove('active');
+            }
 
-    // Add "active" class to the current index
-    items[index].classList.add('active');
-}
+            // Add "active" class to the current index
+            items[index].classList.add('active');
+        }
 
-// Initialize the first slide
-showSlide(currentIndex);
+        // Initialize the first slide
+        showSlide(currentIndex);
 
-// Automatically switch slides every 5 seconds
-setInterval(() => {
-    currentIndex = (currentIndex + 1) % totalItems;
-    showSlide(currentIndex);
-}, 5000);
-
-// Add optional manual controls
-const prev = document.getElementById('prev');
-const next = document.getElementById('next');
-
-prev.addEventListener('click', () => {
-    currentIndex = (currentIndex === 0) ? totalItems - 1 : currentIndex - 1;
-    showSlide(currentIndex);
-});
-
-next.addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % totalItems;
-    showSlide(currentIndex);
-});
+        // Automatically switch slides every 5 seconds
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % totalItems;
+            showSlide(currentIndex);
+        }, 5000);
 
 
         function performSearch() {
