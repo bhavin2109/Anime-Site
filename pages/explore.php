@@ -194,7 +194,7 @@ foreach ($genres as $genre) {
                     <div class="anime-grid">
                         <?php if (!empty($animeByGenre[$genre])): ?>
                             <?php foreach ($animeByGenre[$genre] as $anime): ?>
-                                <a href="player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>&episode=1" class="anime-item">
+                                <a href="../includes/player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>&episode=1" class="anime-item">
                                     <img src="../assets/thumbnails/<?php echo htmlspecialchars($anime['anime_image']); ?>">
                                     <div class="anime-details">
                                         <div class="anime_name"><?php echo htmlspecialchars(isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'); ?></div>
