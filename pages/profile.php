@@ -112,7 +112,7 @@
     // Start the session
     session_start();
     include '../includes/header.php';
-    require_once 'dbconnect.php'; // Include the database connection
+    require_once './includes/dbconnect.php'; // Include the database connection
 
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         header("Location: login.php"); // Redirect to login page if not logged in

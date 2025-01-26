@@ -1,6 +1,6 @@
 <?php
 // Include database connection file
-include_once("../pages/dbconnect.php");
+include_once("../includes/dbconnect.php");
 
 // Check database connection
 if (!$conn) {

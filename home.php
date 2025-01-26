@@ -8,7 +8,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 
 // Include database connection
-include './pages/dbconnect.php';
+include './includes/dbconnect.php';
 
 // Fetch Slider Images
 $sliderQuery = "SELECT * FROM slider ORDER BY RAND() LIMIT 7";
@@ -392,7 +392,7 @@ if (!$trendingAnimeResult) {
                 <a href="./pages/profile.php">Profile</a>
             </div>
             <div class="search-section">
-                <input type="search" name="searchbar" placeholder="Search Anime">
+                <input type="search" id="searchQuery" name="searchbar" placeholder="Search Anime">
                 <button onclick="performSearch()"><img src="./assets/icons/search.png"></button>
             </div>
         </nav>
@@ -404,7 +404,7 @@ if (!$trendingAnimeResult) {
             <div class="slider" id="slider">
                 <?php foreach ($highlightImages as $image): ?>
                     <div class="slider-item">
-                        <a href="./pages/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode=1">
+                        <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode=1">
                             <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
                         </a>
                     </div>
@@ -421,7 +421,7 @@ if (!$trendingAnimeResult) {
             <div class="box-container">
                 <?php if (!empty($trendingAnime)): ?>
                     <?php foreach ($trendingAnime as $anime): ?>
-                        <a href="./pages/player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>&episode=1" class="box-anime">
+                        <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>&episode=1" class="box-anime">
                             <img src="./assets/thumbnails/<?php echo htmlspecialchars($anime['anime_image']); ?>">
                             <div class="anime_name"><?php echo htmlspecialchars(isset($anime['anime_name']) ? $anime['anime_name'] : 'Unknown Title'); ?></div>
                         </a>
@@ -504,7 +504,7 @@ next.addEventListener('click', () => {
         function performSearch() {
             const query = document.getElementById('searchQuery').value.trim();
             if (query) {
-                window.location.href = `search.php?query=${encodeURIComponent(query)}`;
+                window.location.href = `./includes/search.php?query=${encodeURIComponent(query)}`;
             } else {
                 alert('Please enter a search term.');
             }

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../pages/dbconnect.php';
+include '../includes/dbconnect.php';
 
 $anime_id = '';
 $anime_name = '';

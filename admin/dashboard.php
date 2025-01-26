@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../pages/dbconnect.php';
+include '../includes/dbconnect.php';
 
 // Fetch Slider Images
 $sliderQuery = "SELECT * FROM slider ORDER BY RAND() LIMIT 7";

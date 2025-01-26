@@ -1,6 +1,6 @@
 <?php
 // Include database connection file
-include_once("../pages/dbconnect.php");
+include_once("../includes/dbconnect.php");
 
 // Check if episode_id is provided
 if (isset($_GET['episode_id']) && is_numeric($_GET['episode_id'])) {

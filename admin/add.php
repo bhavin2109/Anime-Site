@@ -1,5 +1,5 @@
 <?php
-include '../pages/dbconnect.php';
+include '../includes/dbconnect.php';
 
 // Fetch anime list from the database
 $anime_list = [];

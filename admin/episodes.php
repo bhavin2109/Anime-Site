@@ -66,7 +66,7 @@
 <body>
     
     <?php
-    include '../pages/dbconnect.php';
+    include '../includes/dbconnect.php';
     if (isset($_GET['anime_id'])) {
         $anime_id = intval($_GET['anime_id']);
         $anime_query = "SELECT anime_name FROM anime WHERE anime_id = $anime_id";

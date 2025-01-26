@@ -103,7 +103,7 @@
         </thead>
         <tbody>
             <?php
-            include '../pages/dbconnect.php';
+            include '../includes/dbconnect.php';
             $query = "
                 SELECT anime_id, anime_name, anime_type, anime_image, episodes, genre FROM anime
             ";

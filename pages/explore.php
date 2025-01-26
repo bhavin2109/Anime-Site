@@ -8,7 +8,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 
 // Include database connection
-include 'dbconnect.php';
+include '../includes/dbconnect.php';
 
 // Fetch anime by genre with episode count
 $genres = ['Action', 'Adventure', 'Romance', 'Fantasy']; // Define the genres you want to display

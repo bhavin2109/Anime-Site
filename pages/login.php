@@ -98,7 +98,7 @@ footer a:hover {
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include 'dbconnect.php'; // Include database connection
+    include '../includes/dbconnect.php'; // Include database connection
 
     $username = $_POST["username"];
     $password = $_POST["password"];

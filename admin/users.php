@@ -1,6 +1,6 @@
 <?php
 // Include database connection file
-include_once('../pages/dbconnect.php');
+include_once('../includes/dbconnect.php');
 
 // Fetch users from the database
 $query = "SELECT * FROM users";
