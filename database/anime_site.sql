@@ -39,7 +39,7 @@ CREATE TABLE `anime` (
 
 LOCK TABLES `anime` WRITE;
 /*!40000 ALTER TABLE `anime` DISABLE KEYS */;
-INSERT INTO `anime` VALUES (1,'Dan Da Dan','Dan Da Dan - S01.jpg','TV',0,'Action'),(2,'Your Name','your name.jpg','Movie',0,'Fantasy'),(3,'Wind Breaker','Wind Breaker - S01.jpeg','TV',0,'Action'),(4,'I want to Eat Your Pancreas','i want to eat your pancreas.jpg','Movie',0,'Romance'),(5,'Black Clover','Black Clover.jpeg','TV',0,'Fantasy'),(6,'Bleach','Bleach.jpeg','TV',0,'Shonen'),(7,'Jujutsu Kaisen','Jujutsu Kaisen - S01.jpeg','TV',0,'Action'),(8,'Chainsaw Man','Chainsaw Man - S01.jpeg','TV',0,'Action'),(9,'Demon Slayer','Demon Slayer - Kimetsu no Yaiba.jpg','TV',0,'Action'),(10,'Steins Gate','steins gate.jpg','TV',0,'Isekai'),(12,'One Piece','OnePiece.jpg','TV',0,'Adventure'),(13,'Kaiju No.8','kaiju no.8.jpg','TV',0,'Action'),(14,'Tokyo Revengers','Tokyo Revengers - S01.jpeg','TV',0,'Action'),(15,'Spy X Family','Spy x Family - S01.jpeg','TV',0,'Comedy'),(16,'Blue Lock','blue lock.jpg','TV',0,'Sports'),(17,'Sword Art Online','sword art oline s1.jpg','TV',0,'Isekai');
+INSERT INTO `anime` VALUES (1,'Dan Da Dan','Dan Da Dan - S01.jpg','TV',0,'Action'),(2,'Your Name','your name.jpg','Movie',0,'Fantasy'),(3,'Wind Breaker','Wind Breaker - S01.jpeg','TV',0,'Action'),(4,'I want to Eat Your Pancreas','i want to eat your pancreas.jpg','Movie',0,'Romance'),(5,'Black Clover','Black Clover.jpeg','TV',0,'Fantasy'),(6,'Bleach','Bleach.jpeg','TV',0,'Shonen'),(7,'Jujutsu Kaisen','Jujutsu Kaisen - S01.jpeg','TV',0,'Action'),(8,'Chainsaw Man','Chainsaw Man - S01.jpeg','TV',0,'Action'),(9,'Demon Slayer','Demon Slayer - Kimetsu no Yaiba.jpg','TV',0,'Action'),(10,'Steins Gate','steins gate.jpg','TV',0,'Isekai'),(12,'One Piece','OnePiece.jpg','TV',0,'Adventure'),(13,'Kaiju No.8','kaiju no.8.jpg','TV',0,'Action'),(14,'Tokyo Revengers','Tokyo Revengers - S01.jpeg','TV',0,'Action'),(15,'Spy X Family','Spy x Family - S01.jpeg','TV',0,'Comedy'),(16,'Blue Lock','blue lock.jpg','TV',0,'Sports'),(17,'Sword Art Online','sword art online.jpg','TV',0,'Isekai');
 /*!40000 ALTER TABLE `anime` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -159,4 +159,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-25 12:55:37
+-- Dump completed on 2025-01-29 20:39:29
