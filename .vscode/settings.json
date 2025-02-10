@@ -14,5 +14,6 @@
             "username": "root",
             "password": ""
         }
-    ]
+    ],
+    "codium.codeCompletion.enable": true
 }
