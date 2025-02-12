@@ -221,30 +221,6 @@ if (!$trendingAnimeResult) {
             max-height: 100%;
         }
 
-        .slider-nav {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            z-index: 10;
-        }
-
-        .slider-nav button {
-            background: rgba(0, 0, 0, 0.1);
-            color: #fff;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 10%;
-            transition: background 0.3s;
-        }
-
-        .slider-nav button:hover {
-            background: rgba(0, 0, 0, 0.8);
-        }
-
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
@@ -400,17 +376,17 @@ if (!$trendingAnimeResult) {
 
     <!-- Main Content -->
     <main>
-    <section class="slider-container">
-    <div class="slider" id="slider">
-        <?php foreach ($highlightImages as $index => $image): ?>
-            <div class="slider-item" id="slider-item-<?php echo $index; ?>">
-                <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode_id=1">
-                    <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
-                </a>
+        <section class="slider-container">
+            <div class="slider" id="slider">
+                <?php foreach ($highlightImages as $index => $image): ?>
+                    <div class="slider-item" id="slider-item-<?php echo $index; ?>">
+                        <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode_id=1">
+                            <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
+                        </a>
+                    </div>
+                <?php endforeach; ?>
             </div>
-        <?php endforeach; ?>
-    </div>
-</section>
+        </section>
 
         <section>
             <h2 style="text-align: center; margin: 50px 0; color:#fff;">Anime Suggestions</h2>
