@@ -215,18 +215,20 @@ foreach ($genres as $genre) {
 
         <!-- Additional Sections -->
         <section class="additional-section">
+            <h2>Popular Anime</h2>
+            <p>Check out our most popular anime series</p>
+        </section>
+        <section class="additional-section">
             <h2>About Us</h2>
-            <p>Welcome to our anime streaming platform! We offer a wide variety of anime across different genres. Enjoy your favorite shows and discover new ones.</p>
+            <p>Welcome to our anime streaming site ! </p>
         </section>
 
-        <section class="additional-section">
-            <h2>Popular Anime</h2>
-            <p>Check out our most popular anime series that have captured the hearts of many viewers.</p>
-        </section>
     </main>
 
     <!-- Footer -->
+     <!--
     <?php include 'footer.php'; ?>
+     -->
 </body>
 
 </html>
