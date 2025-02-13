@@ -16,9 +16,25 @@
         /* Body styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #000000, #1a1a1a, #333333, #000000);
+            background-size: 300% 300%;
+            animation: gradient-animation 4s ease infinite;
             margin: 0;
             overflow: hidden;
+        }
+
+         @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* Header styles */
@@ -58,13 +74,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding-top: 70px; /* Offset for the fixed header */
+            height: 90vh;
         }
 
         /* Profile card */
         .profile-card {
-            width: 350px;
+            width: 70%;
+            height: 80%;
             padding: 20px;
             background-color: #222;
             color: #fff;
@@ -139,9 +155,14 @@
     <div class="profile-container">
         <div class="profile-card">
             <h2>User Profile</h2>
+            <div class="profile-picture">
+            <img src="path/to/profile-picture.jpg" alt="Profile Picture">
+            </div>
             <div class="user-info">
-                <p><strong>Name:</strong> <?php echo htmlspecialchars($username); ?></p>
-                <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
+            <p><strong>Name:</strong> <?php echo htmlspecialchars($username); ?></p>
+            <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
+            <p><strong>Date of Birth:</strong> <?php echo htmlspecialchars($dob); ?></p>
+            <p><strong>Location:</strong> <?php echo htmlspecialchars($location); ?></p>
             </div>
             <a href="logout.php" class="logout-btn">Logout</a>
         </div>
