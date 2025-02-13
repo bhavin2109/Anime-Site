@@ -72,7 +72,7 @@
         $anime_query = "SELECT anime_name FROM anime WHERE anime_id = $anime_id";
         $anime_result = mysqli_query($conn, $anime_query);
         if ($anime_row = mysqli_fetch_assoc($anime_result)) {
-            echo "<h3>" . $anime_row['anime_name'] . "</h3>";
+            echo "<h3 style=text-align:center;>" . $anime_row['anime_name'] . "</h3>";
         } else {
             echo "<h3>Anime not found</h3>";
         }
@@ -88,7 +88,7 @@
         </thead>
         <tbody>
             <?php
-            include '../pages/dbconnect.php';
+            include '../includes/dbconnect.php';
             if (isset($_GET['anime_id'])) {
                 $anime_id = intval($_GET['anime_id']);
                 $query = "SELECT * FROM episodes WHERE anime_id = $anime_id";
