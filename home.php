@@ -485,6 +485,7 @@ if (!$trendingAnimeResult) {
         animation: gradient-animation 15s ease infinite;
         border-radius: 10px;
         overflow-x: auto;
+        overflow-y: hidden;
         scroll-behavior: smooth;
         scrollbar-width: none;
         padding: 20px;
