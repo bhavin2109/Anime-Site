@@ -46,7 +46,7 @@ if (!$trendingAnimeResult) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="./assets/logo.ico">
 
-    <title>Urahara TV</title>
+    <title>Home-Page</title>
     <style>
         * {
             margin: 0;
@@ -366,7 +366,7 @@ if (!$trendingAnimeResult) {
         .genre-box {
             width: 100%;
             height: 120vh;
-            background: linear-gradient(135deg, cyan, pink, green);
+            background: linear-gradient(135deg, cyan, pink, blue);
             background-size: 300% 300%;
             animation: gradient-animation 15s ease infinite;
             border-radius: 10px;
@@ -463,6 +463,68 @@ if (!$trendingAnimeResult) {
         .additional-section p {
             margin-bottom: 10px;
         }
+
+    .movie-container {
+        display: grid;
+        width: 95%;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        justify-content: center;
+        margin: 20px 0;
+        padding: 0 20px;
+    }
+
+    .movie-box {
+        width: 100%;
+        height: 60vh;
+        background: linear-gradient(135deg, cyan, pink, blue);
+        background-size: 300% 300%;
+        animation: gradient-animation 15s ease infinite;
+        border-radius: 10px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        padding: 20px;
+    }
+
+    .movie-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .movie-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        transition: 0.3s;
+        padding: 10px;
+        border-radius: 5px;
+        background: transparent;
+    }
+
+    .movie-item:hover {
+        background-color: #e0e0e0;
+    }
+
+    .movie-item img {
+        width: 150px;
+        height: 225px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .movie-details {
+        text-align: center;
+    }
+
+    .movie_name {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
     </style>
 </head>
 
@@ -488,16 +550,9 @@ if (!$trendingAnimeResult) {
 
     <!-- Main Content -->
     <main>
-        <section class="slider-container">
-            <div class="slider" id="slider">
-                <?php foreach ($highlightImages as $index => $image): ?>
-                    <div class="slider-item" id="slider-item-<?php echo $index; ?>">
-                        <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($image['anime_id']); ?>&episode_id=1">
-                            <img src="./assets/slider/<?php echo htmlspecialchars($image['slider_image']); ?>" alt="<?php echo htmlspecialchars($image['slider_image']); ?>">
-                        </a>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+        <section class="additional-section">
+            <h2>Welcome to Urahara TV!</h2>
+            <p>Discover the latest and greatest in anime. From trending series to classic movies, we have it all. Dive into your favorite genres and explore new adventures. Enjoy your stay!</p>
         </section>
 
         <h2 style="text-align: center; margin: 20px 0; color:#fff;">Anime</h2>
@@ -565,35 +620,39 @@ if (!$trendingAnimeResult) {
 
         <h2 style="text-align: center; margin: 20px 0; color:#fff;">Movies</h2>
 
-        <section>
-            <div class="box-container">
-                <?php
-                // Fetch trending movies randomly
-                $trendingMoviesQuery = "SELECT * FROM anime where anime_type = 'Movie' ORDER BY RAND() LIMIT 10";
-                $trendingMoviesResult = $conn->query($trendingMoviesQuery);
+        <section class="movie-container">
+            <?php
+            // Fetch trending movies randomly
+            $trendingMoviesQuery = "SELECT * FROM anime WHERE anime_type = 'Movie' ORDER BY RAND() LIMIT 10";
+            $trendingMoviesResult = $conn->query($trendingMoviesQuery);
 
-                // Check if the query was successful
-                if (!$trendingMoviesResult) {
-                    error_log('Trending movies query failed: ' . mysqli_error($conn));
-                    $trendingMovies = [];
-                } else {
-                    $trendingMovies = [];
-                    while ($movie = $trendingMoviesResult->fetch_assoc()) {
-                        $trendingMovies[] = $movie;
-                    }
-                }
-                ?>
+            // Check if the query was successful
+            if (!$trendingMoviesResult) {
+            error_log('Trending movies query failed: ' . mysqli_error($conn));
+            $trendingMovies = [];
+            } else {
+            $trendingMovies = [];
+            while ($movie = $trendingMoviesResult->fetch_assoc()) {
+                $trendingMovies[] = $movie;
+            }
+            }
+            ?>
 
+            <div class="movie-box">
+            <div class="movie-grid">
                 <?php if (!empty($trendingMovies)): ?>
-                    <?php foreach ($trendingMovies as $movie): ?>
-                        <a href="./includes/player.php?movie_id=<?php echo htmlspecialchars($movie['anime_id']); ?>" class="box-anime">
-                            <img src="./assets/thumbnails/<?php echo htmlspecialchars($movie['anime_image']); ?>">
-                            <div class="anime_name"><?php echo htmlspecialchars(isset($movie['anime_name']) ? $movie['anime_name'] : 'Unknown Title'); ?></div>
-                        </a>
-                    <?php endforeach; ?>
+                <?php foreach ($trendingMovies as $movie): ?>
+                    <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($movie['anime_id']); ?>" class="movie-item">
+                    <img src="./assets/thumbnails/<?php echo htmlspecialchars($movie['anime_image']); ?>" alt="<?php echo htmlspecialchars($movie['anime_name']); ?>">
+                    <div class="movie-details">
+                        <div class="movie_name"><?php echo htmlspecialchars($movie['anime_name']); ?></div>
+                    </div>
+                    </a>
+                <?php endforeach; ?>
                 <?php else: ?>
-                    <p>No trending movies found.</p>
+                <p>No trending movies found.</p>
                 <?php endif; ?>
+            </div>
             </div>
         </section>
     </main>
@@ -627,31 +686,6 @@ if (!$trendingAnimeResult) {
     </footer>
 
     <script>
-        const slider = document.getElementById('slider');
-        const items = slider.children;
-        const totalItems = items.length;
-        let currentIndex = 0;
-
-        function showSlide(index) {
-            // Remove "active" class from all items
-            for (let i = 0; i < totalItems; i++) {
-                items[i].classList.remove('active');
-            }
-
-            // Add "active" class to the current index
-            items[index].classList.add('active');
-        }
-
-        // Initialize the first slide
-        showSlide(currentIndex);
-
-        // Automatically switch slides every 5 seconds
-        setInterval(() => {
-            currentIndex = (currentIndex + 1) % totalItems;
-            showSlide(currentIndex);
-        }, 5000);
-
-
         function performSearch() {
             const query = document.getElementById('searchQuery').value.trim();
             if (query) {
@@ -659,9 +693,6 @@ if (!$trendingAnimeResult) {
             } else {
                 alert('Please enter a search term.');
             }
-
-
-
         }
     </script>
 </body>

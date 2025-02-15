@@ -20,35 +20,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $target_dir = "../assets/thumbnails/";
         $target_file = $target_dir . basename($anime_image);
 
-        if (move_uploaded_file($_FILES["anime_image"]["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO anime (anime_name, anime_image, anime_type, genre) VALUES ('$anime_name', '$anime_image', '$anime_type', '$genre')";
-            if (mysqli_query($conn, $sql)) {
-                echo "<script>alert('Anime added successfully!');</script>";
-                echo "<script>window.location.href = 'dashboard.php';</script>";
-            } else {
-                echo "<script>alert('Error adding anime: " . mysqli_error($conn) . "');</script>";
-            }
+        // Check if anime already exists
+        $sql = "SELECT * FROM anime WHERE anime_name = '$anime_name'";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            echo "<script>alert('Anime already exists!');</script>";
         } else {
-            echo "<script>alert('Error uploading anime image.');</script>";
-        }
-    } elseif (isset($_POST["movie_name"])) {
-        $movie_name = $_POST["movie_name"];
-        $movie_image = $_FILES["movie_image"]["name"];
-        $anime_type = $_POST["anime_type"];
-        $genre = $_POST["genre"];
-        $target_dir = "../assets/thumbnails/";
-        $target_file = $target_dir . basename($movie_image);
-
-        if (move_uploaded_file($_FILES["movie_image"]["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO anime (anime_name, anime_image, anime_type, genre) VALUES ('$movie_name', '$movie_image', '$anime_type', '$genre')";
-            if (mysqli_query($conn, $sql)) {
-                echo "<script>alert('Movie added successfully!');</script>";
-                echo "<script>window.location.href = 'anime.php';</script>";
+            if (move_uploaded_file($_FILES["anime_image"]["tmp_name"], $target_file)) {
+                $sql = "INSERT INTO anime (anime_name, anime_image, anime_type, genre) VALUES ('$anime_name', '$anime_image', '$anime_type', '$genre')";
+                if (mysqli_query($conn, $sql)) {
+                    echo "<script>alert('Anime added successfully!');</script>";
+                    echo "<script>window.location.href = 'add.php';</script>";
+                } else {
+                    echo "<script>alert('Error adding anime: " . mysqli_error($conn) . "');</script>";
+                }
             } else {
-                echo "<script>alert('Error adding movie: " . mysqli_error($conn) . "');</script>";
+                echo "<script>alert('Error uploading anime image.');</script>";
             }
-        } else {
-            echo "<script>alert('Error uploading movie image.');</script>";
         }
     } elseif (isset($_POST["slider_anime_id"])) {
         $slider_anime_id = $_POST["slider_anime_id"];
@@ -151,20 +139,37 @@ mysqli_close($conn);
         <form action="add.php" method="post" enctype="multipart/form-data">
             <input type="text" name="anime_name" placeholder="Anime Name" class="input-box" required>
             <input type="file" name="anime_image" class="input-box" required>
-            <input type="text" name="anime_type" placeholder="Anime Type" class="input-box" required>
-            <input type="text" name="genre" placeholder="Genre" class="input-box" required>
+            <select name="anime_type" class="input-box" required>
+                <option value="">Select Anime Type</option>
+                <option value="TV">TV</option>
+                <option value="Movie">Movie</option>
+                <option value="OVA">OVA</option>
+                <option value="ONA">ONA</option>
+                <option value="Special">Special</option>
+            </select>
+            <select name="genre" class="input-box" required>
+                <option value="">Select Genre</option>
+                <option value="Action">Action</option>
+                <option value="Adventure">Adventure</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Drama">Drama</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Horror">Horror</option>
+                <option value="Isekai">Isekai</option>
+                <option value="Mecha">Mecha</option>
+                <option value="Music">Music</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Psychological">Psychological</option>
+                <option value="Romance">Romance</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Seinen">Seinen</option>
+                <option value="Shounen">Shounen</option>
+                <option value="Slice of Life">Slice of Life</option>
+                <option value="Sports">Sports</option>
+                <option value="Supernatural">Supernatural</option>
+                <option value="Thriller">Thriller</option>
+            </select>
             <button type="submit">Add Anime</button>
-        </form>
-    </div>
-
-    <div class="form-container">
-        <h2>Add Movie</h2>
-        <form action="add.php" method="post" enctype="multipart/form-data">
-            <input type="text" name="movie_name" placeholder="Movie Name" class="input-box" required>
-            <input type="file" name="movie_image" class="input-box" required>
-            <input type="text" name="anime_type" placeholder="Anime Type" class="input-box" required>
-            <input type="text" name="genre" placeholder="Genre" class="input-box" required>
-            <button type="submit">Add Movie</button>
         </form>
     </div>
 
