@@ -479,6 +479,7 @@ if (!$trendingAnimeResult) {
         height: 50vh;
         display: flex;
         align-items: center;
+        justify-content: space-evenly;
         background: linear-gradient(135deg, cyan, pink, blue);
         background-size: 300% 300%;
         animation: gradient-animation 15s ease infinite;
@@ -491,8 +492,9 @@ if (!$trendingAnimeResult) {
 
     .movie-grid {
         display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
+        flex-wrap: nowrap;
+        gap: 30px;
+        overflow-x: auto;
     }
 
     .movie-item {
