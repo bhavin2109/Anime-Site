@@ -466,8 +466,8 @@ if (!$trendingAnimeResult) {
 
     .movie-container {
         display: grid;
-        width: 95%;
-        grid-template-columns: repeat(5, 1fr);
+        width: 100%;
+        align-self: center;
         gap: 20px;
         justify-content: center;
         margin: 20px 0;
@@ -476,12 +476,14 @@ if (!$trendingAnimeResult) {
 
     .movie-box {
         width: 100%;
-        height: 60vh;
+        height: 50vh;
+        display: flex;
+        align-items: center;
         background: linear-gradient(135deg, cyan, pink, blue);
         background-size: 300% 300%;
         animation: gradient-animation 15s ease infinite;
         border-radius: 10px;
-        overflow-y: auto;
+        overflow-x: auto;
         scroll-behavior: smooth;
         scrollbar-width: none;
         padding: 20px;
