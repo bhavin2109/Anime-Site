@@ -495,6 +495,7 @@ if (!$trendingAnimeResult) {
         flex-wrap: nowrap;
         gap: 30px;
         overflow-x: auto;
+        scrollbar-width: none;
     }
 
     .movie-item {
@@ -514,8 +515,8 @@ if (!$trendingAnimeResult) {
     }
 
     .movie-item img {
-        width: 150px;
-        height: 225px;
+        width: 180px;
+        height: 270px;
         border-radius: 4px;
         margin-bottom: 10px;
     }
@@ -527,6 +528,7 @@ if (!$trendingAnimeResult) {
     .movie_name {
         font-size: 16px;
         margin-bottom: 10px;
+        text-align: center;
     }
 
     </style>
