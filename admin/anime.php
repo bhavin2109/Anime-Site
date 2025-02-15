@@ -83,8 +83,9 @@
         }
         td.episodes a:hover {
             color: #007BFF; /* Change the text color on hover */
-            text-decoration: underline; /* Underline the text on hover */
+            text-decoration: none; /* Underline the text on hover */
         }
+
     </style>
 </head>
 <body>

@@ -116,6 +116,16 @@ mysqli_close($conn);
             <input type="hidden" name="anime_id" value="<?php echo $anime_id; ?>">
             <p>Anime ID: <?php echo $anime_id; ?></p>
             <p>Anime Name: <?php echo $anime_name; ?></p>
+            <?php
+            // Fetch the current number of episodes for the anime
+            $stmt = $conn->prepare("SELECT COUNT(*) as episode_count FROM episodes WHERE anime_id = ?");
+            $stmt->bind_param("i", $anime_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+            $episode_count = $row['episode_count'] + 1;
+            ?>
+            <p>Episode Number: <?php echo $episode_count; ?></p>
             <input type="text" name="episode_title" placeholder="Episode Title" required>
             <input type="text" name="episode_url" placeholder="Episode URL" required>
             <button type="submit">Add Episode</button>
