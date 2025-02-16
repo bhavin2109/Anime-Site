@@ -11,7 +11,6 @@ if (isset($_GET['episode_id']) && is_numeric($_GET['episode_id'])) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $episode = mysqli_fetch_array($result);
-        $episode_title = $episode['episode_title'];
         $episode_url = $episode['episode_url'];
     } else {
         echo "<script>alert('Episode not found.');</script>";
@@ -26,10 +25,9 @@ if (isset($_GET['episode_id']) && is_numeric($_GET['episode_id'])) {
 
 if (isset($_POST['update'])) {
     $episode_id = $_POST['episode_id'];
-    $episode_title = $_POST['episode_title'];
     $episode_url = $_POST['episode_url'];
 
-    $sql = "UPDATE episodes SET episode_title='$episode_title', episode_url='$episode_url' WHERE episode_id=$episode_id";
+    $sql = "UPDATE episodes SET episode_url='$episode_url' WHERE episode_id=$episode_id";
     if (mysqli_query($conn, $sql)) {
         echo "<script>alert('Episode updated successfully!');</script>";
         echo "<script>window.location.href = 'episodes.php';</script>";
@@ -100,7 +98,6 @@ if (isset($_POST['update'])) {
         <h2>Update Episode</h2>
         <form action="update_episode.php" method="post">
             <input type="hidden" name="episode_id" value="<?php echo $episode_id; ?>">
-            <input type="text" name="episode_title" placeholder="Episode Title" value="<?php echo $episode_title; ?>" required>
             <input type="text" name="episode_url" placeholder="Episode URL" value="<?php echo $episode_url; ?>" required>
             <button type="submit" name="update">Update Episode</button>
         </form>

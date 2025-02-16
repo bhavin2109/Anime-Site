@@ -50,7 +50,7 @@ foreach ($genres as $genre) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore Anime</title>
+    <title>Explore</title>
     <style>
         * {
             margin: 0;

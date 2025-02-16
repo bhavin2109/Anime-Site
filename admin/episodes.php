@@ -81,8 +81,8 @@
     <table>
         <thead>
             <tr>
+                <th>Episode No</th>
                 <th>Episode ID</th>
-                <th>Episode Title</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -93,10 +93,11 @@
                 $anime_id = intval($_GET['anime_id']);
                 $query = "SELECT * FROM episodes WHERE anime_id = $anime_id";
                 $result = mysqli_query($conn, $query);
+                $count = 1;
                 while ($row = mysqli_fetch_assoc($result)): ?>
                     <tr>
-                        <td><?php echo $row['episode_id']; ?></td>
-                        <td><?php echo $row['episode_title']; ?></td>
+                        <td><?php echo $count++; ?></td>
+                        <td><?php echo $row['episode_id']; ?></td>  
                         <td class="action-buttons">
                             <a href="update_episode.php?episode_id=<?php echo $row['episode_id']; ?>">Update</a>
                             <a href="episodes.php?delete=<?php echo $row['episode_id']; ?>&anime_id=<?php echo $anime_id; ?>" onclick="return confirm('Are you sure you want to delete this episode?');">Remove</a>
