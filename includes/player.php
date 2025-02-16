@@ -40,8 +40,10 @@
             padding: 15px 0px;
             margin-bottom: 5vh;
             display: flex;
-            flex-direction: column;
-            justify-content: space-around;
+            flex-direction: row;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
         }
 
         .episode-list li {
@@ -50,11 +52,11 @@
             padding: 5px;
             border-radius: 8px;
             transition: 0.3s;
-            width: 100%;
-            height: 8vh;
+            width: 20%;
+            height: 6vh;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
         }
 
         .episode-list li a {
@@ -143,7 +145,7 @@
                 // Fetch all episodes for the anime
                 $anime_id = isset($_GET['anime_id']) ? intval($_GET['anime_id']) : 1; // Default to anime_id 1 if not provided
                 $episode_id = isset($_GET['episode_id']) ? intval($_GET['episode_id']) : 1; // Default to 1 if not provided
-                $episodes_query = "SELECT episode_id, episode_title FROM episodes WHERE anime_id = ? ORDER BY episode_id ASC";
+                $episodes_query = "SELECT episode_id FROM episodes WHERE anime_id = ? ORDER BY episode_id ASC";
                 $stmt = $conn->prepare($episodes_query);
                 $stmt->bind_param("i", $anime_id);
                 $stmt->execute();
@@ -160,7 +162,7 @@
                     if ($episode['episode_id'] == $episode_id) {
                         $current_episode_number = $episode_counter;
                     }
-                    echo '<li><a href="?anime_id=' . $anime_id . '&episode_id=' . $episode['episode_id'] . '">' . $episode_counter . '. ' . $episode['episode_title'] . '</a></li>';
+                    echo '<li><a href="?anime_id=' . $anime_id . '&episode_id=' . $episode['episode_id'] . '">' . $episode_counter . '</a></li>';
                     $episode_counter++;
                 }
 

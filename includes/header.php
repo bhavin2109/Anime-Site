@@ -7,6 +7,13 @@
     <link rel="icon" type="image/png" href="../assets/logo.ico">
     <title>Header</title>
     <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+   
         header {
             background: transparent;
             color: #fff;
@@ -14,14 +21,14 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            width: 100%;
         }
 
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
+           
             padding: 0 20px;
         }
 
