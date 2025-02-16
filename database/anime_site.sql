@@ -52,7 +52,6 @@ DROP TABLE IF EXISTS `episodes`;
 CREATE TABLE `episodes` (
   `episode_id` int(11) NOT NULL AUTO_INCREMENT,
   `anime_id` int(11) NOT NULL,
-  `episode_title` varchar(255) DEFAULT NULL,
   `episode_url` text DEFAULT NULL,
   PRIMARY KEY (`episode_id`),
   KEY `anime_id` (`anime_id`),
@@ -66,7 +65,7 @@ CREATE TABLE `episodes` (
 
 LOCK TABLES `episodes` WRITE;
 /*!40000 ALTER TABLE `episodes` DISABLE KEYS */;
-INSERT INTO `episodes` VALUES (1,1,'That\'s How Love Starts, Ya Know!','1o-6-aR4eGyxbmF2PJ3XT5M9EV1J_STm0'),(2,2,'What is your Name ?','1yeirUYkEhVPXSWq-xhA7hlhCxqzWLbM3'),(3,1,'That\'s a Space Alien, Ain\'t It?!','1yet2FV8rDV5HZkW7c85K0rwT0jWHt2Eu'),(4,1,'It\'s a Granny vs Granny Clash!','1bf4sF5X2xdxgefbRkxCuEoOpVdbE5mft'),(5,1,'Kicking Turbo Granny\'s Ass','1rU2kuj0NdPMtlXHoNit903Hw5Nbiv3J_'),(6,3,'Sakura Arrives at Furin','1rTmSckwKJgPN6gzkTnxaONXjyewYImAT'),(7,3,'The Hero of My Dreams','1LM9RJeEm4CIgsuM59GA3KpB8SCHJgsZK'),(8,1,'Like, Where Are Your Balls?','1nHeKg_qCj7cBiIfRRtuZJ74WWQKxJul0'),(9,1,'A Dangerous Woman Arrives','1VC9XiH6SpzhXOFkmLEfaWIROBUXUAmQh'),(10,1,'To a Kinder World','1dBKCbFpPpLCIP8FLjVtpFs8v8VfD5iIe'),(11,1,'I\'ve Got This Funny Feeling','15nbbvIs5a21SjEQwiFGC5w3NmdyINtB0'),(12,1,' Merge! Serpo Dover Demon Nessie!','17iQluKMENdhLPX_nvPnB4aRRKkOc1L7B'),(13,1,'Have You Ever Seen a Cattle Mutilation?','1XWfgC6kwaLGO-wqbuL0PWZre0-M3KTy3'),(14,1,'First Love','1Z8OHWKK7lnfS8ZAZ70kCDfLzUKnu5pOz'),(15,1,'Let\'s Go to the Cursed House','1qxp8kNM3O_buJEGy6w-25uFG9ZlLbuOZ'),(16,4,'I want to Eat Your','16581f-XHkRy8Y4R4TFd4ZXtEbPPdJup4'),(17,5,'Asta and Yuno','17-Lv_cY9MSrMK098AXgRNCLbP7KM2fJw'),(18,6,'The Day I Became a Shinigami','12N8KdEiVdkI6vgJ_yeJ-utl1IhE5IsLf'),(19,12,'I\'m Luffy! The Man Who\'s Gonna Be King of the Pirates!','1nqcISCX9jjsd6ihKR_Ux6fJ2VQO-8ZqE'),(20,12,'Enter the Great Swordsman! Pirate Hunter Roronoa Zoro!','1_EACuxrz8fl6JnbdNCAysfzCXdNJ44Ts');
+INSERT INTO `episodes` VALUES (1,1,'1o-6-aR4eGyxbmF2PJ3XT5M9EV1J_STm0'),(2,2,'1yeirUYkEhVPXSWq-xhA7hlhCxqzWLbM3'),(3,1,'1yet2FV8rDV5HZkW7c85K0rwT0jWHt2Eu'),(4,1,'1bf4sF5X2xdxgefbRkxCuEoOpVdbE5mft'),(5,1,'1rU2kuj0NdPMtlXHoNit903Hw5Nbiv3J_'),(6,3,'1rTmSckwKJgPN6gzkTnxaONXjyewYImAT'),(7,3,'1LM9RJeEm4CIgsuM59GA3KpB8SCHJgsZK'),(8,1,'1nHeKg_qCj7cBiIfRRtuZJ74WWQKxJul0'),(9,1,'1VC9XiH6SpzhXOFkmLEfaWIROBUXUAmQh'),(10,1,'1dBKCbFpPpLCIP8FLjVtpFs8v8VfD5iIe'),(11,1,'15nbbvIs5a21SjEQwiFGC5w3NmdyINtB0'),(12,1,'17iQluKMENdhLPX_nvPnB4aRRKkOc1L7B'),(13,1,'1XWfgC6kwaLGO-wqbuL0PWZre0-M3KTy3'),(14,1,'1Z8OHWKK7lnfS8ZAZ70kCDfLzUKnu5pOz'),(15,1,'1qxp8kNM3O_buJEGy6w-25uFG9ZlLbuOZ'),(16,4,'16581f-XHkRy8Y4R4TFd4ZXtEbPPdJup4'),(17,5,'17-Lv_cY9MSrMK098AXgRNCLbP7KM2fJw'),(18,6,'12N8KdEiVdkI6vgJ_yeJ-utl1IhE5IsLf'),(19,12,'1nqcISCX9jjsd6ihKR_Ux6fJ2VQO-8ZqE'),(20,12,'1_EACuxrz8fl6JnbdNCAysfzCXdNJ44Ts');
 /*!40000 ALTER TABLE `episodes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,4 +157,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-16  5:00:57
+-- Dump completed on 2025-02-16 16:10:19
