@@ -457,74 +457,76 @@ if (!$trendingAnimeResult) {
             margin-bottom: 10px;
         }
 
-    .movie-container {
-        display: grid;
-        width: 100%;
-        align-self: center;
-        gap: 20px;
-        justify-content: center;
-        margin: 20px 0;
-        padding: 0 20px;
-    }
+        .movie-container {
+            display: grid;
+            width: 100%;
+            align-self: flex-start;
+            justify-self: first baseline;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
 
-    .movie-box {
-        width: 100%;
-        height: 50vh;
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
-        background: linear-gradient(135deg, cyan, pink, blue);
-        background-size: 300% 300%;
-        animation: gradient-animation 15s ease infinite;
-        border-radius: 10px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scroll-behavior: smooth;
-        scrollbar-width: none;
-        padding: 20px;
-    }
+        .movie-box {
+            width: 100%;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            background: linear-gradient(135deg, cyan, pink, blue);
+            background-size: 300% 300%;
+            animation: gradient-animation 15s ease infinite;
+            border-radius: 10px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            padding: 20px;
+        }
 
-    .movie-grid {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 30px;
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
+        .movie-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 30px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
 
-    .movie-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-decoration: none;
-        color: #333;
-        transition: 0.3s;
-        padding: 10px;
-        border-radius: 5px;
-        background: transparent;
-    }
+        .movie-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            transition: 0.3s;
+            padding: 10px;
+            border-radius: 5px;
+            background: transparent;
+        }
 
-    .movie-item:hover {
-        background-color: #e0e0e0;
-    }
+        .movie-item:hover {
+            background-color: #e0e0e0;
+        }
 
-    .movie-item img {
-        width: 180px;
-        height: 270px;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
+        .movie-item img {
+            width: 180px;
+            height: 270px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
 
-    .movie-details {
-        text-align: center;
-    }
+        .movie-details {
+            text-align: center;
+        }
 
-    .movie_name {
-        font-size: 16px;
-        margin-bottom: 10px;
-        text-align: center;
-    }
+        .movie_name {
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
 
+        
     </style>
 </head>
 
@@ -561,7 +563,7 @@ if (!$trendingAnimeResult) {
             <?php
 
             // Define the genres you want to display
-            $genres = ['Action', 'Adventure', 'Romance', 'Fantasy'];
+            $genres = ['Action', 'Shounen', 'Psychological', 'Seinen'];
             $animeByGenre = [];
 
             foreach ($genres as $genre) {
@@ -577,7 +579,7 @@ if (!$trendingAnimeResult) {
                     LEFT JOIN 
                         episodes e ON a.anime_id = e.anime_id
                     WHERE 
-                        a.genre = ? and a.anime_type != 'Movie'
+                        a.genre = ? and a.anime_type != 'Movie' AND e.episode_id IS NOT NULL
                     GROUP BY 
                         a.anime_id, a.anime_name, a.anime_image, a.anime_type
                     ORDER BY
@@ -618,44 +620,86 @@ if (!$trendingAnimeResult) {
             <?php endforeach; ?>
         </section>
 
-        <h2 style="text-align: center; margin: 20px 0; color:#fff;">Movies</h2>
+        
 
-        <section class="movie-container">
-            <?php
-            // Fetch trending movies randomly
-            $trendingMoviesQuery = "SELECT * FROM anime WHERE anime_type = 'Movie' ORDER BY RAND() LIMIT 10";
-            $trendingMoviesResult = $conn->query($trendingMoviesQuery);
+            <h2 style="text-align: center; margin: 20px 0; color:#fff;">Movies</h2>
 
-            // Check if the query was successful
-            if (!$trendingMoviesResult) {
-            error_log('Trending movies query failed: ' . mysqli_error($conn));
-            $trendingMovies = [];
-            } else {
-            $trendingMovies = [];
-            while ($movie = $trendingMoviesResult->fetch_assoc()) {
-                $trendingMovies[] = $movie;
-            }
-            }
-            ?>
+            <section class="movie-container">
+                <?php
+                // Fetch trending movies randomly
+                $trendingMoviesQuery = "SELECT * FROM anime WHERE anime_type = 'Movie' ORDER BY RAND() LIMIT 10";
+                $trendingMoviesResult = $conn->query($trendingMoviesQuery);
 
-            <div class="movie-box">
-            <div class="movie-grid">
-                <?php if (!empty($trendingMovies)): ?>
-                <?php foreach ($trendingMovies as $movie): ?>
-                    <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($movie['anime_id']); ?>" class="movie-item">
-                    <img src="./assets/thumbnails/<?php echo htmlspecialchars($movie['anime_image']); ?>" alt="<?php echo htmlspecialchars($movie['anime_name']); ?>">
-                    <div class="movie-details">
-                        <div class="movie_name"><?php echo htmlspecialchars($movie['anime_name']); ?></div>
+                // Check if the query was successful
+                if (!$trendingMoviesResult) {
+                    error_log('Trending movies query failed: ' . mysqli_error($conn));
+                    $trendingMovies = [];
+                } else {
+                    $trendingMovies = [];
+                    while ($movie = $trendingMoviesResult->fetch_assoc()) {
+                        $trendingMovies[] = $movie;
+                    }
+                }
+                ?>
+
+                <div class="movie-box">
+                    <div class="movie-grid">
+                        <?php if (!empty($trendingMovies)): ?>
+                            <?php foreach ($trendingMovies as $movie): ?>
+                                <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($movie['anime_id']); ?>" class="movie-item">
+                                    <img src="./assets/thumbnails/<?php echo htmlspecialchars($movie['anime_image']); ?>" alt="<?php echo htmlspecialchars($movie['anime_name']); ?>">
+                                    <div class="movie-details">
+                                        <div class="movie_name"><?php echo htmlspecialchars($movie['anime_name']); ?></div>
+                                    </div>
+                                </a>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>No trending movies found.</p>
+                        <?php endif; ?>
                     </div>
-                    </a>
-                <?php endforeach; ?>
+                </div>
+            </section>
+    </main>
+
+    <h2 style="text-align: center; margin: 20px 0; color:#fff;">Upcoming</h2>
+
+    <section class="movie-container">
+        <?php
+        // Fetch upcoming anime (anime with zero episodes)
+        $upcomingAnimeQuery = "SELECT * FROM anime WHERE  anime_id NOT IN (SELECT anime_id FROM episodes) ORDER BY RAND() LIMIT 10";
+        $upcomingAnimeResult = $conn->query($upcomingAnimeQuery);
+
+        // Check if the query was successful
+        if (!$upcomingAnimeResult) {
+            error_log('Upcoming anime query failed: ' . mysqli_error($conn));
+            $upcomingAnime = [];
+        } else {
+            $upcomingAnime = [];
+            while ($anime = $upcomingAnimeResult->fetch_assoc()) {
+                $upcomingAnime[] = $anime;
+            }
+        }
+        ?>
+
+        <div class="movie-box">
+            <div class="movie-grid">
+                <?php if (!empty($upcomingAnime)): ?>
+                    <?php foreach ($upcomingAnime as $anime): ?>
+                        <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($anime['anime_id']); ?>" class="movie-item">
+                            <img src="./assets/thumbnails/<?php echo htmlspecialchars($anime['anime_image']); ?>" alt="<?php echo htmlspecialchars($anime['anime_name']); ?>">
+                            <div class="movie-details">
+                                <div class="movie_name"><?php echo htmlspecialchars($anime['anime_name']); ?></div>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
                 <?php else: ?>
-                <p>No trending movies found.</p>
+                    <p>No upcoming anime found.</p>
                 <?php endif; ?>
             </div>
-            </div>
-        </section>
-    </main>
+        </div>
+    </section>
+
+   
 
     <!-- Footer -->
     <footer>
