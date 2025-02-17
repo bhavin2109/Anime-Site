@@ -10,17 +10,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 // Include database connection
 include './includes/dbconnect.php';
 
-// Fetch Slider Images
-$sliderQuery = "SELECT * FROM slider ORDER BY RAND() LIMIT 7";
-$sliderResult = mysqli_query($conn, $sliderQuery);
-if (!$sliderResult) {
-    error_log('Slider query failed: ' . mysqli_error($conn));
-}
 
-// Fetch highlight images
-$highlightImagesQuery = "SELECT slider.*, anime.anime_id FROM slider JOIN anime ON slider.anime_id = anime.anime_id";
-$highlightImagesResult = $conn->query($highlightImagesQuery);
-$highlightImages = $highlightImagesResult->fetch_all(MYSQLI_ASSOC);
 
 // Fetch trending anime randomly
 $trendingAnimeQuery = "SELECT * FROM anime ORDER BY RAND() LIMIT 10";
