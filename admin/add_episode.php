@@ -21,32 +21,37 @@ if (isset($_GET['anime_id']) && isset($_GET['anime_name'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $anime_id = intval($_POST["anime_id"]);
-    $episode_title = $_POST["episode_title"];
     $episode_url = $_POST["episode_url"];
 
-    // Check if anime exists in the anime table
-    $stmt = $conn->prepare("SELECT anime_id FROM anime WHERE anime_id = ?");
-    $stmt->bind_param("i", $anime_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // Extract file ID from Google Drive URL
+    preg_match('/\/d\/(.*?)\//', $episode_url, $matches);
+    $file_id = $matches[1] ?? '';
 
-    if ($result->num_rows > 0) {
-        // Insert new episode without episode number
-        $stmt = $conn->prepare("INSERT INTO episodes (anime_id, episode_title, episode_url) VALUES (?, ?, ?)");
-        $stmt->bind_param("iss", $anime_id, $episode_title, $episode_url);
-        if ($stmt->execute()) {
-            echo "<script>alert('Episode added successfully!');</script>";
-            echo "<script>window.location.href = 'add_episode.php';</script>";
-        } else {
-            echo "<script>alert('Error adding episode: " . $stmt->error . "');</script>";
-        }
+    if (empty($file_id)) {
+        echo "<script>alert('Invalid Google Drive URL.');</script>";
     } else {
-        echo "<script>alert('Anime not found.');</script>";
+        // Check if anime exists in the anime table
+        $stmt = $conn->prepare("SELECT anime_id FROM anime WHERE anime_id = ?");
+        $stmt->bind_param("i", $anime_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // Insert new episode with file ID
+            $stmt = $conn->prepare("INSERT INTO episodes (anime_id, episode_url) VALUES (?, ?)");
+            $stmt->bind_param("is", $anime_id, $file_id);
+            if ($stmt->execute()) {
+                echo "<script>alert('Episode added successfully!');</script>";
+                echo "<script>window.location.href = 'add_episode.php';</script>";
+            } else {
+                echo "<script>alert('Error adding episode: " . $stmt->error . "');</script>";
+            }
+        } else {
+            echo "<script>alert('Anime not found.');</script>";
+        }
     }
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -126,7 +131,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $episode_count = $row['episode_count'] + 1;
             ?>
             <p>Episode Number: <?php echo $episode_count; ?></p>
-            <input type="text" name="episode_title" placeholder="Episode Title" required>
             <input type="text" name="episode_url" placeholder="Episode URL" required>
             <button type="submit">Add Episode</button>
         </form>
