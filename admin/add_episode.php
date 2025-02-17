@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bind_param("is", $anime_id, $file_id);
                 if ($stmt->execute()) {
                     $episodes_added[] = $episode_count;
-                    echo "<script>alert('Episode added successfully: Episode " . $episode_count . "');</script>";
+                    echo "<script>alert('Episode added successfully: Episode " . $episodes_added . "');</script>";
                 } else {
                     echo "<script>alert('Error adding episode: " . $stmt->error . "');</script>";
                 }
