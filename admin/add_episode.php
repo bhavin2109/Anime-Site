@@ -21,34 +21,47 @@ if (isset($_GET['anime_id']) && isset($_GET['anime_name'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $anime_id = intval($_POST["anime_id"]);
-    $episode_url = $_POST["episode_url"];
+    $episode_urls = explode(',', $_POST["episode_urls"]);
 
-    // Extract file ID from Google Drive URL
-    preg_match('/\/d\/(.*?)\//', $episode_url, $matches);
-    $file_id = $matches[1] ?? '';
+    // Check if anime exists in the anime table
+    $stmt = $conn->prepare("SELECT anime_id FROM anime WHERE anime_id = ?");
+    $stmt->bind_param("i", $anime_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if (empty($file_id)) {
-        echo "<script>alert('Invalid Google Drive URL.');</script>";
-    } else {
-        // Check if anime exists in the anime table
-        $stmt = $conn->prepare("SELECT anime_id FROM anime WHERE anime_id = ?");
+    if ($result->num_rows > 0) {
+        // Fetch the current number of episodes for the anime
+        $stmt = $conn->prepare("SELECT COUNT(*) as episode_count FROM episodes WHERE anime_id = ?");
         $stmt->bind_param("i", $anime_id);
         $stmt->execute();
         $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $episode_count = $row['episode_count'];
 
-        if ($result->num_rows > 0) {
-            // Insert new episode with file ID
-            $stmt = $conn->prepare("INSERT INTO episodes (anime_id, episode_url) VALUES (?, ?)");
-            $stmt->bind_param("is", $anime_id, $file_id);
-            if ($stmt->execute()) {
-                echo "<script>alert('Episode added successfully!');</script>";
-                echo "<script>window.location.href = 'add_episode.php';</script>";
+        foreach ($episode_urls as $episode_url) {
+            $episode_url = trim($episode_url);
+
+            // Extract file ID from Google Drive URL
+            preg_match('/\/d\/(.*?)\//', $episode_url, $matches);
+            $file_id = $matches[1] ?? '';
+
+            if (empty($file_id)) {
+                echo "<script>alert('Invalid Google Drive URL: $episode_url');</script>";
             } else {
-                echo "<script>alert('Error adding episode: " . $stmt->error . "');</script>";
+                $episode_count++;
+                // Insert new episode with file ID
+                $stmt = $conn->prepare("INSERT INTO episodes (anime_id, episode_url, episode_number) VALUES (?, ?, ?)");
+                $stmt->bind_param("isi", $anime_id, $file_id, $episode_count);
+                if ($stmt->execute()) {
+                    echo "<script>alert('Episode $episode_count added successfully!');</script>";
+                } else {
+                    echo "<script>alert('Error adding episode: " . $stmt->error . "');</script>";
+                }
             }
-        } else {
-            echo "<script>alert('Anime not found.');</script>";
         }
+        echo "<script>window.location.href = 'add_episode.php';</script>";
+    } else {
+        echo "<script>alert('Anime not found.');</script>";
     }
 }
 ?>
@@ -130,9 +143,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $row = $result->fetch_assoc();
             $episode_count = $row['episode_count'] + 1;
             ?>
-            <p>Episode Number: <?php echo $episode_count; ?></p>
-            <input type="text" name="episode_url" placeholder="Episode URL" required>
-            <button type="submit">Add Episode</button>
+            <p>Next Episode Number: <?php echo $episode_count; ?></p>
+            <input type="text" name="episode_urls" placeholder="Episode URLs (comma separated)" required>
+            <button type="submit">Add Episodes</button>
         </form>
     </div>
 </body>

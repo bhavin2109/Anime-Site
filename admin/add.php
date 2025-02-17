@@ -176,13 +176,8 @@ mysqli_close($conn);
     <div class="form-container">
         <h2>Add Slider</h2>
         <form action="add.php" method="post" enctype="multipart/form-data">
-            <select name="slider_anime_id" class="input-box" required>
-                <option value="">Select Anime</option>
-                <?php foreach ($anime_list as $anime): ?>
-                    <option value="<?php echo $anime['anime_id']; ?>"><?php echo $anime['anime_name']; ?></option>
-                <?php endforeach; ?>
-            </select>
-            <input type="file" name="slider_image" class="input-box" required>
+            
+            <textarea name="episode_urls" placeholder="Enter episode URLs separated by commas" class="input-box" required></textarea>
             <button type="submit">Add Slider</button>
         </form>
     </div>
