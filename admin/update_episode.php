@@ -2,38 +2,29 @@
 // Include database connection file
 include_once("../includes/dbconnect.php");
 
-// Check if episode_id is provided
-if (isset($_GET['episode_id']) && is_numeric($_GET['episode_id'])) {
-    $episode_id = $_GET['episode_id'];
+// Fetch all episodes
+$result = mysqli_query($conn, "SELECT * FROM episodes");
 
-    // Fetch episode data based on ID
-    $result = mysqli_query($conn, "SELECT * FROM episodes WHERE episode_id=$episode_id");
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        $episode = mysqli_fetch_array($result);
-        $episode_url = $episode['episode_url'];
-    } else {
-        echo "<script>alert('Episode not found.');</script>";
-        echo "<script>window.location.href = 'episodes.php';</script>";
-        exit();
-    }
-} else {
-    echo "<script>alert('Invalid episode ID.');</script>";
+if (!$result || mysqli_num_rows($result) == 0) {
+    echo "<script>alert('No episodes found.');</script>";
     echo "<script>window.location.href = 'episodes.php';</script>";
     exit();
 }
 
 if (isset($_POST['update'])) {
-    $episode_id = $_POST['episode_id'];
-    $episode_url = $_POST['episode_url'];
-
-    $sql = "UPDATE episodes SET episode_url='$episode_url' WHERE episode_id=$episode_id";
-    if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Episode updated successfully!');</script>";
-        echo "<script>window.location.href = 'episodes.php';</script>";
-    } else {
-        echo "<script>alert('Error updating episode: " . mysqli_error($conn) . "');</script>";
+    $urls = explode(",", trim($_POST['episode_urls']));
+    foreach ($urls as $index => $url) {
+        $url = trim($url);
+        if (!empty($url)) {
+            $episode_id = $index + 1; // Assuming episode IDs are sequential starting from 1
+            $sql = "UPDATE episodes SET episode_url='$url' WHERE episode_id=$episode_id";
+            if (!mysqli_query($conn, $sql)) {
+                echo "<script>alert('Error updating episode ID $episode_id: " . mysqli_error($conn) . "');</script>";
+            }
+        }
     }
+    echo "<script>alert('Episodes updated successfully!');</script>";
+    echo "<script>window.location.href = 'episodes.php';</script>";
 }
 ?>
 
@@ -42,7 +33,7 @@ if (isset($_POST['update'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Episode</title>
+    <title>Update Episodes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,7 +49,7 @@ if (isset($_POST['update'])) {
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
+            width: 500px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -69,12 +60,13 @@ if (isset($_POST['update'])) {
             text-align: center;
         }
 
-        .form-container input[type="text"] {
-            width: 100%;
+        .form-container textarea {
+            width: calc(100% - 20px);
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            height: 200px;
         }
 
         .form-container button {
@@ -95,11 +87,10 @@ if (isset($_POST['update'])) {
 </head>
 <body>
     <div class="form-container">
-        <h2>Update Episode</h2>
+        <h2>Update Episodes</h2>
         <form action="update_episode.php" method="post">
-            <input type="hidden" name="episode_id" value="<?php echo $episode_id; ?>">
-            <input type="text" name="episode_url" placeholder="Episode URL" value="<?php echo $episode_url; ?>" required>
-            <button type="submit" name="update">Update Episode</button>
+            <textarea name="episode_urls" placeholder="Enter episode URLs, separated by commas" required></textarea>
+            <button type="submit" name="update">Update Episodes</button>
         </form>
     </div>
 </body>

@@ -34,18 +34,24 @@ if (isset($_POST['update'])) {
     $anime_name = $_POST['anime_name'];
     $anime_image = $_FILES['anime_image']['name'];
     $target_dir = "../assets/thumbnails/";
-    $target_file = $target_dir . basename($anime_image);
 
-    if (move_uploaded_file($_FILES['anime_image']['tmp_name'], $target_file)) {
-        $sql = "UPDATE anime SET anime_name='$anime_name', anime_image='$anime_image' WHERE anime_id=$anime_id";
-        if (mysqli_query($conn, $sql)) {
-            echo "<script>alert('Anime updated successfully!');</script>";
-            echo "<script>window.location.href = 'anime.php';</script>";
+    if (!empty($anime_image)) {
+        $target_file = $target_dir . basename($anime_image);
+        if (move_uploaded_file($_FILES['anime_image']['tmp_name'], $target_file)) {
+            $sql = "UPDATE anime SET anime_name='$anime_name', anime_image='$anime_image' WHERE anime_id=$anime_id";
         } else {
-            echo "<script>alert('Error updating anime: " . mysqli_error($conn) . "');</script>";
+            echo "<script>alert('Error uploading anime image.');</script>";
+            exit();
         }
     } else {
-        echo "<script>alert('Error uploading anime image.');</script>";
+        $sql = "UPDATE anime SET anime_name='$anime_name' WHERE anime_id=$anime_id";
+    }
+
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>alert('Anime updated successfully!');</script>";
+        echo "<script>window.location.href = 'anime.php';</script>";
+    } else {
+        echo "<script>alert('Error updating anime: " . mysqli_error($conn) . "');</script>";
     }
 }
 ?>

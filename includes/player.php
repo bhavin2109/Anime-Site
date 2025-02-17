@@ -16,6 +16,23 @@
             height: 100%;
             font-family: Arial, sans-serif;
             overflow: hidden;
+            background: linear-gradient(135deg,  #000000, #1a1a1a, #333333, #000000);
+            background-size: 300% 300%;
+            animation: gradient-animation 10s ease infinite;
+        }
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .player-container {
@@ -23,37 +40,52 @@
             height: 100%;
             justify-content: space-between;
             padding: 1px;
+            gap: 5px;
             overflow: hidden;
         }
 
         .sidebar {
             width: 300px;
-            background-color: #bebaba;
+            background: transparent;
+            border-radius: 10px;
             padding: 15px;
+            padding-top: 0;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            height: 100%;
-            overflow-y: scroll;
+            height: auto;
+            overflow-y: auto;
+            scrollbar-width: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .sidebar h3 {
+            color: white;
+            margin-top: 2vh;
+            font-size: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
         }
 
         .episode-list {
+            margin-top: 2vh;
             list-style: none;
-            padding: 15px 0px;
-            margin-bottom: 5vh;
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: space-evenly;
+            padding: 5px 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+            gap: 5px;
+            margin-bottom: 6vh;
         }
 
         .episode-list li {
-            margin-top: 8px;
-            background-color: rgb(168, 169, 169);
-            padding: 5px;
+            background-color: rgba(48, 47, 47, 0.6);
+            padding: 10px;
             border-radius: 8px;
             transition: 0.3s;
-            width: 20%;
-            height: 6vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -61,8 +93,9 @@
 
         .episode-list li a {
             text-decoration: none;
-            color: #333;
+            color: black;
             font-size: 18px;
+            font-weight:    200;
         }
 
         .episode-list li:hover {
@@ -80,14 +113,16 @@
             width: 100%;
             height: 65vh;
             border: none;
+            border-radius: 10px;
         }
 
         .anime-info {
             width: 350px;
-            background-color: #a1a1a1;
+            background-color: transparent;
+            border-radius: 10px;
             padding: 25px;
             text-align: center;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
             height: 100%;
             overflow-y: auto;
         }
@@ -96,6 +131,7 @@
             width: 150px;
             height: 200px;
             margin-bottom: 20px;
+            border-radius: 5px;
         }
 
         .anime-info h2 {

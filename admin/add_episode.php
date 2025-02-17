@@ -53,8 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt = $conn->prepare("INSERT INTO episodes (anime_id, episode_url) VALUES (?, ?)");
                 $stmt->bind_param("is", $anime_id, $file_id);
                 if ($stmt->execute()) {
-                    $episodes_added[] = $episode_count;
-                    echo "<script>alert('Episode added successfully: Episode " . $episodes_added . "');</script>";
+                    echo "<script>alert('Episode added successfully: Episode " . $episode_count . "');</script>";
                 } else {
                     echo "<script>alert('Error adding episode: " . $stmt->error . "');</script>";
                 }
