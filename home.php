@@ -440,6 +440,9 @@ if (!$trendingAnimeResult) {
         .additional-section {
             margin: 20px 0;
             padding: 20px;
+            width: 98%;
+            justify-self: center;
+            align-self: center;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -548,7 +551,7 @@ if (!$trendingAnimeResult) {
     <!-- Main Content -->
     <main>
         <section class="additional-section">
-            <h2>Welcome to Urahara TV!</h2>
+            <h2>Welcome to Anime Streaming Site!</h2>
             <p>Discover the latest and greatest in anime. From trending series to classic movies, we have it all. Dive into your favorite genres and explore new adventures. Enjoy your stay!</p>
         </section>
 

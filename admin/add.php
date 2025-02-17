@@ -96,7 +96,7 @@ mysqli_close($conn);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
+            width: 500px;
             height: 400px;
             display: flex;
             flex-direction: column;
@@ -170,15 +170,6 @@ mysqli_close($conn);
                 <option value="Thriller">Thriller</option>
             </select>
             <button type="submit">Add Anime</button>
-        </form>
-    </div>
-
-    <div class="form-container">
-        <h2>Add Slider</h2>
-        <form action="add.php" method="post" enctype="multipart/form-data">
-            
-            <textarea name="episode_urls" placeholder="Enter episode URLs separated by commas" class="input-box" required></textarea>
-            <button type="submit">Add Slider</button>
         </form>
     </div>
 </body>
