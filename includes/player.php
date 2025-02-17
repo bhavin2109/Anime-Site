@@ -76,14 +76,15 @@
             list-style: none;
             padding: 5px 10px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+            grid-template-columns: 1fr 1fr 1fr 1fr; 
             gap: 5px;
             margin-bottom: 6vh;
+            flex-wrap: wrap;
         }
 
         .episode-list li {
             background-color: rgba(48, 47, 47, 0.6);
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             transition: 0.3s;
             display: flex;
@@ -95,7 +96,7 @@
             text-decoration: none;
             color: black;
             font-size: 18px;
-            font-weight:    200;
+            font-weight: 200;
         }
 
         .episode-list li:hover {
