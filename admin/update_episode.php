@@ -12,19 +12,17 @@ if (!$result || mysqli_num_rows($result) == 0) {
 }
 
 if (isset($_POST['update'])) {
-    $urls = explode(",", trim($_POST['episode_urls']));
-    foreach ($urls as $index => $url) {
-        $url = trim($url);
-        if (!empty($url)) {
-            $episode_id = $index + 1; // Assuming episode IDs are sequential starting from 1
-            $sql = "UPDATE episodes SET episode_url='$url' WHERE episode_id=$episode_id";
-            if (!mysqli_query($conn, $sql)) {
-                echo "<script>alert('Error updating episode ID $episode_id: " . mysqli_error($conn) . "');</script>";
-            }
+    $episode_id = intval($_POST['episode_id']);
+    $url = trim($_POST['episode_url']);
+    if (!empty($url)) {
+        $sql = "UPDATE episodes SET episode_url='$url' WHERE episode_id=$episode_id";
+        if (!mysqli_query($conn, $sql)) {
+            echo "<script>alert('Error updating episode ID $episode_id: " . mysqli_error($conn) . "');</script>";
+        } else {
+            echo "<script>alert('Episode updated successfully!');</script>";
+            echo "<script>window.location.href = 'episodes.php';</script>";
         }
     }
-    echo "<script>alert('Episodes updated successfully!');</script>";
-    echo "<script>window.location.href = 'episodes.php';</script>";
 }
 ?>
 
@@ -33,7 +31,7 @@ if (isset($_POST['update'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Episodes</title>
+    <title>Update Episode</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,13 +58,13 @@ if (isset($_POST['update'])) {
             text-align: center;
         }
 
-        .form-container textarea {
+        .form-container select,
+        .form-container input {
             width: calc(100% - 20px);
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
-            height: 200px;
         }
 
         .form-container button {
@@ -87,10 +85,16 @@ if (isset($_POST['update'])) {
 </head>
 <body>
     <div class="form-container">
-        <h2>Update Episodes</h2>
+        <h2>Update Episode</h2>
         <form action="update_episode.php" method="post">
-            <textarea name="episode_urls" placeholder="Enter episode URLs, separated by commas" required></textarea>
-            <button type="submit" name="update">Update Episodes</button>
+            <select name="episode_id" required>
+                <option value="">Select Episode</option>
+                <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                    <option value="<?php echo $row['episode_id']; ?>"><?php echo $row['episode_id']; ?></option>
+                <?php } ?>
+            </select>
+            <input type="text" name="episode_url" placeholder="Enter episode URL" required>
+            <button type="submit" name="update">Update Episode</button>
         </form>
     </div>
 </body>

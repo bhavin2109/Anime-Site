@@ -67,6 +67,16 @@
     
     <?php
     include '../includes/dbconnect.php';
+    
+    // Handle delete request
+    if (isset($_GET['delete'])) {
+        $episode_id = intval($_GET['delete']);
+        $delete_query = "DELETE FROM episodes WHERE episode_id = $episode_id";
+        mysqli_query($conn, $delete_query);
+        header("Location: episodes.php?anime_id=" . intval($_GET['anime_id']));
+        exit();
+    }
+    
     if (isset($_GET['anime_id'])) {
         $anime_id = intval($_GET['anime_id']);
         $anime_query = "SELECT anime_name FROM anime WHERE anime_id = $anime_id";
