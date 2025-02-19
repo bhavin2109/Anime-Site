@@ -43,6 +43,7 @@ foreach ($genres as $genre) {
 
 
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
