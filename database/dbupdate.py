@@ -62,4 +62,4 @@ while True:
         import_database()
         file_last_modified_time = current_file_modified_time
 
-    time.sleep(300)  # Check for changes every 100 seconds
+    time.sleep(300)  # Check for changes every 300 seconds
