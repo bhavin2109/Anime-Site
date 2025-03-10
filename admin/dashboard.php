@@ -82,10 +82,6 @@ error_log('Users count: ' . $usersCount);
             <p><?php echo htmlspecialchars($animeCount); ?></p>
         </div>
         <div class="stats-item">
-            <h3>Movies</h3>
-            <p><?php echo htmlspecialchars($moviesCount); ?></p>
-        </div>
-        <div class="stats-item">
             <h3>Users</h3>
             <p><?php echo htmlspecialchars($usersCount); ?></p>
         </div>

@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 include '../includes/dbconnect.php';
 
 // Fetch anime by genre with episode count
-$genres = ['Action', 'Adventure', 'Romance', 'Fantasy']; // Define the genres you want to display
+$genres = ['Action', 'Shounen', 'Romance', 'Fantasy']; // Define the genres you want to display
 $animeByGenre = [];
 
 foreach ($genres as $genre) {
@@ -27,7 +27,7 @@ foreach ($genres as $genre) {
         LEFT JOIN 
             episodes e ON a.anime_id = e.anime_id
         WHERE 
-            a.genre = ?
+            a.genre = ? AND a.anime_type = 'Movie'
         GROUP BY 
             a.anime_id, a.anime_name, a.anime_image, a.anime_type
         ORDER BY

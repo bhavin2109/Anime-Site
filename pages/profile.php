@@ -83,6 +83,10 @@
             height: 80%;
             padding: 20px;
             background-color: #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -155,14 +159,9 @@
     <div class="profile-container">
         <div class="profile-card">
             <h2>User Profile</h2>
-            <div class="profile-picture">
-            <img src="path/to/profile-picture.jpg" alt="Profile Picture">
-            </div>
             <div class="user-info">
             <p><strong>Name:</strong> <?php echo htmlspecialchars($username); ?></p>
             <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
-            <p><strong>Date of Birth:</strong> <?php echo htmlspecialchars($dob); ?></p>
-            <p><strong>Location:</strong> <?php echo htmlspecialchars($location); ?></p>
             </div>
             <a href="logout.php" class="logout-btn">Logout</a>
         </div>

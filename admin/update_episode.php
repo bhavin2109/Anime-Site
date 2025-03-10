@@ -2,17 +2,21 @@
 // Include database connection file
 include_once("../includes/dbconnect.php");
 
-// Fetch all episodes
-$result = mysqli_query($conn, "SELECT * FROM episodes");
+// Get episode ID from URL parameter
+$episode_id = isset($_GET['episode_id']) ? intval($_GET['episode_id']) : 0;
+
+// Fetch specific episode
+$result = mysqli_query($conn, "SELECT * FROM episodes WHERE episode_id = $episode_id");
 
 if (!$result || mysqli_num_rows($result) == 0) {
-    echo "<script>alert('No episodes found.');</script>";
+    echo "<script>alert('Episode not found.');</script>";
     echo "<script>window.location.href = 'episodes.php';</script>";
     exit();
 }
 
+$episode = mysqli_fetch_assoc($result);
+
 if (isset($_POST['update'])) {
-    $episode_id = intval($_POST['episode_id']);
     $url = trim($_POST['episode_url']);
     if (!empty($url)) {
         $sql = "UPDATE episodes SET episode_url='$url' WHERE episode_id=$episode_id";
@@ -33,6 +37,11 @@ if (isset($_POST['update'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Episode</title>
     <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -85,15 +94,9 @@ if (isset($_POST['update'])) {
 </head>
 <body>
     <div class="form-container">
-        <h2>Update Episode</h2>
-        <form action="update_episode.php" method="post">
-            <select name="episode_id" required>
-                <option value="">Select Episode</option>
-                <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-                    <option value="<?php echo $row['episode_id']; ?>"><?php echo $row['episode_id']; ?></option>
-                <?php } ?>
-            </select>
-            <input type="text" name="episode_url" placeholder="Enter episode URL" required>
+        <h2>Update Episode <?php echo $episode_id; ?></h2>
+        <form action="update_episode.php?episode_id=<?php echo $episode_id; ?>" method="post">
+            <input type="text" name="episode_url" placeholder="Enter episode URL" value="<?php echo htmlspecialchars($episode['episode_url']); ?>" required>
             <button type="submit" name="update">Update Episode</button>
         </form>
     </div>
