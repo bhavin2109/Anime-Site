@@ -1,4 +1,3 @@
-
 # Anime Site
 
 This project is an Anime and Movie listing site with functionalities to add, update, and delete anime and movies. It also includes user authentication, an admin panel, and a video player for episodes.
@@ -10,15 +9,21 @@ This project is an Anime and Movie listing site with functionalities to add, upd
 - Add, Update, and Delete Anime and Movies
 - List of Episodes for each Anime
 - Video Player for Episodes
-- Search functionality
+- Search functionality 
 - Explore Anime by Genre
 - Responsive Design
+- Automatic Database Backup System
+- Upcoming Anime Section
+- Genre-based Anime Sections (Action, Shounen, Psychological, Seinen)
+- Movies Section
+- Dashboard with Statistics
 
 ## Prerequisites
 
 - XAMPP (Apache, MySQL)
 - PHP 7.4 or higher
 - MySQL 5.7 or higher
+- Python 3.x (for database backup system)
 
 ## Installation
 
@@ -55,7 +60,15 @@ This project is an Anime and Movie listing site with functionalities to add, upd
       ?>
       ```
 
-5. **Run the Project:**
+5. **Set up Database Backup System:**
+    - Ensure Python 3.x is installed
+    - Configure the paths in `database/dbupdate.py`
+    - Run the backup script:
+      ```bash
+      python database/dbupdate.py
+      ```
+
+6. **Run the Project:**
     - Open your browser and navigate to `http://localhost/Projects/Anime-Site/home.php`.
 
 ## Usage
@@ -63,6 +76,7 @@ This project is an Anime and Movie listing site with functionalities to add, upd
 - **Admin Panel:**
   - Navigate to `http://localhost/Projects/Anime-Site/admin/admin.php`.
   - Use the admin panel to manage anime, movies, and users.
+  - View statistics in the dashboard.
 
 - **User Authentication:**
   - Sign up or log in to access the site.
@@ -71,6 +85,8 @@ This project is an Anime and Movie listing site with functionalities to add, upd
 
 - **Explore and Search:**
   - Use the explore page to browse anime by genre: `http://localhost/Projects/Anime-Site/pages/explore.php`.
+  - Browse specific genre sections (Action, Shounen, Psychological, Seinen).
+  - Check out upcoming anime in the Upcoming section.
   - Use the search functionality to find specific anime.
 
 ## Contributing
