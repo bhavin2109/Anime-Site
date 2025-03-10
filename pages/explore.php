@@ -214,15 +214,7 @@ foreach ($genres as $genre) {
             <?php endforeach; ?>
         </section>
 
-        <!-- Additional Sections -->
-        <section class="additional-section">
-            <h2>Popular Anime</h2>
-            <p>Check out our most popular anime series</p>
-        </section>
-        <section class="additional-section">
-            <h2>About Us</h2>
-            <p>Welcome to our anime streaming site ! </p>
-        </section>
+      
 
     </main>
 
