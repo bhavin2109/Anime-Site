@@ -253,10 +253,7 @@
             <?php endif; ?>
             <h2><?php echo isset($episodeDetails['anime_name']) ? $episodeDetails['anime_name'] : 'Unknown Anime'; ?></h2>
             <p>Current Episode: <?php echo $current_episode_number; ?></p>
-            <form method="post" action="like_dislike.php">
-                <button name="like" value="<?php echo $episode_id; ?>">Like</button>
-                <button name="dislike" value="<?php echo $episode_id; ?>">Dislike</button>
-            </form>
+           
         </div> <!-- Anime Information Section ends -->
     </div> <!-- Player Container ends -->
 </body>
