@@ -9,7 +9,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: url('../assets/78.jpg') no-repeat center center fixed;
+    background: url('../assets/background.jpg') no-repeat center center fixed;
     background-size: cover;
     display: flex;
     justify-content: center;
