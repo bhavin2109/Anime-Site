@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "anime_site",
+            "database": "anime_site",
+            "username": "root",
+            "password": ""
+        }
+    ],
+    "codium.codeCompletion.enable": true
+}
