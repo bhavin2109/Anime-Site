@@ -115,6 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Set session variables for logged-in user
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $row['username'];
+            $_SESSION['user_id'] = $row['user_id'];
 
             // Redirect to home page
             header("Location: ..//home.php");

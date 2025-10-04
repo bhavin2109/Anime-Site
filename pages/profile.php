@@ -1,171 +1,132 @@
+<?php
+session_start();
+require_once '../includes/dbconnect.php';
+
+// Check if user is logged in and user_id is set
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+$username = '';
+$email = '';
+$profile_picture = '';
+$date_of_birth = '';
+
+// Fetch user info from database
+$stmt = $conn->prepare("SELECT username, email, profile_picture, date_of_birth FROM users WHERE user_id = ?");
+if ($stmt) {
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $stmt->bind_result($db_username, $db_email, $db_profile_picture, $db_dob);
+    if ($stmt->fetch()) {
+        $username = $db_username;
+        $email = $db_email;
+        $profile_picture = $db_profile_picture;
+        $date_of_birth = $db_dob;
+        // Update session for consistency
+        $_SESSION['username'] = $username;
+        $_SESSION['email'] = $email;
+        $_SESSION['profile_picture'] = $profile_picture;
+        $_SESSION['date_of_birth'] = $date_of_birth;
+    }
+    $stmt->close();
+}
+
+// Profile picture logic
+if (!empty($profile_picture)) {
+    $profile_pic_url = "../assets/profile_pics/" . htmlspecialchars($profile_picture);
+} else {
+    $profile_pic_url = "https://ui-avatars.com/api/?name=" . urlencode($username) . "&background=222&color=fff";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Body styles */
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #000000, #1a1a1a, #333333, #000000);
-            background-size: 300% 300%;
-            animation: gradient-animation 4s ease infinite;
-            margin: 0;
-            overflow: hidden;
-        }
-
-         @keyframes gradient-animation {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Header styles */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(159, 159, 159, 0.8);
-            z-index: 1000;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 10px 20px;
-        }
-
-        .logo img {
-            height: 50px;
-        }
-
-        .options a {
+            background: #222;
             color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
         }
-
-        .search-section input {
-            padding: 5px;
-        }
-
-        /* Profile container */
         .profile-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 90vh;
+            min-height: 90vh;
         }
-
-        /* Profile card */
         .profile-card {
-            width: 70%;
-            height: 80%;
-            padding: 20px;
-            background-color: #222;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            background: #333;
+            padding: 32px 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
             text-align: center;
+            min-width: 320px;
         }
-
+        .profile-picture {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #3498db;
+            margin-bottom: 18px;
+            background: #444;
+        }
         .profile-card h2 {
-            margin-bottom: 20px;
-            font-size: 1.8em;
+            margin-bottom: 18px;
             color: #3498db;
         }
-
-        .user-info {
-            margin-bottom: 30px;
-        }
-
         .user-info p {
-            font-size: 1.1em;
             margin: 10px 0;
+            font-size: 1.1em;
         }
-
-        /* Logout button */
-        .logout-btn {
+        .profile-actions {
+            margin-top: 22px;
+        }
+        .profile-actions a, .profile-actions button {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #e74c3c;
-            color: white;
-            text-decoration: none;
-            font-size: 1.2em;
+            margin: 0 6px;
+            padding: 10px 22px;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
+            border: none;
+            background: #3498db;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
         }
-
-        .logout-btn:hover {
-            background-color: #c0392b;
+        .profile-actions a.logout-btn {
+            background: #e74c3c;
+        }
+        .profile-actions a.logout-btn:hover {
+            background: #c0392b;
+        }
+        .profile-actions a:hover, .profile-actions button:hover {
+            background: #217dbb;
         }
     </style>
 </head>
-
 <body>
-    <!-- PHP User Profile Logic -->
-    <?php
-    // Start the session
-    session_start();
-    include '../includes/header.php';
-    require_once '../includes/dbconnect.php'; // Include the database connection
-
-    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-        header("Location: login.php"); // Redirect to login page if not logged in
-        exit;
-    } else {
-        $username = $_SESSION['username']; // Get the session username
-
-        // Fetch email from the database if not set in session
-        if (!isset($_SESSION['email'])) {
-            $stmt = $conn->prepare("SELECT email FROM users WHERE username = ?");
-            $stmt->bind_param("s", $username);
-            $stmt->execute();
-            $stmt->bind_result($email);
-            $stmt->fetch();
-            $_SESSION['email'] = $email; // Store email in session
-            $stmt->close();
-        } else {
-            $email = $_SESSION['email']; // Get the session email
-        }
-    }
-    ?>
-
-    <!-- Profile Container -->
+    <?php include '../includes/header.php'; ?>
     <div class="profile-container">
         <div class="profile-card">
             <h2>User Profile</h2>
+            <img src="<?php echo $profile_pic_url; ?>" alt="Profile Picture" class="profile-picture">
             <div class="user-info">
-            <p><strong>Name:</strong> <?php echo htmlspecialchars($username); ?></p>
-            <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
+                <p><strong>Username:</strong> <?php echo htmlspecialchars($username); ?></p>
+                <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
+                <p><strong>Date of Birth:</strong> <?php echo htmlspecialchars($date_of_birth); ?></p>
             </div>
-            <a href="logout.php" class="logout-btn">Logout</a>
+            <div class="profile-actions">
+                <a href="edit_profile.php">Edit Profile</a>
+                <a href="logout.php" class="logout-btn">Logout</a>
+            </div>
         </div>
     </div>
 </body>
-
 </html>
+<?php if (isset($conn)) $conn->close(); ?>

@@ -139,35 +139,45 @@ mysqli_close($conn);
         <form action="add.php" method="post" enctype="multipart/form-data">
             <input type="text" name="anime_name" placeholder="Anime Name" class="input-box" required>
             <input type="file" name="anime_image" class="input-box" required>
+            <?php
+            // Ensure database connection is included
+            include '../includes/dbconnect.php';
+
+            $typeOptions = [];
+            $typeQuery = "SELECT * FROM type";
+            $typeResult = mysqli_query($conn, $typeQuery);
+            if ($typeResult) {
+                while ($typeRow = mysqli_fetch_assoc($typeResult)) {
+                    $typeOptions[] = $typeRow;
+                }
+            }
+            ?>
             <select name="anime_type" class="input-box" required>
                 <option value="">Select Anime Type</option>
-                <option value="TV">TV</option>
-                <option value="Movie">Movie</option>
-                <option value="OVA">OVA</option>
-                <option value="ONA">ONA</option>
-                <option value="Special">Special</option>
+                <?php foreach ($typeOptions as $type): ?>
+                    <option value="<?php echo htmlspecialchars($type['name']); ?>">
+                        <?php echo htmlspecialchars($type['name']); ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
+            <?php
+            // Fetch genres from the genre table
+            $genreOptions = [];
+            $genreQuery = "SELECT * FROM genres";
+            $genreResult = mysqli_query($conn, $genreQuery);
+            if ($genreResult) {
+                while ($genreRow = mysqli_fetch_assoc($genreResult)) {
+                    $genreOptions[] = $genreRow;
+                }
+            }
+            ?>
             <select name="genre" class="input-box" required>
                 <option value="">Select Genre</option>
-                <option value="Action">Action</option>
-                <option value="Adventure">Adventure</option>
-                <option value="Comedy">Comedy</option>
-                <option value="Drama">Drama</option>
-                <option value="Fantasy">Fantasy</option>
-                <option value="Horror">Horror</option>
-                <option value="Isekai">Isekai</option>
-                <option value="Mecha">Mecha</option>
-                <option value="Music">Music</option>
-                <option value="Mystery">Mystery</option>
-                <option value="Psychological">Psychological</option>
-                <option value="Romance">Romance</option>
-                <option value="Sci-Fi">Sci-Fi</option>
-                <option value="Seinen">Seinen</option>
-                <option value="Shounen">Shounen</option>
-                <option value="Slice of Life">Slice of Life</option>
-                <option value="Sports">Sports</option>
-                <option value="Supernatural">Supernatural</option>
-                <option value="Thriller">Thriller</option>
+                <?php foreach ($genreOptions as $genre): ?>
+                    <option value="<?php echo htmlspecialchars($genre['genre_name']); ?>">
+                        <?php echo htmlspecialchars($genre['genre_name']); ?>
+                    </option>
+                <?php endforeach; ?>
             </select>
             <button type="submit">Add Anime</button>
         </form>

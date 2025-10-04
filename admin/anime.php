@@ -111,8 +111,7 @@
             <?php
             include '../includes/dbconnect.php';
             $query = "
-                SELECT anime_id, anime_name, anime_type, anime_image, genre FROM anime ORDER BY anime_name
-                ";
+                SELECT anime_id, anime_name, anime_type, anime_image, genre FROM anime ORDER BY anime_name";
             $result = mysqli_query($conn, $query);
             while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>

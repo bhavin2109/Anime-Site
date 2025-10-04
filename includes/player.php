@@ -1,5 +1,58 @@
+<?php
+// Start session at the very top, before any output
+session_start();
+
+// --- Add to Watchlist Logic (moved to BEFORE any output) ---
+$watchlist_message = '';
+$redirect_to_login = false;
+$anime_id_for_watchlist = 0;
+$user_id = $_SESSION['loggedin'] ?? null;
+
+// Only process the add-to-watchlist POST before any output
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_watchlist'])) {
+    require_once 'dbconnect.php';
+    $anime_id_for_watchlist = isset($_POST['anime_id']) ? intval($_POST['anime_id']) : 0;
+    if (!$user_id) {
+        // Not logged in, redirect to login (no output yet)
+        header("Location: ../pages/login.php");
+        exit;
+    }
+    $status = 'watching'; // Set default status as 'watching'
+
+    // Check if already in watchlist
+    $checkQuery = "SELECT status FROM watchlist WHERE user_id = ? AND anime_id = ?";
+    $stmt = $conn->prepare($checkQuery);
+    $stmt->bind_param("ii", $user_id, $anime_id_for_watchlist);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        if ($row['status'] !== $status) {
+            $updateQuery = "UPDATE watchlist SET status = ? WHERE user_id = ? AND anime_id = ?";
+            $updateStmt = $conn->prepare($updateQuery);
+            $updateStmt->bind_param("sii", $status, $user_id, $anime_id_for_watchlist);
+            $updateStmt->execute();
+            $updateStmt->close();
+            $watchlist_message = '<span style="color:green;">Status updated in your watchlist!</span>';
+        } else {
+            $watchlist_message = '<span style="color:orange;">Already in your watchlist!</span>';
+        }
+    } else {
+        $insertQuery = "INSERT INTO watchlist (user_id, anime_id, status, added_at) VALUES (?, ?, ?, NOW())";
+        $insertStmt = $conn->prepare($insertQuery);
+        $insertStmt->bind_param("iis", $user_id, $anime_id_for_watchlist, $status);
+        $insertStmt->execute();
+        $insertStmt->close();
+        $watchlist_message = '<span style="color:green;">Added to your watchlist!</span>';
+    }
+    $stmt->close();
+    // No header() redirect here, just show the message
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +65,12 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             height: 100%;
             font-family: Arial, sans-serif;
             overflow: hidden;
-            background: linear-gradient(135deg,  #000000, #1a1a1a, #333333, #000000);
+            background: linear-gradient(135deg, #000000, #1a1a1a, #333333, #000000);
             background-size: 300% 300%;
             animation: gradient-animation 10s ease infinite;
         }
@@ -76,7 +130,7 @@
             list-style: none;
             padding: 5px 10px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr; 
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 5px;
             margin-bottom: 6vh;
             flex-wrap: wrap;
@@ -170,6 +224,7 @@
         }
     </style>
 </head>
+
 <body>
     <?php include 'header.php'; ?>
     <div class="player-container">
@@ -226,7 +281,7 @@
             $episode_id = isset($_GET['episode_id']) ? intval($_GET['episode_id']) : 1;
 
             // Fetch episode details from the database
-            $sql = "SELECT e.episode_id, a.anime_name, a.anime_image, e.episode_url
+            $sql = "SELECT e.episode_id, e.anime_id, a.anime_name, a.anime_image, e.episode_url
                     FROM episodes e 
                     JOIN anime a ON e.anime_id = a.anime_id 
                     WHERE e.episode_id = ? AND e.anime_id = ?";
@@ -235,6 +290,35 @@
             $stmt->execute();
             $result = $stmt->get_result();
             $episodeDetails = $result->fetch_assoc();
+
+            // --- Insert into history table when an episode is played ---
+            // Only if user is logged in and episode/anime is valid
+            if ($user_id && $episodeDetails && isset($episodeDetails['anime_id']) && isset($episodeDetails['episode_id'])) {
+                // Check if a history entry already exists for this user, anime, and episode
+                $checkHistoryQuery = "SELECT id FROM history WHERE user_id = ? AND anime_id = ? AND episode_id = ?";
+                $checkStmt = $conn->prepare($checkHistoryQuery);
+                $checkStmt->bind_param("iii", $user_id, $episodeDetails['anime_id'], $episodeDetails['episode_id']);
+                $checkStmt->execute();
+                $checkResult = $checkStmt->get_result();
+
+                if ($checkResult && $checkResult->num_rows > 0) {
+                    // Update watched_at to now
+                    $updateHistoryQuery = "UPDATE history SET watched_at = NOW() WHERE user_id = ? AND anime_id = ? AND episode_id = ?";
+                    $updateStmt = $conn->prepare($updateHistoryQuery);
+                    $updateStmt->bind_param("iii", $user_id, $episodeDetails['anime_id'], $episodeDetails['episode_id']);
+                    $updateStmt->execute();
+                    $updateStmt->close();
+                } else {
+                    // Insert new history entry
+                    $insertHistoryQuery = "INSERT INTO history (user_id, anime_id, episode_id, watched_at) VALUES (?, ?, ?, NOW())";
+                    $insertStmt = $conn->prepare($insertHistoryQuery);
+                    $insertStmt->bind_param("iii", $user_id, $episodeDetails['anime_id'], $episodeDetails['episode_id']);
+                    $insertStmt->execute();
+                    $insertStmt->close();
+                }
+                $checkStmt->close();
+            }
+            // --- End history logic ---
 
             if ($episodeDetails): ?>
                 <!-- Embed video using iframe -->
@@ -253,8 +337,23 @@
             <?php endif; ?>
             <h2><?php echo isset($episodeDetails['anime_name']) ? $episodeDetails['anime_name'] : 'Unknown Anime'; ?></h2>
             <p>Current Episode: <?php echo $current_episode_number; ?></p>
-           
+            <?php
+            // For the form, get the anime_id from $episodeDetails if not already set
+            if (!$anime_id_for_watchlist) {
+                $anime_id_for_watchlist = isset($episodeDetails['anime_id']) ? intval($episodeDetails['anime_id']) : 0;
+            }
+            ?>
+
+            <form method="post" action="" style="display:inline;">
+                <input type="hidden" name="anime_id" value="<?php echo htmlspecialchars($anime_id_for_watchlist); ?>">
+                <button type="submit" name="add_to_watchlist" class="add-watchlist-btn" style="background:#3498db;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.95em;">
+                    Add to Watchlist
+                </button>
+            </form>
+            <?php if (!empty($watchlist_message)) echo $watchlist_message; ?>
+
         </div> <!-- Anime Information Section ends -->
     </div> <!-- Player Container ends -->
 </body>
+
 </html>

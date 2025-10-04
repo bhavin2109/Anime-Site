@@ -15,7 +15,8 @@
         }
    
         header {
-            background: transparent;
+            background-color: black;
+            
             color: #fff;
             padding: 10px 0;
             position: sticky;
@@ -28,7 +29,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-           
             padding: 0 20px;
         }
 
@@ -114,6 +114,7 @@
             <div class="options">
                 <a href="../home.php">Home</a>
                 <a href="../pages/explore.php">Movies</a>
+                <a href="../pages/watchlist.php">Watchlist</a>
                 <a href="../admin/admin.php">Admin</a>
                 <a href="../pages/profile.php">Profile</a>
             </div>
