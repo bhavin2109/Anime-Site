@@ -10,7 +10,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 // Include database connection
 include '../includes/dbconnect.php';
 
-// Fetch anime by genre with episode count
+// Fetch anime by genre with episode count (only movies with at least one episode)
 $genres = ['Action', 'Shounen', 'Romance', 'Fantasy']; // Define the genres you want to display
 $animeByGenre = [];
 
@@ -30,6 +30,8 @@ foreach ($genres as $genre) {
             a.genre = ? AND a.anime_type = 'Movie'
         GROUP BY 
             a.anime_id, a.anime_name, a.anime_image, a.anime_type
+        HAVING 
+            episode_count > 0
         ORDER BY
             RAND()
         LIMIT 10
@@ -41,9 +43,32 @@ foreach ($genres as $genre) {
     $animeByGenre[$genre] = $result->fetch_all(MYSQLI_ASSOC);
 }
 
-
-
-
+// Fetch upcoming movies (movies with no episodes)
+$upcomingMoviesQuery = "
+    SELECT 
+        a.anime_id, 
+        a.anime_name, 
+        a.anime_image, 
+        a.anime_type
+    FROM 
+        anime a
+    LEFT JOIN 
+        episodes e ON a.anime_id = e.anime_id
+    WHERE 
+        a.anime_type = 'Movie'
+    GROUP BY 
+        a.anime_id, a.anime_name, a.anime_image, a.anime_type
+    HAVING 
+        COUNT(e.episode_id) = 0
+    ORDER BY
+        RAND()
+    LIMIT 10
+";
+$upcomingMoviesResult = $conn->query($upcomingMoviesQuery);
+$upcomingMovies = [];
+if ($upcomingMoviesResult) {
+    $upcomingMovies = $upcomingMoviesResult->fetch_all(MYSQLI_ASSOC);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +93,6 @@ foreach ($genres as $genre) {
             animation: gradient-animation 4s ease infinite;
         }
 
-        
         .genre-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -178,6 +202,61 @@ foreach ($genres as $genre) {
         .additional-section p {
             margin-bottom: 10px;
         }
+
+        /* Styles for upcoming movies section */
+        .upcoming-movies-section {
+            margin: 40px 0 20px 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .upcoming-movies-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .upcoming-movies-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .upcoming-movie-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 160px;
+            background: #f7f7f7;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            padding: 12px;
+            text-decoration: none;
+            color: #222;
+            transition: box-shadow 0.2s;
+        }
+        .upcoming-movie-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .upcoming-movie-item img {
+            width: 120px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .upcoming-movie-title {
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .upcoming-movie-type {
+            font-size: 13px;
+            color: #888;
+        }
     </style>
 </head>
 
@@ -214,7 +293,23 @@ foreach ($genres as $genre) {
             <?php endforeach; ?>
         </section>
 
-      
+        <!-- Upcoming Movies Section -->
+        <section class="upcoming-movies-section">
+            <h2>Upcoming Movies</h2>
+            <div class="upcoming-movies-grid">
+                <?php if (!empty($upcomingMovies)): ?>
+                    <?php foreach ($upcomingMovies as $movie): ?>
+                        <div class="upcoming-movie-item">
+                            <img src="../assets/thumbnails/<?php echo htmlspecialchars($movie['anime_image']); ?>" alt="<?php echo htmlspecialchars($movie['anime_name']); ?>">
+                            <div class="upcoming-movie-title"><?php echo htmlspecialchars($movie['anime_name']); ?></div>
+                            <div class="upcoming-movie-type"><?php echo htmlspecialchars($movie['anime_type']); ?></div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No upcoming movies found.</p>
+                <?php endif; ?>
+            </div>
+        </section>
 
     </main>
 

@@ -131,7 +131,7 @@
                 </form>
             </div>
         </section>
-        <p style="height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center; color:#fff;">&copy; Group No.1</p>
+        <p style="height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center; color:#fff;">&copy; Group No.2</p>
     </footer>
 </body>
 </html>

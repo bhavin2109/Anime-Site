@@ -247,10 +247,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_watchlist'])) 
                 $firstEpisode = null; // To store the first episode
                 $current_episode_number = 1; // Default to 1
 
+                // We'll also build a mapping from episode_id to episode number for later use
+                $episodeIdToNumber = [];
+
                 while ($episode = $episodes_result->fetch_assoc()) {
                     if ($firstEpisode === null) {
                         $firstEpisode = $episode; // Set the first episode
                     }
+                    $episodeIdToNumber[$episode['episode_id']] = $episode_counter;
                     if ($episode['episode_id'] == $episode_id) {
                         $current_episode_number = $episode_counter;
                     }
@@ -354,6 +358,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_watchlist'])) 
 
         </div> <!-- Anime Information Section ends -->
     </div> <!-- Player Container ends -->
+
+    <!-- CONTINUE WATCHING FEATURE: Show last played episode for each anime -->
+    <?php if ($user_id): ?>
+        <div style="width:100%;background:#222;padding:20px 0 10px 0;margin-top:10px;">
+            <h2 style="color:#fff;text-align:center;">Continue Watching</h2>
+            <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:30px;">
+            <?php
+                // Fetch last watched episode for each anime for this user
+                include 'dbconnect.php';
+                $continueQuery = "
+                    SELECT h.anime_id, a.anime_name, a.anime_image, a.anime_type, MAX(h.watched_at) as last_watched
+                    FROM history h
+                    JOIN anime a ON h.anime_id = a.anime_id
+                    WHERE h.user_id = ?
+                    GROUP BY h.anime_id
+                    ORDER BY last_watched DESC
+                    LIMIT 10
+                ";
+                $stmt = $conn->prepare($continueQuery);
+                $stmt->bind_param("i", $user_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                while ($row = $result->fetch_assoc()) {
+                    // For each anime, get the last played episode_id for this user
+                    $lastEpQuery = "SELECT episode_id, watched_at FROM history WHERE user_id = ? AND anime_id = ? ORDER BY watched_at DESC, id DESC LIMIT 1";
+                    $epStmt = $conn->prepare($lastEpQuery);
+                    $epStmt->bind_param("ii", $user_id, $row['anime_id']);
+                    $epStmt->execute();
+                    $epResult = $epStmt->get_result();
+                    $epData = $epResult->fetch_assoc();
+                    $epStmt->close();
+
+                    $last_episode_id = $epData ? $epData['episode_id'] : null;
+                    $last_episode_number = null;
+
+                    // Get the episode number for this episode_id
+                    if ($last_episode_id) {
+                        $epNumQuery = "SELECT episode_id FROM episodes WHERE anime_id = ? ORDER BY episode_id ASC";
+                        $epNumStmt = $conn->prepare($epNumQuery);
+                        $epNumStmt->bind_param("i", $row['anime_id']);
+                        $epNumStmt->execute();
+                        $epNumResult = $epNumStmt->get_result();
+                        $epNum = 1;
+                        while ($epRow = $epNumResult->fetch_assoc()) {
+                            if ($epRow['episode_id'] == $last_episode_id) {
+                                $last_episode_number = $epNum;
+                                break;
+                            }
+                            $epNum++;
+                        }
+                        $epNumStmt->close();
+                    }
+
+                    // Fallback if not found
+                    if (!$last_episode_number) $last_episode_number = 1;
+
+                    // Link to the last played episode
+                    $link = "./includes/player.php?anime_id=" . htmlspecialchars($row['anime_id']) . "&episode_id=" . htmlspecialchars($last_episode_id);
+
+                    echo '<div style="background:#333;border-radius:10px;padding:15px 20px;min-width:220px;max-width:250px;text-align:center;box-shadow:0 2px 8px #0003;">';
+                    echo '<a href="' . $link . '" style="text-decoration:none;color:inherit;">';
+                    echo '<img src="./assets/thumbnails/' . htmlspecialchars($row['anime_image']) . '" alt="thumb" style="width:120px;height:160px;border-radius:6px;box-shadow:0 2px 8px #0006;"><br>';
+                    echo '<div style="margin-top:10px;font-size:1.1em;font-weight:bold;color:#fff;">' . htmlspecialchars($row['anime_name']) . '</div>';
+                    echo '<div style="color:#bbb;font-size:0.95em;">Type: ' . htmlspecialchars($row['anime_type']) . '</div>';
+                    echo '<div style="color:#6cf;font-size:1em;margin-top:6px;">Last Played Episode: ' . htmlspecialchars($last_episode_number) . '</div>';
+                    echo '</a>';
+                    echo '</div>';
+                }
+                $stmt->close();
+            ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </body>
 
 </html>

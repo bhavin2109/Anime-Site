@@ -79,6 +79,17 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             height: 30px
         }
 
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .options {
+            display: flex;
+            align-items: center;
+        }
+
         .options a {
             color: #fff;
             text-decoration: none;
@@ -86,10 +97,28 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             padding: 10px;
             border-radius: 5px;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
         }
 
         .options a:hover {
             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        .profile-link img {
+            width:28px;
+            height:28px;
+            border-radius:50%;
+            object-fit:cover;
+            border:1px solid #fff;
         }
 
         .search-section {
@@ -217,6 +246,10 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             .featured-anime-image {
                 margin-bottom: 10px;
             }
+            .nav-center {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
         /* --- End Featured Anime Section --- */
 
@@ -332,106 +365,7 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
         }
         /* --- End Anime Section Vertical Redesign --- */
 
-        .footer-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            justify-content: center;
-            padding: 50px 150px;
-            background-color: #333;
-            color: #fff;
-            height: auto;
-        }
-
-        .contact-us ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .contact-us ul li {
-            margin: 10px 0;
-            padding: 5px;
-        }
-
-        .contact-us ul li a {
-            color: #fff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .contact-us ul li a img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-
-        .feedback-container input {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .feedback-container input[type="text"] {
-            height: 150px;
-        }
-
-        .submit-btn {
-            background-color: #fff;
-            color: #333;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            border-radius: 5px;
-        }
-
-        .submit-btn:hover {
-            background-color: #ddd;
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .options {
-                margin-top: 10px;
-            }
-
-            .search-section {
-                margin-top: 10px;
-            }
-
-            .footer-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .additional-section {
-            margin: 20px 0;
-            padding: 20px;
-            width: 98%;
-            justify-self: center;
-            align-self: center;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .additional-section h2 {
-            margin-bottom: 20px;
-        }
-
-        .additional-section p {
-            margin-bottom: 10px;
-        }
+        /* Remove footer styles, not needed for About Us section */
 
         .movie-container {
             display: grid;
@@ -500,6 +434,36 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             margin-bottom: 10px;
             text-align: center;
         }
+
+        /* About Us Section Styles */
+        .about-us-section {
+            margin: 40px auto 0 auto;
+            padding: 40px 20px;
+            max-width: 900px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            text-align: center;
+        }
+        .about-us-section h2 {
+            font-size: 2rem;
+            margin-bottom: 18px;
+            color: #222;
+        }
+        .about-us-section p {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 10px;
+        }
+        .about-us-section ul {
+            list-style: disc;
+            margin: 0 auto 0 2em;
+            text-align: left;
+            color: #444;
+        }
+        .about-us-section li {
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 
@@ -510,12 +474,36 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             <div class="logo">
                 <img src="./assets/logo.ico" alt="Logo">
             </div>
-            <div class="options">
-                <a href="home.php">Home</a>
-                <a href="./pages/explore.php">Movies</a>
-                <a href="./pages/watchlist.php">Watchlist</a>
-                <a href="./admin/admin.php">Admin</a>
-                <a href="./pages/profile.php">Profile</a>
+            <div class="nav-center">
+                <div class="options">
+                    <a href="home.php">Home</a>
+                    <a href="./pages/explore.php">Movies</a>
+                    <a href="./pages/watchlist.php">Watchlist</a>
+                    <a href="./admin/admin.php">Admin</a>
+                </div>
+                <?php
+                // Show profile icon of the user currently logged in
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $profile_pic_url = '';
+                $username = '';
+                if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+                    $username = $_SESSION['username'] ?? 'User';
+                    if (!empty($_SESSION['profile_picture'])) {
+                        $profile_pic_url = "./assets/profile_pics/" . htmlspecialchars($_SESSION['profile_picture']);
+                    } else {
+                        $profile_pic_url = "https://ui-avatars.com/api/?name=" . urlencode($username) . "&background=222&color=fff";
+                    }
+                } else {
+                    // Not logged in, show default avatar
+                    $profile_pic_url = "https://ui-avatars.com/api/?name=User&background=222&color=fff";
+                }
+                ?>
+                <a href="./pages/profile.php" class="profile-link">
+                    <img src="<?php echo $profile_pic_url; ?>" alt="Profile">
+                    <span style="color:#fff;"><?php echo htmlspecialchars($username); ?></span>
+                </a>
             </div>
             <div class="search-section">
                 <input type="search" id="searchQuery" name="searchbar" placeholder="Search Anime">
@@ -618,9 +606,6 @@ foreach ($genres as $genre) {
 
             $continueWatching = [];
 
-            // The main problem: $user_id is not set or is not the correct session variable.
-            // Fix: Use $user_id from session, as set above.
-
             if (isset($user_id) && is_numeric($user_id)) {
                 // Get the most recent history entry for each anime watched by this user
                 $cwQuery = "
@@ -660,18 +645,15 @@ foreach ($genres as $genre) {
                             $animeStmt->close();
                         }
 
-                        // Get episode info
-                        $episode_url = null;
+                        // Get episode info (fetch episode number and title)
+                        // The episodes table does not have episode_number or episode_title columns.
+                        // Only episode_id is available in the history table.
+                        $episode_number = null;
+                        $episode_title = null;
                         if (!empty($history['episode_id'])) {
-                            $epQuery = "SELECT episode_url FROM episodes WHERE episode_id = ?";
-                            if ($epStmt = $conn->prepare($epQuery)) {
-                                $epStmt->bind_param("i", $history['episode_id']);
-                                $epStmt->execute();
-                                $epResult = $epStmt->get_result();
-                                $epData = $epResult->fetch_assoc();
-                                $epStmt->close();
-                                $episode_url = $epData['episode_url'] ?? null;
-                            }
+                            // Since we don't have episode_number or episode_title, just use the episode_id as the number.
+                            $episode_number = $history['episode_id'];
+                            // Optionally, you could display as "Episode #" or leave $episode_title null.
                         }
 
                         if ($animeData) {
@@ -680,7 +662,9 @@ foreach ($genres as $genre) {
                                 'anime_name' => $animeData['anime_name'],
                                 'anime_image' => $animeData['anime_image'],
                                 'anime_type' => $animeData['anime_type'],
-                                'last_episode_number' => $episode_url,
+                                'last_episode_id' => $history['episode_id'],
+                                'last_episode_number' => $episode_number,
+                                'last_episode_title' => $episode_title,
                                 'watched_at' => $history['watched_at']
                             ];
                         }
@@ -693,11 +677,18 @@ foreach ($genres as $genre) {
                 <div class="movie-box">
                     <div class="movie-grid">
                         <?php foreach ($continueWatching as $cw): ?>
-                            <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($cw['anime_id']); ?>&episode=<?php echo htmlspecialchars($cw['last_episode_number'] ?? 1); ?>" class="movie-item">
+                            <a href="./includes/player.php?anime_id=<?php echo htmlspecialchars($cw['anime_id']); ?>&episode=<?php echo htmlspecialchars($cw['last_episode_id'] ?? 1); ?>" class="movie-item">
                                 <img src="./assets/thumbnails/<?php echo htmlspecialchars($cw['anime_image']); ?>" alt="<?php echo htmlspecialchars($cw['anime_name']); ?>">
                                 <div class="movie-details">
                                     <div class="movie_name"><?php echo htmlspecialchars($cw['anime_name']); ?></div>
-                                    
+                                    <?php if (!empty($cw['last_episode_number'])): ?>
+                                        <div style="font-size:14px;color:#555;">
+                                            Last watched: Episode <?php echo htmlspecialchars($cw['last_episode_number']); ?>
+                                            <?php if (!empty($cw['last_episode_title'])): ?>
+                                                - <?php echo htmlspecialchars($cw['last_episode_title']); ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </a>
                         <?php endforeach; ?>
@@ -795,33 +786,22 @@ foreach ($genres as $genre) {
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <section class="footer-container">
-            <div class="contact-us">
-                <h2>Contact Us</h2>
-                <div class="contact-us-container">
-                    <ul type="none">
-                        <li><a href="https://www.instagram.com/bleach_tbh?igsh=cTBmM20zM2M4OWFs"><img src="./assets/icons/instagram.png">Instagram</a></li>
-                        <li><a href="#"><img src="./assets/icons/telegram.png">Telegram</a></li>
-                        <li><a href="#"><img src="./assets/icons/twitter.png">X</a></li>
-                        <li><a href="#"><img src="./assets/icons/facebook.png">Facebook</a></li>
-                        <li><a href="#"><img src="./assets/icons/gmail.png">G-Mail</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="feedback-form">
-                <h2>Feedback</h2>
-                <form action="" class="feedback-container" name="feedback-form" method="post">
-                    <input type="email" name="emailid" class="email-feedback" placeholder="E-Mail">
-                    <input type="text" name="feedback-text" class="text-feedback" placeholder="Feedback">
-                    <input type="button" value="Submit" name="submitok" class="submit-btn">
-                </form>
-            </div>
-        </section>
-        <p style="height: 5vh; width: 100%; display: flex; align-items:center; justify-content:center; color:#fff;">&copy; Group No.1</p>
-    </footer>
+    <!-- About Us Section -->
+    <section class="about-us-section">
+        <h2>About Us</h2>
+        <p>Welcome to AnimeFlix, your one-stop destination for streaming and discovering your favorite anime and movies!</p>
+        <p>Our website is dedicated to providing anime fans with a seamless and enjoyable experience. Here you can:</p>
+        <ul>
+            <li>Browse trending and featured anime and movies</li>
+            <li>Continue watching from where you left off</li>
+            <li>Explore anime by genre</li>
+            <li>Keep track of your watchlist</li>
+            <li>Stay updated with upcoming releases</li>
+        </ul>
+        <p>AnimeFlix is created by Group No.2 as a project to bring the best anime content to fans in a user-friendly and visually appealing way.</p>
+        <p>We hope you enjoy your time here!</p>
+        <p style="margin-top:24px; color:#888;">&copy; <?php echo date('Y'); ?> AnimeFlix &mdash; Group No.2</p>
+    </section>
 
     <script>
         function performSearch() {
