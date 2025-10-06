@@ -543,7 +543,7 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
 
 <section class="genre-container">
     <?php
-$genres = ['Action', 'Shounen', 'Romance', 'Fantasy']; // Define the genres you want to display
+$genres = ['Adventure', 'Shounen', 'Romance', 'Seinen']; // Define the genres you want to display
 $animeByGenre = [];
 
 foreach ($genres as $genre) {

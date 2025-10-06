@@ -19,6 +19,9 @@ if (isset($_GET['anime_id']) && isset($_GET['anime_name'])) {
     exit();
 }
 
+$success_message = '';
+$error_message = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $anime_id = intval($_POST["anime_id"]);
     $episode_urls = explode(',', $_POST["episode_urls"]);
@@ -38,6 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $row = $result->fetch_assoc();
         $episode_count = $row['episode_count'];
 
+        $added_count = 0;
+        $invalid_urls = [];
         foreach ($episode_urls as $episode_url) {
             $episode_url = trim($episode_url);
 
@@ -46,20 +51,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $file_id = $matches[1] ?? '';
 
             if (empty($file_id)) {
-                echo "<script>alert('Invalid Google Drive URL: $episode_url');</script>";
+                $invalid_urls[] = $episode_url;
             } else {
                 $episode_count++;
                 // Insert new episode with file ID
                 $stmt = $conn->prepare("INSERT INTO episodes (anime_id, episode_url) VALUES (?, ?)");
                 $stmt->bind_param("is", $anime_id, $file_id);
                 if ($stmt->execute()) {
-                    echo "<script>alert('Episode added successfully: Episode " . $episode_count . "');</script>";
+                    $added_count++;
                 } else {
-                    echo "<script>alert('Error adding episode: " . $stmt->error . "');</script>";
+                    $error_message .= "Error adding episode: " . $stmt->error . "\\n";
                 }
             }
         }
-        echo "<script>window.location.href = 'add_episode.php';</script>";
+        if ($added_count > 0) {
+            $success_message = "Successfully added $added_count episode" . ($added_count > 1 ? "s" : "") . ".";
+        }
+        if (!empty($invalid_urls)) {
+            $error_message .= "Invalid Google Drive URL(s): " . implode(", ", $invalid_urls) . ".\\n";
+        }
+        if ($success_message || $error_message) {
+            echo "<script>";
+            if ($success_message) echo "alert('$success_message');";
+            if ($error_message) echo "alert('$error_message');";
+            echo "window.location.href = 'add_episode.php';";
+            echo "</script>";
+        }
     } else {
         echo "<script>alert('Anime not found.');</script>";
     }

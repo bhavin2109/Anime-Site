@@ -7,28 +7,40 @@ from datetime import datetime
 DB_NAME = "anime_site"  # Replace with your actual database name
 DB_USER = "root"
 DB_PASSWORD = ""
-SQL_FILE = "C:/xampp/htdocs/Projects/Anime-Site/database/anime_site.sql"  # Replace with your actual path
+SQL_FILE = "C:/xampp/htdocs/Anime-Site/database/anime_site.sql"  # Replace with your actual path
 EXPORT_CMD = f'mysqldump -u {DB_USER} --password={DB_PASSWORD} {DB_NAME} > "{SQL_FILE}"'
 IMPORT_CMD = f'mysql -u {DB_USER} --password={DB_PASSWORD} {DB_NAME} < "{SQL_FILE}"'
-GIT_REPO_PATH = "C:/xampp/htdocs/Projects/Anime-Site/"  # Replace with your actual GitHub repository path
+GIT_REPO_PATH = "C:/xampp/htdocs/Anime-Site/"  # Replace with your actual GitHub repository path
 
 # Track timestamps
 db_last_export_time = datetime.min  # Tracks last export to the file
-file_last_modified_time = os.path.getmtime(SQL_FILE)  # Tracks last modification of .sql file
+
+try:
+    file_last_modified_time = os.path.getmtime(SQL_FILE)  # Tracks last modification of .sql file
+except FileNotFoundError:
+    file_last_modified_time = 0  # If file doesn't exist yet
 
 
 def export_database():
     """Exports the MySQL database to the .sql file."""
     print("Exporting database to .sql file...")
-    subprocess.run(EXPORT_CMD, shell=True, check=True)
-    print("Database exported successfully!")
+    try:
+        subprocess.run(EXPORT_CMD, shell=True, check=True)
+        print("Database exported successfully!")
+    except subprocess.CalledProcessError as e:
+        print(f"Database export failed: {e}")
+        print("Make sure 'mysqldump' is installed and available in your PATH.")
 
 
 def import_database():
     """Imports the .sql file to the MySQL database."""
     print("Importing .sql file to the database...")
-    subprocess.run(IMPORT_CMD, shell=True, check=True)
-    print("Database updated successfully!")
+    try:
+        subprocess.run(IMPORT_CMD, shell=True, check=True)
+        print("Database updated successfully!")
+    except subprocess.CalledProcessError as e:
+        print(f"Database import failed: {e}")
+        print("Make sure 'mysql' is installed and available in your PATH.")
 
 
 def push_to_github():
@@ -42,24 +54,36 @@ def push_to_github():
         print("Changes pushed to GitHub successfully!")
     except subprocess.CalledProcessError as e:
         print(f"Git operation failed: {e}")
+        print("Make sure Git is installed and the repository is properly configured.")
 
 
-while True:
-    # Monitor for changes in the database
-    current_time = datetime.now()
-    if (current_time - db_last_export_time).seconds >= 10:  # Check every 10 seconds
-        print("Exporting database to sync changes...")
-        export_database()
-        db_last_export_time = current_time
+def main_loop():
+    global db_last_export_time, file_last_modified_time
 
-        # Automatically push the updated file to GitHub
-        push_to_github()
+    while True:
+        # Monitor for changes in the database
+        current_time = datetime.now()
+        if (current_time - db_last_export_time).seconds >= 10:  # Check every 10 seconds
+            print("Exporting database to sync changes...")
+            export_database()
+            db_last_export_time = current_time
 
-    # Monitor for changes in the .sql file
-    current_file_modified_time = os.path.getmtime(SQL_FILE)
-    if current_file_modified_time != file_last_modified_time:
-        print("Changes detected in the .sql file. Updating the database...")
-        import_database()
-        file_last_modified_time = current_file_modified_time
+            # Automatically push the updated file to GitHub
+            push_to_github()
 
-    time.sleep(300)  # Check for changes every 300 seconds
+        # Monitor for changes in the .sql file
+        try:
+            current_file_modified_time = os.path.getmtime(SQL_FILE)
+        except FileNotFoundError:
+            current_file_modified_time = 0
+
+        if current_file_modified_time != file_last_modified_time:
+            print("Changes detected in the .sql file. Updating the database...")
+            import_database()
+            file_last_modified_time = current_file_modified_time
+
+        time.sleep(300)  # Check for changes every 300 seconds
+
+
+if __name__ == "__main__":
+    main_loop()
