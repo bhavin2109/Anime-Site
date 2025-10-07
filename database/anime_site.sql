@@ -114,7 +114,7 @@ CREATE TABLE `history` (
   CONSTRAINT `fk_history_anime` FOREIGN KEY (`anime_id`) REFERENCES `anime` (`anime_id`),
   CONSTRAINT `fk_history_episode` FOREIGN KEY (`episode_id`) REFERENCES `episodes` (`episode_id`),
   CONSTRAINT `fk_history_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +123,7 @@ CREATE TABLE `history` (
 
 LOCK TABLES `history` WRITE;
 /*!40000 ALTER TABLE `history` DISABLE KEYS */;
-INSERT INTO `history` VALUES (1,1,6,204,'2025-10-05 02:09:49'),(2,1,2,171,'2025-10-05 02:09:32'),(3,1,38,177,'2025-10-06 17:22:27'),(4,1,7,610,'2025-10-06 10:49:02'),(5,1,30,635,'2025-10-06 10:52:21'),(6,1,59,570,'2025-10-06 12:12:11'),(7,1,61,596,'2025-10-06 12:12:28'),(8,1,38,189,'2025-10-06 12:12:50'),(9,1,39,190,'2025-10-06 17:33:42'),(10,1,39,191,'2025-10-06 17:33:44'),(11,1,12,706,'2025-10-06 22:44:44'),(12,1,12,1780,'2025-10-06 22:47:47');
+INSERT INTO `history` VALUES (1,1,6,204,'2025-10-05 02:09:49'),(2,1,2,171,'2025-10-05 02:09:32'),(3,1,38,177,'2025-10-06 17:22:27'),(4,1,7,610,'2025-10-06 10:49:02'),(5,1,30,635,'2025-10-06 10:52:21'),(6,1,59,570,'2025-10-07 10:59:57'),(7,1,61,596,'2025-10-06 12:12:28'),(8,1,38,189,'2025-10-06 12:12:50'),(9,1,39,190,'2025-10-06 17:33:42'),(10,1,39,191,'2025-10-06 17:33:44'),(11,1,12,706,'2025-10-06 22:44:44'),(12,1,12,1780,'2025-10-06 22:47:47'),(13,1,21,173,'2025-10-07 11:22:25');
 /*!40000 ALTER TABLE `history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +176,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'bhavin','opbhavin21@gmail.com','bhavin2109','65.jpg','2004-09-21'),(2,'heet','heetvelani@gmail.com','heet',NULL,NULL),(4,'mann','mann@gmail.com','mann',NULL,NULL);
+INSERT INTO `users` VALUES (1,'bhavin','opbhavin21@gmail.com','bhavin2109','63.png','2004-09-21'),(2,'heet','heetvelani@gmail.com','heet',NULL,NULL),(4,'mann','mann@gmail.com','mann',NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,7 +198,7 @@ CREATE TABLE `watchlist` (
   KEY `fk_anime` (`anime_id`),
   CONSTRAINT `fk_anime` FOREIGN KEY (`anime_id`) REFERENCES `anime` (`anime_id`),
   CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-07  0:04:09
+-- Dump completed on 2025-10-07 11:36:26
