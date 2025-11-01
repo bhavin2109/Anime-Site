@@ -96,7 +96,7 @@
                     <li><a href="anime.php" target="content-frame">Anime</a></li>
                     <li><a href="users.php" target="content-frame">Users</a></li>
                     <li><a href="genres.php" target="content-frame">Genres</a></li>
-                    <li><a href="../home.php">Home Page</a></li>
+                    
                 </ul>
         </section>
         <!-- Right Content -->

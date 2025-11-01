@@ -6,7 +6,14 @@ session_start();
 $watchlist_message = '';
 $redirect_to_login = false;
 $anime_id_for_watchlist = 0;
-$user_id = $_SESSION['loggedin'] ?? null;
+
+// Get user_id from session (fixed: was incorrectly using $_SESSION['loggedin'] which is a boolean)
+$user_id = null;
+if (isset($_SESSION['user_id']) && is_numeric($_SESSION['user_id'])) {
+    $user_id = (int)$_SESSION['user_id'];
+} elseif (isset($_SESSION['id']) && is_numeric($_SESSION['id'])) {
+    $user_id = (int)$_SESSION['id'];
+}
 
 // Only process the add-to-watchlist POST before any output
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_watchlist'])) {
@@ -321,6 +328,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_watchlist'])) 
                     $insertStmt->close();
                 }
                 $checkStmt->close();
+
+                // --- Add watched anime to watchlist automatically with status 'watching' ---
+                $watched_anime_id = $episodeDetails['anime_id'];
+                $status = 'watching';
+                // Check if the anime is already in user's watchlist
+                $checkWQuery = "SELECT status FROM watchlist WHERE user_id = ? AND anime_id = ?";
+                $stmtW = $conn->prepare($checkWQuery);
+                $stmtW->bind_param("ii", $user_id, $watched_anime_id);
+                $stmtW->execute();
+                $resultW = $stmtW->get_result();
+                if ($resultW && $resultW->num_rows > 0) {
+                    $rowW = $resultW->fetch_assoc();
+                    if ($rowW['status'] !== $status) {
+                        $updateWQuery = "UPDATE watchlist SET status = ? WHERE user_id = ? AND anime_id = ?";
+                        $updateWStmt = $conn->prepare($updateWQuery);
+                        $updateWStmt->bind_param("sii", $status, $user_id, $watched_anime_id);
+                        $updateWStmt->execute();
+                        $updateWStmt->close();
+                    }
+                } else {
+                    $insertWQuery = "INSERT INTO watchlist (user_id, anime_id, status, added_at) VALUES (?, ?, ?, NOW())";
+                    $insertWStmt = $conn->prepare($insertWQuery);
+                    $insertWStmt->bind_param("iis", $user_id, $watched_anime_id, $status);
+                    $insertWStmt->execute();
+                    $insertWStmt->close();
+                }
+                $stmtW->close();
             }
             // --- End history logic ---
 
@@ -350,9 +384,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_watchlist'])) 
 
             <form method="post" action="" style="display:inline;">
                 <input type="hidden" name="anime_id" value="<?php echo htmlspecialchars($anime_id_for_watchlist); ?>">
-                <button type="submit" name="add_to_watchlist" class="add-watchlist-btn" style="background:#3498db;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.95em;">
-                    Add to Watchlist
-                </button>
+                
             </form>
             <?php if (!empty($watchlist_message)) echo $watchlist_message; ?>
 

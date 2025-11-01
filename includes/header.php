@@ -1,3 +1,22 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$profile_pic_url = '';
+$username = '';
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    $username = $_SESSION['username'] ?? 'User';
+    if (!empty($_SESSION['profile_picture'])) {
+        $profile_pic_url = "../assets/profile_pics/" . htmlspecialchars($_SESSION['profile_picture']);
+    } else {
+        $profile_pic_url = "https://ui-avatars.com/api/?name=" . urlencode($username) . "&background=222&color=fff";
+    }
+} else {
+    // Not logged in, show default avatar
+    $profile_pic_url = "https://ui-avatars.com/api/?name=User&background=222&color=fff";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -145,27 +164,9 @@
                     <a href="../home.php">Home</a>
                     <a href="../pages/explore.php">Movies</a>
                     <a href="../pages/watchlist.php">Watchlist</a>
-                    <a href="../admin/admin.php">Admin</a>
+                    
                 </div>
-                <?php
-                // Show profile icon of the user currently logged in
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-                $profile_pic_url = '';
-                $username = '';
-                if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-                    $username = $_SESSION['username'] ?? 'User';
-                    if (!empty($_SESSION['profile_picture'])) {
-                        $profile_pic_url = "../assets/profile_pics/" . htmlspecialchars($_SESSION['profile_picture']);
-                    } else {
-                        $profile_pic_url = "https://ui-avatars.com/api/?name=" . urlencode($username) . "&background=222&color=fff";
-                    }
-                } else {
-                    // Not logged in, show default avatar
-                    $profile_pic_url = "https://ui-avatars.com/api/?name=User&background=222&color=fff";
-                }
-                ?>
+                <?php // profile icon and username use variables initialized at top ?>
                 <a href="../pages/profile.php" style="display: flex; align-items: center; gap: 6px; text-decoration: none;">
                     <img src="<?php echo $profile_pic_url; ?>" alt="Profile" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid #fff;">
                     <span style="color:#fff;"><?php echo htmlspecialchars($username); ?></span>

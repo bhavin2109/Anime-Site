@@ -9,7 +9,19 @@ if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
     exit;
 }
 
-$user_id = $_SESSION['loggedin'];
+// Get user_id from session (fixed: was incorrectly using $_SESSION['loggedin'] which is a boolean)
+$user_id = null;
+if (isset($_SESSION['user_id']) && is_numeric($_SESSION['user_id'])) {
+    $user_id = (int)$_SESSION['user_id'];
+} elseif (isset($_SESSION['id']) && is_numeric($_SESSION['id'])) {
+    $user_id = (int)$_SESSION['id'];
+}
+
+// If still no user_id, redirect to login
+if (!$user_id) {
+    header("Location: login.php");
+    exit;
+}
 
 // Handle status update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -114,10 +126,20 @@ $result = $stmt->get_result();
         button.remove-btn {
             background: #e74c3c;
         }
+        .watchlist-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .watchlist-actions form {
+            margin: 0;
+        }
         @media (max-width: 700px) {
             .watchlist-container { padding: 10px; }
             table, th, td { font-size: 0.95em; }
             img.thumbnail { width: 40px; height: 55px; }
+            .watchlist-actions { flex-direction: column; gap: 4px; }
         }
     </style>
 </head>
@@ -132,8 +154,7 @@ $result = $stmt->get_result();
                     <th>Image</th>
                     <th>Status</th>
                     <th>Added At</th>
-                    <th>Update Status</th>
-                    <th>Remove</th>
+                    <th colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -157,26 +178,26 @@ $result = $stmt->get_result();
                     <td>
                         <?php echo htmlspecialchars(date('Y-m-d', strtotime($row['added_at']))); ?>
                     </td>
-                    <td>
-                        <form method="post" class="inline-form" action="">
-                            <input type="hidden" name="anime_id" value="<?php echo $row['anime_id']; ?>">
-                            <select name="new_status">
-                                <?php
-                                $statuses = ['watching', 'completed', 'dropped', 'plan to watch'];
-                                foreach ($statuses as $status) {
-                                    $selected = ($row['status'] === $status) ? 'selected' : '';
-                                    echo "<option value=\"$status\" $selected>" . ucwords($status) . "</option>";
-                                }
-                                ?>
-                            </select>
-                            <button type="submit" name="update_status" class="update-btn">Update</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form method="post" class="inline-form" action="" onsubmit="return confirm('Remove this anime from your watchlist?');">
-                            <input type="hidden" name="anime_id" value="<?php echo $row['anime_id']; ?>">
-                            <button type="submit" name="remove" class="remove-btn">Remove</button>
-                        </form>
+                    <td colspan="2">
+                        <div class="watchlist-actions">
+                            <form method="post" class="inline-form" action="">
+                                <input type="hidden" name="anime_id" value="<?php echo $row['anime_id']; ?>">
+                                <select name="new_status">
+                                    <?php
+                                    $statuses = ['watching', 'completed', 'dropped', 'plan to watch'];
+                                    foreach ($statuses as $status) {
+                                        $selected = ($row['status'] === $status) ? 'selected' : '';
+                                        echo "<option value=\"$status\" $selected>" . ucwords($status) . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <button type="submit" name="update_status" class="update-btn">Update</button>
+                            </form>
+                            <form method="post" class="inline-form" action="" onsubmit="return confirm('Remove this anime from your watchlist?');">
+                                <input type="hidden" name="anime_id" value="<?php echo $row['anime_id']; ?>">
+                                <button type="submit" name="remove" class="remove-btn">Remove</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             <?php endwhile; ?>
