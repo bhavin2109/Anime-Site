@@ -42,7 +42,15 @@ if (!$trendingAnimeResult) {
 }
 
 // Fetch featured anime (pick 1 random anime for the featured section)
-$featuredAnimeQuery = "SELECT * FROM anime ORDER BY RAND() LIMIT 1";
+$featuredAnimeQuery = "
+    SELECT a.*
+    FROM anime a
+    WHERE (
+        SELECT COUNT(*) FROM episodes e WHERE e.anime_id = a.anime_id
+    ) > 0
+    ORDER BY RAND() 
+    LIMIT 1
+";
 $featuredAnimeResult = $conn->query($featuredAnimeQuery);
 $featuredAnime = null;
 if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
@@ -58,140 +66,16 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
     <link rel="icon" type="image/png" href="./assets/logo.ico">
 
     <title>Home</title>
+    <link rel="stylesheet" href="./css/shared_styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg,rgb(39, 59, 52) 0%,rgba(0, 0, 0, 0.48) 100%);
-            color: #333;
-        }
-
-        header {
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            padding: 10px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .logo img {
-            height: 30px
-        }
-
-        .nav-center {
-            display: flex;
-            align-items: center;
-            gap: 0;
-        }
-
-        .options {
-            display: flex;
-            align-items: center;
-        }
-
-        .options a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: center;
-        }
-
-        .options a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .profile-link {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-left: 10px;
-            text-decoration: none;
-        }
-
-        .profile-link img {
-            width:28px;
-            height:28px;
-            border-radius:50%;
-            object-fit:cover;
-            border:1px solid #fff;
-        }
-
-        .search-section {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-        }
-
-        .search-section input {
-            padding: 10px;
-            border: none;
-            border-radius: 5px 0 0 5px;
-            background: transparent;
-            transition: 0.3s ease-in-out;
-        }
-
-        .search-section input::placeholder {
-            color: #fff;
-        }
-
-        .search-section input:focus {
-            outline: none;
-        }
-
-        .search-section input:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .search-section input:focus::placeholder {
-            color: transparent;
-        }
-
-        .search-section button {
-            padding: 8px;
-            border: none;
-            border-radius: 0 5px 5px 0;
-            cursor: pointer;
-            background: transparent;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .search-section button img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .search-section button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
 
         main {
             display: flex;
             flex-direction: column;
             margin-top: 5vh;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         /* --- Featured Anime Section --- */
@@ -200,27 +84,39 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             height: 60vh;
             margin: 0px auto 0 auto;
             padding: 30px 20px;
-            background: linear-gradient(135deg, #f8ffae 0%, #43c6ac 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1e3a5f 30%, #dc2626 60%, #0a0a0a 100%);
+            background-size: 200% 200%;
+            animation: featured-gradient 8s ease infinite;
             border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            box-shadow: 0 8px 32px rgba(220, 38, 38, 0.4);
             display: flex;
             align-items: center;
             gap: 32px;
+            border: 2px solid rgba(220, 38, 38, 0.3);
+        }
+
+        @keyframes featured-gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
         .featured-anime-image {
             flex: 0 0 180px;
-            max-width: 180px;
-            max-height: 270px;
+            width: 180px;
+            height: 270px;
+            min-width: 180px;
+            min-height: 270px;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-            background: #fff;
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4);
+            background: rgba(26, 26, 26, 0.5);
+            border: 2px solid rgba(220, 38, 38, 0.3);
         }
         .featured-anime-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 10px;
+            display: block;
         }
         .featured-anime-info {
             flex: 1 1 auto;
@@ -231,38 +127,54 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
         .featured-anime-title {
             font-size: 2rem;
             font-weight: bold;
-            color: #222;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(220, 38, 38, 0.5);
         }
         .featured-anime-meta {
             font-size: 1.1rem;
-            color: #444;
+            color: #e5e7eb;
         }
         .featured-anime-link {
             margin-top: 16px;
             display: inline-block;
-            background: #43c6ac;
+            background: #dc2626;
             color: #fff;
-            padding: 10px 24px;
-            border-radius: 6px;
+            padding: 12px 28px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
         }
         .featured-anime-link:hover {
-            background: #2e8b7a;
+            background: #991b1b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
         }
         @media (max-width: 700px) {
             .featured-anime-section {
                 flex-direction: column;
-                align-items: flex-start;
-                padding: 20px 10px;
+                align-items: center;
+                padding: 20px 15px;
+                height: auto;
+                min-height: 60vh;
             }
             .featured-anime-image {
-                margin-bottom: 10px;
+                margin-bottom: 20px;
+                width: 150px;
+                height: 225px;
+                min-width: 150px;
+                min-height: 225px;
             }
-            .nav-center {
-                flex-direction: column;
-                align-items: flex-start;
+            .featured-anime-info {
+                width: 100%;
+                text-align: center;
+            }
+            .featured-anime-title {
+                font-size: 1.5rem;
+            }
+            .featured-anime-meta {
+                font-size: 1rem;
             }
         }
         /* --- End Featured Anime Section --- */
@@ -280,14 +192,16 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
         .genre-box {
             width: 100%;
             height: 150vh;
-            background: linear-gradient(135deg, cyan, pink, cyan);
-            background-size: 300% 300%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1e3a5f 25%, #dc2626 50%, #1e3a5f 75%, #0a0a0a 100%);
+            background-size: 400% 400%;
             animation: gradient-animation 15s ease infinite;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow-y: auto;
             scroll-behavior: smooth;
             scrollbar-width: none;
             padding: 20px;
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3);
+            border: 2px solid rgba(220, 38, 38, 0.2);
         }
 
         @keyframes gradient-animation {
@@ -305,6 +219,11 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
         }
 
         .genre-box h2 {
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(220, 38, 38, 0.5);
+        }
+
+        .genre-box h2 {
             text-align: center;
             margin-bottom: 20px;
         }
@@ -319,15 +238,19 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             display: flex;
             align-items: center;
             text-decoration: none;
-            color: #333;
-            transition: 0.3s;
+            color: #e5e7eb;
+            transition: all 0.3s ease;
             padding: 10px;
-            border-radius: 5px;
-            background: transparent;
+            border-radius: 8px;
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid rgba(220, 38, 38, 0.1);
         }
 
         .anime-item:hover {
-            background-color: #e0e0e0;
+            background: rgba(220, 38, 38, 0.2);
+            border-color: rgba(220, 38, 38, 0.5);
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
         }
 
         .anime-item img {
@@ -398,14 +321,22 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             display: flex;
             align-items: center;
             justify-content: space-evenly;
-            background: linear-gradient(135deg, cyan, pink, blue);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1e3a5f 30%, #dc2626 60%, #0a0a0a 100%);
             background-size: 300% 300%;
-            border-radius: 10px;
+            animation: movie-gradient 10s ease infinite;
+            border-radius: 12px;
             overflow-x: auto;
             overflow-y: hidden;
             scroll-behavior: smooth;
             scrollbar-width: none;
             padding: 20px;
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3);
+            border: 2px solid rgba(220, 38, 38, 0.2);
+        }
+
+        @keyframes movie-gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .movie-grid {
@@ -421,15 +352,19 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             flex-direction: column;
             align-items: center;
             text-decoration: none;
-            color: #333;
-            transition: 0.3s;
+            color: #e5e7eb;
+            transition: all 0.3s ease;
             padding: 10px;
-            border-radius: 5px;
-            background: transparent;
+            border-radius: 8px;
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid rgba(220, 38, 38, 0.1);
         }
 
         .movie-item:hover {
-            background-color: #e0e0e0;
+            background: rgba(220, 38, 38, 0.2);
+            border-color: rgba(220, 38, 38, 0.5);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
         }
 
         .movie-item img {
@@ -449,67 +384,95 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
             text-align: center;
         }
 
-        /* About Us Section Styles */
-        .about-us-section {
-            width: 100vw;
-            max-width: 100vw;
-            margin: 40px 0 0 0;
-            padding: 48px 0 48px 0;
-            background: linear-gradient(135deg, rgba(39,59,52,0.98) 0%, rgba(0,0,0,0.85) 100%);
-            border-radius: 0;
-            box-shadow: none;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+        /* About Us Section Styles - Now using footer from shared */
+        h2 {
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(220, 38, 38, 0.3);
+        }
+        .about-us-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            align-items: start;
         }
         .about-us-section h2 {
             font-size: 2.2rem;
-            margin-bottom: 18px;
+            margin-bottom: 30px;
             color: #f8ffae;
             letter-spacing: 1px;
             text-align: center;
+            grid-column: 1 / -1;
         }
-        .about-us-section p {
-            font-size: 1.15rem;
-            color: #e0e0e0;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .about-us-section ul {
-            list-style: disc inside;
-            margin: 0 auto;
-            text-align: center;
-            color: #e0e0e0;
-            max-width: 600px;
+        .about-us-column {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding-left: 0;
+        }
+        .about-us-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #f8ffae;
+        }
+        .about-us-section p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .about-us-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
         .about-us-section li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            line-height: 1.6;
+            padding-left: 20px;
+            position: relative;
+        }
+        .about-us-section li:before {
+            content: "•";
+            color: #f8ffae;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        .about-us-footer {
+            grid-column: 1 / -1;
             text-align: center;
-            width: 100%;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: #bdbdbd;
         }
         @media (max-width: 900px) {
-            .about-us-section {
-                padding: 32px 0 32px 0;
+            .about-us-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
             }
-            .about-us-section ul {
-                margin: 0 auto;
+            .about-us-section {
+                padding: 32px 20px;
             }
         }
         @media (max-width: 600px) {
+            .about-us-container {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
             .about-us-section {
-                padding: 20px 0 20px 0;
+                padding: 20px 15px;
             }
             .about-us-section h2 {
-                font-size: 1.4rem;
+                font-size: 1.6rem;
+                margin-bottom: 20px;
             }
-            .about-us-section ul {
+            .about-us-column h3 {
+                font-size: 1.2rem;
+            }
+            .about-us-section p {
                 font-size: 1rem;
             }
         }
@@ -517,47 +480,10 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
 </head>
 
 <body>
-    <!-- Header -->
-    <header>
-        <nav>
-            <div class="logo">
-                <img src="./assets/logo.ico" alt="Logo">
-            </div>
-            <div class="nav-center">
-                <div class="options">
-                    <a href="home.php">Home</a>
-                    <a href="./pages/explore.php">Movies</a>
-                    <a href="./pages/watchlist.php">Watchlist</a>
-                </div>
-                <?php
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-                $profile_pic_url = '';
-                $username = '';
-                if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-                    $username = $_SESSION['username'] ?? 'User';
-                    if (!empty($_SESSION['profile_picture'])) {
-                        $profile_pic_url = "./assets/profile_pics/" . htmlspecialchars($_SESSION['profile_picture']);
-                    } else {
-                        $profile_pic_url = "https://ui-avatars.com/api/?name=" . urlencode($username) . "&background=222&color=fff";
-                    }
-                } else {
-                    // Not logged in, show default avatar
-                    $profile_pic_url = "https://ui-avatars.com/api/?name=User&background=222&color=fff";
-                }
-                ?>
-                <a href="./pages/profile.php" class="profile-link">
-                    <img src="<?php echo $profile_pic_url; ?>" alt="Profile">
-                    <span style="color:#fff;"><?php echo htmlspecialchars($username); ?></span>
-                </a>
-            </div>
-            <div class="search-section">
-                <input type="search" id="searchQuery" name="searchbar" placeholder="Search Anime">
-                <button onclick="performSearch()"><img src="./assets/icons/search.png"></button>
-            </div>
-        </nav>
-    </header>
+    <?php 
+    $current_page = 'home.php';
+    include './includes/header_shared.php'; 
+    ?>
 
     <!-- Main Content -->
     <main>
@@ -585,7 +511,7 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
         </section>
         <?php endif; ?>
 
-        <h2 style="text-align: center; margin: 20px 0; color:#fff;">Anime</h2>
+        <h2 style="text-align: center; margin: 20px 0;">Anime</h2>
 
 <section class="genre-container">
     <?php
@@ -636,15 +562,13 @@ if ($featuredAnimeResult && $featuredAnimeResult->num_rows > 0) {
                         </a>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p>No anime found in this genre.</p>
+                    <p style="color: #e5e7eb;">No anime found in this genre.</p>
                 <?php endif; ?>
             </div>
         </div>
     <?php endforeach; ?>
 </section>
 
-<h2 style="text-align: center; margin: 20px 0; color:#fff;">Continue Watching</h2>
-<section class="movie-container">
 <?php
 // Fix: Get the correct user's continue watching history, not only '1'!
 
@@ -710,6 +634,8 @@ if ($user_id && is_numeric($user_id)) {
 ?>
 
 <?php if (!empty($continueWatching)): ?>
+<h2 style="text-align: center; margin: 20px 0;">Continue Watching</h2>
+<section class="movie-container">
     <div class="movie-box">
         <div class="movie-grid">
             <?php foreach ($continueWatching as $cw): ?>
@@ -722,12 +648,10 @@ if ($user_id && is_numeric($user_id)) {
             <?php endforeach; ?>
         </div>
     </div>
-<?php else: ?>
-    <p style="text-align: center; color: #fff;">No anime watched recently</p>
-<?php endif; ?>
 </section>
+<?php endif; ?>
 
-<h2 style="text-align: center; margin: 20px 0; color:#fff;">Movies</h2>
+<h2 style="text-align: center; margin: 20px 0;">Movies</h2>
 
 <section class="movie-container">
     <?php
@@ -768,14 +692,14 @@ if ($user_id && is_numeric($user_id)) {
                     </a>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>No trending movies found.</p>
+                <p style="color: #e5e7eb;">No trending movies found.</p>
             <?php endif; ?>
         </div>
     </div>
 </section>
 </main>
 
-<h2 style="text-align: center; margin: 20px 0; color:#fff;">Upcoming</h2>
+<h2 style="text-align: center; margin: 20px 0;">Upcoming</h2>
 
 <section class="movie-container">
     <?php
@@ -807,40 +731,14 @@ if ($user_id && is_numeric($user_id)) {
                     </a>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>No upcoming anime found.</p>
+                <p style="color: #e5e7eb;">No upcoming anime found.</p>
             <?php endif; ?>
         </div>
     </div>
 </section>
 
-<!-- About Us Section -->
-<section class="about-us-section">
-    <h2>About Us</h2>
-    <p>Welcome to our Anime and Movie streaming website, your one-stop destination for streaming and discovering your favorite anime and movies!</p>
-    <p>Our website is dedicated to providing anime fans with a seamless and enjoyable experience. Here you can:</p>
-    <ul style="text-align: left;">
-        <li>Browse trending and featured anime and movies</li>
-        <li>Continue watching from where you left off</li>
-        <li>Explore anime by genre</li>
-        <li>Keep track of your watchlist</li>
-        <li>Stay updated with upcoming releases</li>
-    </ul>
-    <br>
-    <p>Our website is created by Group No.2 as a project to bring the best anime and movie content to fans in a user-friendly and visually appealing way.</p>
-    <p>We hope you enjoy your time here!</p>
-    <p style="margin-top:24px; color:#bdbdbd;">&copy; <?php echo date('Y'); ?> Anime streaming Site &mdash; Group No.2</p>
-</section>
+    <?php include './includes/footer_shared.php'; ?>
 
-<script>
-    function performSearch() {
-        const query = document.getElementById('searchQuery').value.trim();
-        if (query) {
-            window.location.href = `./includes/search.php?query=${encodeURIComponent(query)}`;
-        } else {
-            alert('Please enter a search term.');
-        }
-    }
-</script>
 
 </body>
 </html>

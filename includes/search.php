@@ -140,6 +140,6 @@ if (!empty($query)) {
         ?>
     </div>
 
-    <?php include 'footer.php'; ?>
+    
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'check_admin.php';
 include '../includes/dbconnect.php';
 
 // Fetch counts from the database

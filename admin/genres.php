@@ -1,4 +1,5 @@
 <?php
+require_once 'check_admin.php';
 include '../includes/dbconnect.php';
 
 // Handle add genre form submission

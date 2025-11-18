@@ -1,4 +1,5 @@
 <?php
+require_once 'check_admin.php';
 // Include database connection file
 include_once("../includes/dbconnect.php");
 

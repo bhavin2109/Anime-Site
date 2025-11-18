@@ -77,21 +77,8 @@ if ($upcomingMoviesResult) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore</title>
+    <link rel="stylesheet" href="../css/shared_styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #000000, #1a1a1a, #333333, #000000);
-            background-size: 300% 300%;
-            animation: gradient-animation 4s ease infinite;
-        }
 
         .genre-container {
             display: grid;
@@ -105,14 +92,16 @@ if ($upcomingMoviesResult) {
         .genre-box {
             width: 100%;
             height: 150vh;
-            background: linear-gradient(135deg, cyan, pink, green);
-            background-size: 300% 300%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1e3a5f 25%, #dc2626 50%, #1e3a5f 75%, #0a0a0a 100%);
+            background-size: 400% 400%;
             animation: gradient-animation 15s ease infinite;
-            border-radius: 10px;
+            border-radius: 12px;
             overflow-y: auto;
             scroll-behavior: smooth;
             scrollbar-width: none;
             padding: 20px;
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3);
+            border: 2px solid rgba(220, 38, 38, 0.2);
         }
 
         @keyframes gradient-animation {
@@ -132,6 +121,8 @@ if ($upcomingMoviesResult) {
         .genre-box h2 {
             text-align: center;
             margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(220, 38, 38, 0.5);
         }
 
         .anime-grid {
@@ -144,15 +135,19 @@ if ($upcomingMoviesResult) {
             display: flex;
             align-items: center;
             text-decoration: none;
-            color: #333;
-            transition: 0.3s;
+            color: #e5e7eb;
+            transition: all 0.3s ease;
             padding: 10px;
-            border-radius: 5px;
-            background: transparent;
+            border-radius: 8px;
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid rgba(220, 38, 38, 0.1);
         }
 
         .anime-item:hover {
-            background-color: #e0e0e0;
+            background: rgba(220, 38, 38, 0.2);
+            border-color: rgba(220, 38, 38, 0.5);
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
         }
 
         .anime-item img {
@@ -203,66 +198,95 @@ if ($upcomingMoviesResult) {
             margin-bottom: 10px;
         }
 
-        /* Styles for upcoming movies section */
-        .upcoming-movies-section {
-            margin: 40px 0 20px 0;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .upcoming-movies-section h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .upcoming-movies-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
+        /* Styles for upcoming movies section - matching home page */
+        .movie-container {
+            display: grid;
+            width: 100%;
+            align-self: flex-start;
+            justify-self: first baseline;
+            gap: 20px;
             justify-content: center;
+            margin: 20px 0;
+            padding: 0 20px;
         }
-        .upcoming-movie-item {
+
+        .movie-box {
+            width: 100%;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1e3a5f 30%, #dc2626 60%, #0a0a0a 100%);
+            background-size: 300% 300%;
+            animation: movie-gradient 10s ease infinite;
+            border-radius: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.3);
+            border: 2px solid rgba(220, 38, 38, 0.2);
+        }
+
+        @keyframes movie-gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .movie-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 30px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .movie-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 160px;
-            background: #f7f7f7;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            padding: 12px;
             text-decoration: none;
-            color: #222;
-            transition: box-shadow 0.2s;
+            color: #e5e7eb;
+            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid rgba(220, 38, 38, 0.1);
         }
-        .upcoming-movie-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+
+        .movie-item:hover {
+            background: rgba(220, 38, 38, 0.2);
+            border-color: rgba(220, 38, 38, 0.5);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
         }
-        .upcoming-movie-item img {
-            width: 120px;
-            height: 180px;
-            object-fit: cover;
+
+        .movie-item img {
+            width: 180px;
+            height: 270px;
             border-radius: 4px;
             margin-bottom: 10px;
         }
-        .upcoming-movie-title {
-            font-size: 15px;
-            font-weight: bold;
+
+        .movie-details {
             text-align: center;
-            margin-bottom: 6px;
         }
-        .upcoming-movie-type {
-            font-size: 13px;
-            color: #888;
+
+        .movie_name {
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #e5e7eb;
         }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
-    <?php include '../includes/header.php'; ?>
+    <?php 
+    $current_page = 'explore.php';
+    include '../includes/header_shared.php'; 
+    ?>
 
     <!-- Main Content -->
     <main>
@@ -286,7 +310,7 @@ if ($upcomingMoviesResult) {
                                 </a>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <p>No anime found in this genre.</p>
+                            <p style="color: #e5e7eb;">No anime found in this genre.</p>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -294,31 +318,29 @@ if ($upcomingMoviesResult) {
         </section>
 
         <!-- Upcoming Movies Section -->
-        <section class="upcoming-movies-section">
-            <h2>Upcoming Movies</h2>
-            <div class="upcoming-movies-grid">
-                <?php if (!empty($upcomingMovies)): ?>
-                    <?php foreach ($upcomingMovies as $movie): ?>
-                        <div class="upcoming-movie-item">
-                            <img src="../assets/thumbnails/<?php echo htmlspecialchars($movie['anime_image']); ?>" alt="<?php echo htmlspecialchars($movie['anime_name']); ?>">
-                            <div class="upcoming-movie-title"><?php echo htmlspecialchars($movie['anime_name']); ?></div>
-                            <div class="upcoming-movie-type"><?php echo htmlspecialchars($movie['anime_type']); ?></div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>No upcoming movies found.</p>
-                <?php endif; ?>
+        <h2 style="text-align: center; margin: 20px 0;">Upcoming Movies</h2>
+        <section class="movie-container">
+            <div class="movie-box">
+                <div class="movie-grid">
+                    <?php if (!empty($upcomingMovies)): ?>
+                        <?php foreach ($upcomingMovies as $movie): ?>
+                            <a href="../includes/player.php?anime_id=<?php echo htmlspecialchars($movie['anime_id']); ?>" class="movie-item">
+                                <img src="../assets/thumbnails/<?php echo htmlspecialchars($movie['anime_image']); ?>" alt="<?php echo htmlspecialchars($movie['anime_name']); ?>">
+                                <div class="movie-details">
+                                    <div class="movie_name"><?php echo htmlspecialchars($movie['anime_name']); ?></div>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p style="color: #e5e7eb;">No upcoming movies found.</p>
+                    <?php endif; ?>
+                </div>
             </div>
         </section>
 
     </main>
-
-    <!-- Footer -->
-     <!--
-    <?php include 'footer.php'; ?>
-     -->
+    <?php include '../includes/footer_shared.php'; ?>
 </body>
-
 </html>
 <?php
 $conn->close();

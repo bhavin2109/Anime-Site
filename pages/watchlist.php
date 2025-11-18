@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../includes/dbconnect.php';
-include '../includes/header.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
@@ -63,40 +62,45 @@ $result = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <title>Your Watchlist</title>
+    <link rel="stylesheet" href="../css/shared_styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f3f3f3;
-            margin: 0;
-            padding: 0;
-        }
         .watchlist-container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 100%;
+            margin: 40px 0;
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(220, 38, 38, 0.3);
             padding: 30px;
         }
         h2 {
             text-align: center;
             margin-bottom: 25px;
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(220, 38, 38, 0.3);
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            background: #fafafa;
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid rgba(220, 38, 38, 0.2);
         }
         th, td {
             padding: 12px 10px;
             text-align: center;
+            color: #e5e7eb;
         }
         th {
-            background: #3498db;
+            background: linear-gradient(135deg, #dc2626, #1e3a5f);
             color: #fff;
+            border-bottom: 2px solid rgba(220, 38, 38, 0.5);
         }
         tr:nth-child(even) {
-            background: #f0f6fa;
+            background: rgba(30, 58, 95, 0.2);
+        }
+        tr:hover {
+            background: rgba(220, 38, 38, 0.1);
         }
         img.thumbnail {
             width: 60px;
@@ -114,17 +118,27 @@ $result = $stmt->get_result();
             font-size: 1em;
         }
         button {
-            background: #e74c3c;
+            background: #dc2626;
             color: #fff;
             border: none;
             cursor: pointer;
             margin-left: 4px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+        }
+        button:hover {
+            background: #991b1b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.5);
         }
         button.update-btn {
-            background: #27ae60;
+            background: #1e3a5f;
+        }
+        button.update-btn:hover {
+            background: #1e40af;
         }
         button.remove-btn {
-            background: #e74c3c;
+            background: #dc2626;
         }
         .watchlist-actions {
             display: flex;
@@ -135,8 +149,18 @@ $result = $stmt->get_result();
         .watchlist-actions form {
             margin: 0;
         }
+        main {
+            width: 100%;
+            padding: 0 20px;
+        }
         @media (max-width: 700px) {
-            .watchlist-container { padding: 10px; }
+            .watchlist-container { 
+                padding: 15px;
+                margin: 20px 0;
+            }
+            main {
+                padding: 0 10px;
+            }
             table, th, td { font-size: 0.95em; }
             img.thumbnail { width: 40px; height: 55px; }
             .watchlist-actions { flex-direction: column; gap: 4px; }
@@ -144,6 +168,11 @@ $result = $stmt->get_result();
     </style>
 </head>
 <body>
+    <?php 
+    $current_page = 'watchlist.php';
+    include '../includes/header_shared.php'; 
+    ?>
+    <main>
     <div class="watchlist-container">
         <h2>Your Watchlist</h2>
         <?php if ($result->num_rows > 0): ?>
@@ -204,9 +233,11 @@ $result = $stmt->get_result();
             </tbody>
         </table>
         <?php else: ?>
-            <p style="text-align:center;color:#888;">Your watchlist is empty. <a href="explore.php" style="color:#3498db;">Explore anime</a> to add!</p>
+            <p style="text-align:center;color:#e5e7eb;">Your watchlist is empty. <a href="explore.php" style="color:#dc2626;">Explore anime</a> to add!</p>
         <?php endif; ?>
     </div>
+    </main>
+    <?php include '../includes/footer_shared.php'; ?>
 </body>
 </html>
 <?php
