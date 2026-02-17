@@ -1,0 +1,108 @@
+/* ===== Profile & Edit Profile ===== */
+
+.profile-container {
+    max-width: 700px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.profile-card {
+    background: var(--gradient-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+    animation: fadeIn 0.5s ease;
+}
+
+.profile-card img.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+    margin: 0 auto 20px;
+    object-fit: cover;
+    box-shadow: var(--shadow-gold);
+}
+
+.profile-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+}
+
+.profile-card .email {
+    color: var(--gray-light);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+
+.profile-card .profile-info {
+    text-align: left;
+    margin: 20px 0;
+}
+
+.profile-card .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.95rem;
+}
+
+.profile-card .info-row .label {
+    color: var(--gray-light);
+}
+
+.profile-card .info-row .value {
+    color: var(--white);
+    font-weight: 500;
+}
+
+.profile-card .btn-edit {
+    display: inline-block;
+    background: var(--gradient-gold);
+    color: var(--black);
+    padding: 12px 32px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    margin-top: 16px;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.profile-card .btn-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold);
+}
+
+/* Edit Profile Form */
+.edit-form {
+    text-align: left;
+}
+
+.edit-form label {
+    display: block;
+    color: var(--gray-light);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    margin-top: 16px;
+}
+
+.edit-form input {
+    margin-bottom: 4px;
+}
+
+.edit-form button[type="submit"] {
+    width: 100%;
+    margin-top: 24px;
+}
+
+@media (max-width: 480px) {
+    .profile-card {
+        padding: 24px 16px;
+    }
+
+    .profile-card img.profile-pic {
+        width: 90px;
+        height: 90px;
+    }
+}

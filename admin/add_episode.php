@@ -4,164 +4,69 @@ include '../includes/dbconnect.php';
 
 $anime_id = '';
 $anime_name = '';
-
 if (isset($_GET['anime_id']) && isset($_GET['anime_name'])) {
     $_SESSION['anime_id'] = $_GET['anime_id'];
     $_SESSION['anime_name'] = $_GET['anime_name'];
     $anime_id = $_SESSION['anime_id'];
     $anime_name = $_SESSION['anime_name'];
-} elseif (isset($_SESSION['anime_id']) && isset($_SESSION['anime_name'])) {
+}
+elseif (isset($_SESSION['anime_id']) && isset($_SESSION['anime_name'])) {
     $anime_id = $_SESSION['anime_id'];
     $anime_name = $_SESSION['anime_name'];
-} else {
-    echo "<script>alert('Anime ID or name not provided.');</script>";
-    echo "<script>window.location.href = 'anime.php';</script>";
+}
+else {
+    echo "<script>alert('Anime ID not provided.'); window.location.href = 'anime.php';</script>";
     exit();
 }
-
-$success_message = '';
-$error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $anime_id = intval($_POST["anime_id"]);
     $episode_urls = explode(',', $_POST["episode_urls"]);
-
-    // Check if anime exists in the anime table
     $stmt = $conn->prepare("SELECT anime_id FROM anime WHERE anime_id = ?");
     $stmt->bind_param("i", $anime_id);
     $stmt->execute();
     $result = $stmt->get_result();
-
     if ($result->num_rows > 0) {
-        // Fetch the current number of episodes for the anime
-        $stmt = $conn->prepare("SELECT COUNT(*) as episode_count FROM episodes WHERE anime_id = ?");
-        $stmt->bind_param("i", $anime_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $episode_count = $row['episode_count'];
-
         $added_count = 0;
-        $invalid_urls = [];
-        foreach ($episode_urls as $episode_url) {
-            $episode_url = trim($episode_url);
-
-            // Extract file ID from Google Drive URL
-            preg_match('/\/d\/(.*?)\//', $episode_url, $matches);
+        foreach ($episode_urls as $url) {
+            $url = trim($url);
+            preg_match('/\/d\/(.*?)\//', $url, $matches);
             $file_id = $matches[1] ?? '';
-
-            if (empty($file_id)) {
-                $invalid_urls[] = $episode_url;
-            } else {
-                $episode_count++;
-                // Insert new episode with file ID
-                $stmt = $conn->prepare("INSERT INTO episodes (anime_id, episode_url) VALUES (?, ?)");
-                $stmt->bind_param("is", $anime_id, $file_id);
-                if ($stmt->execute()) {
+            if (!empty($file_id)) {
+                $stmt2 = $conn->prepare("INSERT INTO episodes (anime_id, episode_url) VALUES (?, ?)");
+                $stmt2->bind_param("is", $anime_id, $file_id);
+                if ($stmt2->execute())
                     $added_count++;
-                } else {
-                    $error_message .= "Error adding episode: " . $stmt->error . "\\n";
-                }
             }
         }
-        if ($added_count > 0) {
-            $success_message = "Successfully added $added_count episode" . ($added_count > 1 ? "s" : "") . ".";
-        }
-        if (!empty($invalid_urls)) {
-            $error_message .= "Invalid Google Drive URL(s): " . implode(", ", $invalid_urls) . ".\\n";
-        }
-        if ($success_message || $error_message) {
-            echo "<script>";
-            if ($success_message) echo "alert('$success_message');";
-            if ($error_message) echo "alert('$error_message');";
-            echo "window.location.href = 'add_episode.php';";
-            echo "</script>";
-        }
-    } else {
-        echo "<script>alert('Anime not found.');</script>";
+        if ($added_count > 0)
+            echo "<script>alert('Added $added_count episode(s).'); window.location.href = 'add_episode.php';</script>";
     }
 }
+$stmt = $conn->prepare("SELECT COUNT(*) as c FROM episodes WHERE anime_id = ?");
+$stmt->bind_param("i", $anime_id);
+$stmt->execute();
+$next_ep = $stmt->get_result()->fetch_assoc()['c'] + 1;
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Episode</title>
+    <link rel="stylesheet" href="../css/admin_styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .form-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .form-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .form-container input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .form-container button:hover {
-            background-color: #0056b3;
-        }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
     </style>
 </head>
 <body>
-    <div class="form-container">
+    <div class="form-container" style="max-width:450px;">
         <h2>Add Episode</h2>
         <form action="add_episode.php" method="post">
             <input type="hidden" name="anime_id" value="<?php echo $anime_id; ?>">
-            <p>Anime ID: <?php echo $anime_id; ?></p>
-            <p>Anime Name: <?php echo $anime_name; ?></p>
-            <?php
-            // Fetch the current number of episodes for the anime
-            $stmt = $conn->prepare("SELECT COUNT(*) as episode_count FROM episodes WHERE anime_id = ?");
-            $stmt->bind_param("i", $anime_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-            $episode_count = $row['episode_count'] + 1;
-            ?>
-            <p>Next Episode Number: <?php echo $episode_count; ?></p>
-            <input type="text" name="episode_urls" placeholder="Episode URLs (comma separated)" required>
+            <p>Anime: <strong style="color:var(--gold);"><?php echo htmlspecialchars($anime_name); ?></strong></p>
+            <p>Next Episode: <strong style="color:var(--gold);">#<?php echo $next_ep; ?></strong></p>
+            <input type="text" name="episode_urls" placeholder="Google Drive URLs (comma separated)" required>
             <button type="submit">Add Episodes</button>
         </form>
     </div>

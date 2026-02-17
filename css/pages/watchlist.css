@@ -1,0 +1,92 @@
+/* ===== Watchlist Page ===== */
+
+.watchlist-container {
+    max-width: 1000px;
+    margin: 20px auto 40px;
+}
+
+.watchlist-container table {
+    margin-top: 20px;
+}
+
+.watchlist-container .thumbnail {
+    width: 60px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.watchlist-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.inline-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.inline-form select {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    width: auto;
+    min-width: 120px;
+}
+
+.update-btn {
+    background: var(--gradient-gold) !important;
+    color: var(--black) !important;
+    padding: 6px 14px !important;
+    border-radius: var(--radius-sm) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+}
+
+.remove-btn {
+    background: transparent !important;
+    color: #ef4444 !important;
+    border: 1px solid #ef4444 !important;
+    padding: 6px 14px !important;
+    border-radius: var(--radius-sm) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    cursor: pointer;
+    transition: background var(--transition-fast) !important;
+}
+
+.remove-btn:hover {
+    background: rgba(239, 68, 68, 0.12) !important;
+}
+
+@media (max-width: 768px) {
+    .watchlist-container {
+        margin: 16px auto;
+    }
+
+    .watchlist-container table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .watchlist-actions {
+        flex-direction: column;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .watchlist-container .thumbnail {
+        width: 45px;
+        height: 65px;
+    }
+
+    .inline-form select {
+        min-width: 90px;
+        font-size: 0.75rem;
+    }
+}

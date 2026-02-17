@@ -1,0 +1,41 @@
+/* ===== Explore Page ===== */
+
+.genre-container {
+    margin-bottom: 20px;
+}
+
+.movie-container {
+    margin-bottom: 40px;
+}
+
+.movie-box {
+    padding: 10px 0;
+}
+
+.movie-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: none;
+}
+
+.movie-grid::-webkit-scrollbar {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .movie-grid {
+        gap: 14px;
+    }
+
+    .genre-box {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-grid {
+        gap: 10px;
+    }
+}

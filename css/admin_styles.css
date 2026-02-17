@@ -1,0 +1,422 @@
+/* ===== Admin Shared Styles ===== */
+/* Linked by admin sub-pages loaded in the iframe */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --gold: #ffd300;
+    --gold-light: #ffe44d;
+    --gold-dark: #ccaa00;
+    --white: #ffffff;
+    --gray: #757b81;
+    --gray-light: #9ca3af;
+    --dark: #262b32;
+    --darker: #1a1e24;
+    --black: #090c11;
+    --gradient-main: linear-gradient(135deg, #090c11 0%, #262b32 50%, #090c11 100%);
+    --gradient-gold: linear-gradient(135deg, #ffd300, #ccaa00);
+    --gradient-card: linear-gradient(145deg, rgba(38, 43, 50, 0.95), rgba(9, 12, 17, 0.95));
+    --gradient-sidebar: linear-gradient(180deg, #262b32 0%, #090c11 100%);
+    --glass-border: rgba(255, 211, 0, 0.12);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-gold: 0 4px 20px rgba(255, 211, 0, 0.25);
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --transition-fast: 0.2s cubic-bezier(.4, 0, .2, 1);
+    --transition-smooth: 0.4s cubic-bezier(.4, 0, .2, 1);
+    --font-primary: 'Outfit', sans-serif;
+    --font-secondary: 'Inter', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--gradient-main);
+    background-attachment: fixed;
+    color: var(--white);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--gold);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--gold-light);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-primary);
+    color: var(--white);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--black);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark);
+    border-radius: 3px;
+}
+
+/* ===== Admin Navbar (used in sub-pages like anime.php, genres.php) ===== */
+.admin-navbar {
+    background: var(--gradient-gold);
+    color: var(--black);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-navbar h2 {
+    color: var(--black);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.admin-navbar .btn-add {
+    background: var(--black);
+    color: var(--gold);
+    padding: 8px 18px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+}
+
+.admin-navbar .btn-add:hover {
+    opacity: 0.85;
+}
+
+/* ===== Admin Tables ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--gradient-card);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+thead th {
+    background: rgba(255, 211, 0, 0.08);
+    color: var(--gold);
+    font-weight: 600;
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--white);
+    font-size: 0.9rem;
+    vertical-align: middle;
+    text-align: center;
+}
+
+tbody tr {
+    transition: background var(--transition-fast);
+}
+
+tbody tr:hover {
+    background: rgba(255, 211, 0, 0.04);
+}
+
+td img {
+    border-radius: var(--radius-sm);
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+}
+
+.action-buttons a,
+.action-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--glass-border);
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.04);
+    transition: all var(--transition-fast);
+}
+
+.action-buttons a:hover,
+.action-btn:hover {
+    background: rgba(255, 211, 0, 0.12);
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* Delete specific styling */
+.action-btn-delete {
+    color: #ef4444 !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.action-btn-delete:hover {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border-color: #ef4444 !important;
+}
+
+/* ===== Forms ===== */
+.admin-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.form-container {
+    background: var(--gradient-card);
+    border: 1px solid var(--glass-border);
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.4rem;
+}
+
+.form-container p {
+    color: var(--gray-light);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.input-box,
+.form-container input[type="text"],
+.form-container input[type="file"],
+.form-container input[type="email"],
+.form-container input[type="password"],
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    padding: 12px 14px;
+    margin: 8px 0;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    background: rgba(38, 43, 50, 0.8);
+    color: var(--white);
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-container input:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 12px rgba(255, 211, 0, 0.1);
+}
+
+.form-container input::placeholder {
+    color: var(--gray);
+}
+
+.form-container button,
+.form-container input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    background: var(--gradient-gold);
+    color: var(--black);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-container button:hover,
+.form-container input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold);
+}
+
+/* ===== Dashboard Stats ===== */
+.dashboard-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.dashboard-container h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.5rem;
+}
+
+.stats-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.stats-item {
+    background: var(--gradient-card);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    text-align: center;
+    transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.stats-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-gold);
+}
+
+.stats-item h3 {
+    color: var(--gold);
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.stats-item p {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--white);
+}
+
+/* ===== Add Genre Form (navbar version) ===== */
+.add-genre-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-genre-form input[type="text"] {
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--white);
+    font-size: 0.85rem;
+}
+
+.add-genre-form input::placeholder {
+    color: var(--gray-light);
+}
+
+.add-genre-form input:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.add-genre-form button {
+    padding: 8px 18px;
+    background: var(--black);
+    color: var(--gold);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .admin-navbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 16px;
+    }
+
+    .stats-box {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        font-size: 0.8rem;
+    }
+
+    .form-container {
+        padding: 24px 16px;
+    }
+
+    .action-buttons {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-box {
+        grid-template-columns: 1fr;
+    }
+
+    .form-container {
+        padding: 20px 12px;
+        margin: 16px auto;
+    }
+
+    .dashboard-container {
+        margin: 20px auto;
+    }
+
+    .admin-container {
+        padding: 0 12px;
+    }
+}

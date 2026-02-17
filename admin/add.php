@@ -1,15 +1,11 @@
 <?php
 require_once 'check_admin.php';
 include '../includes/dbconnect.php';
-
-// Fetch anime list from the database
 $anime_list = [];
-$sql = "SELECT anime_id, anime_name FROM anime";
-$result = mysqli_query($conn, $sql);
+$result = mysqli_query($conn, "SELECT anime_id, anime_name FROM anime");
 if (mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
+    while ($row = mysqli_fetch_assoc($result))
         $anime_list[] = $row;
-    }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -20,118 +16,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $genre = $_POST["genre"];
         $target_dir = "../assets/thumbnails/";
         $target_file = $target_dir . basename($anime_image);
-
-        // Check if anime already exists
         $sql = "SELECT * FROM anime WHERE anime_name = '$anime_name'";
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0) {
             echo "<script>alert('Anime already exists!');</script>";
-        } else {
+        }
+        else {
             if (move_uploaded_file($_FILES["anime_image"]["tmp_name"], $target_file)) {
                 $sql = "INSERT INTO anime (anime_name, anime_image, anime_type, genre) VALUES ('$anime_name', '$anime_image', '$anime_type', '$genre')";
                 if (mysqli_query($conn, $sql)) {
-                    echo "<script>alert('Anime added successfully!');</script>";
-                    echo "<script>window.location.href = 'add.php';</script>";
-                } else {
-                    echo "<script>alert('Error adding anime: " . mysqli_error($conn) . "');</script>";
+                    echo "<script>alert('Anime added successfully!'); window.location.href = 'add.php';</script>";
                 }
-            } else {
-                echo "<script>alert('Error uploading anime image.');</script>";
+                else {
+                    echo "<script>alert('Error adding anime.');</script>";
+                }
+            }
+            else {
+                echo "<script>alert('Error uploading image.');</script>";
             }
         }
-    } elseif (isset($_POST["slider_anime_id"])) {
+    }
+    elseif (isset($_POST["slider_anime_id"])) {
         $slider_anime_id = $_POST["slider_anime_id"];
         $slider_image = $_FILES["slider_image"]["name"];
-        $target_dir = "../assets/slider/";
-        $target_file = $target_dir . basename($slider_image);
-
-        // Fetch the number of episodes for the selected anime
-        $sql = "SELECT episodes FROM anime WHERE anime_id = '$slider_anime_id'";
-        $result = mysqli_query($conn, $sql);
-        $episodes = 0;
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            $episodes = $row['episodes'];
-        }
-
+        $target_file = "../assets/slider/" . basename($slider_image);
         if (move_uploaded_file($_FILES["slider_image"]["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO slider (anime_id, slider_image, episodes) VALUES ('$slider_anime_id', '$slider_image', '$episodes')";
+            $sql = "INSERT INTO slider (anime_id, slider_image) VALUES ('$slider_anime_id', '$slider_image')";
             if (mysqli_query($conn, $sql)) {
-                echo "<script>alert('Slider added successfully!');</script>";
-                echo "<script>window.location.href = 'dashboard.php';</script>";
-            } else {
-                echo "<script>alert('Error adding slider: " . mysqli_error($conn) . "');</script>";
+                echo "<script>alert('Slider added!'); window.location.href = 'dashboard.php';</script>";
             }
-        } else {
-            echo "<script>alert('Error uploading slider image.');</script>";
         }
     }
 }
-
 mysqli_close($conn);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Anime</title>
+    <link rel="stylesheet" href="../css/admin_styles.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .form-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 500px;
-            height: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .form-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .form-container .input-box {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .form-container button:hover {
-            background-color: #0056b3;
-        }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; gap: 30px; flex-wrap: wrap; padding: 20px; }
+        @media (max-width: 768px) { body { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -141,44 +69,23 @@ mysqli_close($conn);
             <input type="text" name="anime_name" placeholder="Anime Name" class="input-box" required>
             <input type="file" name="anime_image" class="input-box" required>
             <?php
-            // Ensure database connection is included
-            include '../includes/dbconnect.php';
-
-            $typeOptions = [];
-            $typeQuery = "SELECT * FROM type";
-            $typeResult = mysqli_query($conn, $typeQuery);
-            if ($typeResult) {
-                while ($typeRow = mysqli_fetch_assoc($typeResult)) {
-                    $typeOptions[] = $typeRow;
-                }
-            }
-            ?>
+include '../includes/dbconnect.php';
+$typeResult = mysqli_query($conn, "SELECT * FROM type");
+?>
             <select name="anime_type" class="input-box" required>
-                <option value="">Select Anime Type</option>
-                <?php foreach ($typeOptions as $type): ?>
-                    <option value="<?php echo htmlspecialchars($type['name']); ?>">
-                        <?php echo htmlspecialchars($type['name']); ?>
-                    </option>
-                <?php endforeach; ?>
+                <option value="">Select Type</option>
+                <?php while ($t = mysqli_fetch_assoc($typeResult)): ?>
+                    <option value="<?php echo htmlspecialchars($t['name']); ?>"><?php echo htmlspecialchars($t['name']); ?></option>
+                <?php
+endwhile; ?>
             </select>
-            <?php
-            // Fetch genres from the genre table
-            $genreOptions = [];
-            $genreQuery = "SELECT * FROM genres";
-            $genreResult = mysqli_query($conn, $genreQuery);
-            if ($genreResult) {
-                while ($genreRow = mysqli_fetch_assoc($genreResult)) {
-                    $genreOptions[] = $genreRow;
-                }
-            }
-            ?>
+            <?php $genreResult = mysqli_query($conn, "SELECT * FROM genres"); ?>
             <select name="genre" class="input-box" required>
                 <option value="">Select Genre</option>
-                <?php foreach ($genreOptions as $genre): ?>
-                    <option value="<?php echo htmlspecialchars($genre['genre_name']); ?>">
-                        <?php echo htmlspecialchars($genre['genre_name']); ?>
-                    </option>
-                <?php endforeach; ?>
+                <?php while ($g = mysqli_fetch_assoc($genreResult)): ?>
+                    <option value="<?php echo htmlspecialchars($g['genre_name']); ?>"><?php echo htmlspecialchars($g['genre_name']); ?></option>
+                <?php
+endwhile; ?>
             </select>
             <button type="submit">Add Anime</button>
         </form>
