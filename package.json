@@ -1,0 +1,20 @@
+{
+  "name": "anime-site-fullstack",
+  "version": "1.0.0",
+  "description": "Anime Streaming Site migrated to React + Node/Express + PostgreSQL + Tailwind",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "db:migrate": "node database/migrate.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "pg": "^8.22.0"
+  }
+}

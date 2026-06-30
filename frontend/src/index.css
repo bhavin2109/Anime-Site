@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Custom Utilities & Reset ===== */
+@layer base {
+  body {
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+}
+
+/* ===== Custom Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090c11;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #262b32;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ccaa00;
+}
+
+/* ===== Scroll Reveal Animations ===== */
+.reveal, .reveal-left, .reveal-right, .reveal-scale {
+  opacity: 0;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.reveal {
+  transform: translateY(30px);
+}
+
+.reveal-left {
+  transform: translateX(-50px);
+}
+
+.reveal-right {
+  transform: translateX(50px);
+}
+
+.reveal-scale {
+  transform: scale(0.95);
+}
+
+.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delay classes (handled dynamically in JS or CSS) */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stagger-children.revealed > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(38, 43, 50, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 211, 0, 0.15);
+}
+
+/* Micro-animations */
+.hover-gold-glow:hover {
+  box-shadow: 0 0 20px rgba(255, 211, 0, 0.4);
+  transform: scale(1.02);
+}
+
+/* Animation delays */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+
+/* Flowing Pink-Cyan Gradient Effect */
+@keyframes flowGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.flowing-gradient-box {
+  background: linear-gradient(-45deg, rgba(236, 72, 153, 0.12), rgba(6, 182, 212, 0.12), rgba(236, 72, 153, 0.04), rgba(6, 182, 212, 0.04));
+  background-size: 300% 300%;
+  animation: flowGradient 8s ease infinite;
+  border: 1px solid rgba(236, 72, 153, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flowing-gradient-box:hover {
+  border-color: rgba(6, 182, 212, 0.35);
+  box-shadow: 0 8px 32px rgba(6, 182, 212, 0.15);
+  transform: translateY(-2px);
+}
+
